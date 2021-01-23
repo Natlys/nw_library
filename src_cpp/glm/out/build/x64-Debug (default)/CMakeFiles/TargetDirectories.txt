@@ -1,0 +1,2 @@
+D:/dev/native_world/nw_engine/ext/glm/glm/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
+D:/dev/native_world/nw_engine/ext/glm/glm/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir

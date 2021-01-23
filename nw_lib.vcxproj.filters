@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="nwlib">
+      <UniqueIdentifier>{01A20810-6DB6-30C1-3638-D420A20B2DF2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src_cpp\nwl_core.hpp" />
+    <ClInclude Include="src_cpp\nwlib\nwl_container.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_data_res.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_event.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_id_stack.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_io.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_math.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_math_matrix.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_math_transform.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_math_vector.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_memory.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_random.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_singleton.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_string.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_time.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\native_world_library.hpp" />
+    <ClInclude Include="src_cpp\nwlib\nwl_types.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src_cpp\nwlib\nwl_data_res.cpp">
+      <Filter>nwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_memory.cpp">
+      <Filter>nwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_random.cpp">
+      <Filter>nwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_string.cpp">
+      <Filter>nwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_types.cpp">
+      <Filter>nwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_code_res.cpp" />
+  </ItemGroup>
+</Project>
