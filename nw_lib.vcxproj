@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|x64">
+      <Configuration>debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|x64">
+      <Configuration>release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{40CF1511-2C71-40E7-152C-543B016DC737}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>nw_lib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <OutDir>..\bin\debug-windows-x86_64\nw_lib\</OutDir>
+    <IntDir>..\bin\debug-windows-x86_64\nw_lib\</IntDir>
+    <TargetName>nw_lib</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <OutDir>..\bin\release-windows-x86_64\nw_lib\</OutDir>
+    <IntDir>..\bin\release-windows-x86_64\nw_lib\</IntDir>
+    <TargetName>nw_lib</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NWL_LINK_STATIC;NWL_BUILD_LIB;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src_cpp;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NWL_LINK_STATIC;NWL_BUILD_LIB;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src_cpp;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src_cpp\native_world_library.hpp" />
+    <ClInclude Include="src_cpp\nwl_core.hpp" />
+    <ClInclude Include="src_cpp\nwlib\nwl_container.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_data_res.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_event.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_id_stack.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_io.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_math.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_math_matrix.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_math_transform.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_math_vector.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_memory.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_random.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_singleton.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_string.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_time.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_types.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src_cpp\nwlib\nwl_data_res.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_memory.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_random.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_string.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_types.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_code_res.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
