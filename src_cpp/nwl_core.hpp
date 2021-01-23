@@ -17,11 +17,11 @@
 using Int8 = __int8;
 using Int16 = __int16;
 using Int32 = __int32;
-using Int64 = __int64;
+using Int64 = long int;
 using UInt8 = unsigned __int8;
 using UInt16 = unsigned __int16;
 using UInt32 = unsigned __int32;
-using UInt64 = unsigned __int64;
+using UInt64 = unsigned long int;
 using Float32 = float;
 using Float64 = double;
 using float128 = long double;
@@ -31,9 +31,10 @@ using Byte = char;
 using UByte = unsigned char;
 using Size = size_t;
 using Char = char;
-using Char8 = char;
 using UChar = unsigned char;
+using Char8 = char;
 using UChar8 = unsigned char;
+using WChar = wchar_t;
 using Char16 = wchar_t;
 // --==</alias>==--
 

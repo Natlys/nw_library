@@ -2,10 +2,14 @@
 #define NWL_MEMORY_H
 
 #include <nwl_core.hpp>
-
-#include <memory>
 #include <nwlib/nwl_io.h>
 
+#include <new>
+#include <memory>
+
+#pragma warning (disable : 4267)
+
+// --==<supporting_structs>==--
 namespace NWL
 {
 	/// MemInfo struct
@@ -19,7 +23,11 @@ namespace NWL
 		Ptr pLoc = this;
 	public:
 		// --getters
-		inline UInt32 GetLocDec() const { return reinterpret_cast<uintptr_t>(pLoc); }
+		static MemInfo& GetGlobal() { static MemInfo s_Global; return s_Global; }
+		inline uintptr_t GetLocDec() const { return reinterpret_cast<uintptr_t>(pLoc); }
+		// --setters
+		inline void SetAllocation(Size szAlloc, Size unAlloc) { szAlloc += szAlloc; unAlloc += unAlloc; }
+		inline void SetDeallocation(Size szDealloc, Size unDealloc) { szAlloc -= szDealloc; unAlloc -= unDealloc; }
 		// --operators
 		OutStream& operator<<(OutStream& rStream) const;
 	};
@@ -40,7 +48,7 @@ namespace NWL
 		UInt32 szBlock = 0;
 	public:
 		// --getters
-		inline MemLink* GetBlock(UInt32 szMem) {
+		inline MemLink* GetBlock(Size szMem) {
 			if (szBlock >= szMem) { this->szBlock -= szMem; return this; }
 			for (MemLink *pBlock = this, *pBlockNext = pBlock->pNext;
 				pBlockNext != nullptr;
@@ -58,6 +66,13 @@ namespace NWL
 		inline MType* GetCasted() { return reinterpret_cast<MType*>(this); }
 	};
 }
+// --==</supporting_structs>==--
+// --==<supporting_functions>==--
+namespace NWL
+{
+	inline Size GetAligned(Size szData, UInt8 szAlign) { return (szData + (szAlign - 1)) & ~(szAlign - 1); }
+}
+// --==</supporting_functions>==--
 namespace NWL
 {
 	/// Abstract MemAllocator class
@@ -104,7 +119,7 @@ namespace NWL
 	class NWL_API MemArena : public AMemAllocator
 	{
 	public:
-		MemArena(Ptr pBlock, Size szMemory) :
+		MemArena(Ptr pBlock = 0, Size szMemory = 0) :
 			AMemAllocator(pBlock, szMemory),
 			m_FreeList(nullptr) { }
 		~MemArena() { }
@@ -120,7 +135,7 @@ namespace NWL
 	inline Ptr MemArena::Alloc(Size szMemory, UInt8 szAlign) {
 		Ptr pBlock = nullptr;
 		if (szMemory == 0) { return nullptr; }
-		szMemory = (szMemory + szAlign - 1) & ~(szAlign - 1);
+		szMemory = GetAligned(szMemory, szAlign);
 		if (m_FreeList != nullptr) {
 			if (MemLink* pLink = m_FreeList->GetBlock(szMemory)) {
 				pBlock = pLink->GetCasted<Byte>();
@@ -160,6 +175,48 @@ namespace NWL
 	}
 	// --==</core_methods>==--
 }
+// --==<new_delete_functions>==--
+namespace NWL
+{
+	// --declaration
+	template<typename MType, typename ... Args>
+	static inline MType* NewT(AMemAllocator& rmAllocator, Args& ... Arguments);
+	template <typename MType>
+	static inline MType* NewTArr(AMemAllocator& rmAllocator, UInt64 unAlloc);
+	template<typename MType>
+	static inline void DelT(AMemAllocator& rmAllocator, MType* pBlock);
+	template <typename MType>
+	static inline void DelTArr(AMemAllocator& rmAllocator, MType* pBlock, UInt64 unDealloc);
+	template<typename MType, typename ... Args>
+	static inline void* NewPlaceT(MType* pBlock, Args&& ... Arguments);
+	// --implementation
+	template<typename MType, typename ... Args>
+	inline MType* NewT(AMemAllocator& rmAllocator, Args& ... Arguments) {
+		MType* pBlock = reinterpret_cast<MType*>(rmAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
+		NewPlaceT<MType>(pBlock, std::forward<Args>(Arguments)...);
+		return pBlock;
+	}
+	template <typename MType>
+	inline MType* NewTArr(AMemAllocator& rmAllocator, UInt64 unAlloc) {
+		return reinterpret_cast<MType*>(rmAllocator.Alloc(unAlloc * sizeof(MType), __alignof(MType)));
+	}
+	template<typename MType>
+	inline void DelT(AMemAllocator& rmAllocator, MType* pBlock) {
+		pBlock->~MType();
+		rmAllocator.Dealloc(pBlock, 1 * sizeof(MType));
+	}
+	template <typename MType>
+	inline void DelTArr(AMemAllocator& rmAllocator, MType* pBlock, UInt64 unDealloc) {
+		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
+		rmAllocator.Dealloc(pBlock, unDealloc * sizeof(MType));
+	}
+	template<typename MType, typename ... Args>
+	inline void* NewPlaceT(MType* pBlock, Args&& ... Arguments) {
+		return new(pBlock)MType(std::forward<Args>(Arguments)...);
+	}
+}
+// --==</new_delete_functions>==--
+// --==<RefOwner>==--
 namespace NWL
 {
 	/// RefOwner class
@@ -189,7 +246,7 @@ namespace NWL
 		inline void MakeRef(AMemAllocator& rAllocator, Args...Arguments) {
 			Reset();
 			m_pAllocator = &rAllocator;
-			m_szData = sizeof(VType) + __alignof(VType);
+			m_szData = GetAligned(sizeof(VType), __alignof(VType));
 			VType* pRef = static_cast<VType*>(m_pAllocator->Alloc(m_szData));
 			new(pRef)VType(std::forward<Args>(Arguments)...);
 			m_pRef = pRef;
@@ -198,7 +255,7 @@ namespace NWL
 		inline void MakeRef(AMemAllocator& rAllocator, VType& rCpy) {
 			Reset();
 			m_pAllocator = &rAllocator;
-			m_szData = sizeof(sizeof(VType), __alignof(VType));
+			m_szData = GetAligned(sizeof(VType), __alignof(VType));
 			new(m_pRef)VType(rCpy);
 		}
 		// --operators
@@ -227,4 +284,5 @@ namespace NWL
 		m_szData = 0;
 	}
 }
+// --==</RefOwner>==--
 #endif // NWL_MEMORY_H

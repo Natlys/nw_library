@@ -15,7 +15,8 @@
 #include <nwlib/nwl_random.h>
 #include <nwlib/nwl_singleton.h>
 #include <nwlib/nwl_string.h>
-#include <nwlib/nwl_time.h>
 #include <nwlib/nwl_types.h>
+#include <nwlib/nwl_time.h>
+#include <nwlib/nwl_thread.h>
 
 #endif	// NATIVE_WORLD_LIBRARY_HPP
