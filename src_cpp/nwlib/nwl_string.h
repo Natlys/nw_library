@@ -5,6 +5,7 @@
 
 #include <string>
 #include <string.h>
+#include <sstream>
 
 namespace NWL
 {

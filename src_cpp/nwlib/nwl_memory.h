@@ -9,7 +9,7 @@
 
 #pragma warning (disable : 4267)
 
-// --==<supporting_structs>==--
+// --==<support_structs>==--
 namespace NWL
 {
 	/// MemInfo struct
@@ -66,13 +66,15 @@ namespace NWL
 		inline MType* GetCasted() { return reinterpret_cast<MType*>(this); }
 	};
 }
-// --==</supporting_structs>==--
-// --==<supporting_functions>==--
+// --==</support_structs>==--
+// --==<support_functions>==--
 namespace NWL
 {
 	inline Size GetAligned(Size szData, UInt8 szAlign) { return (szData + (szAlign - 1)) & ~(szAlign - 1); }
 }
-// --==</supporting_functions>==--
+// --==</support_functions>==--
+
+// --==<AMemAllocator>==--
 namespace NWL
 {
 	/// Abstract MemAllocator class
@@ -111,6 +113,8 @@ namespace NWL
 		MemInfo m_Info;
 	};
 }
+// --==</AMemAllocator>==--
+// --==<MemArena>==--
 namespace NWL
 {
 	/// MemArena class
@@ -175,7 +179,9 @@ namespace NWL
 	}
 	// --==</core_methods>==--
 }
-// --==<new_delete_functions>==--
+// --==</MemArena>==--
+
+// --==<NewDel>==--
 namespace NWL
 {
 	// --declaration
@@ -215,8 +221,9 @@ namespace NWL
 		return new(pBlock)MType(std::forward<Args>(Arguments)...);
 	}
 }
-// --==</new_delete_functions>==--
-// --==<RefOwner>==--
+// --==</NewDel>==--
+
+// --==<Refs>==--
 namespace NWL
 {
 	/// RefOwner class
@@ -231,6 +238,7 @@ namespace NWL
 	public:
 		RefOwner() :
 			m_pAllocator(nullptr), m_pRef(nullptr), m_szData(0) { }
+		RefOwner(AMemAllocator& rAllocator, MType* pRef, Size szData = sizeof(MType));
 		RefOwner(RefOwner& rCpy) :
 			m_pAllocator(rCpy.m_pAllocator), *m_pRef(*rCpy.m_pRef), m_szData(rCpy.m_szData) { }
 		~RefOwner() { Reset(); }
@@ -261,7 +269,6 @@ namespace NWL
 		// --operators
 		inline MType* operator->() { return m_pRef; }
 		inline MType& operator*() { return *m_pRef; }
-		inline void operator=(MType* pRef) = delete;
 		inline void operator=(RefOwner& rCpy) {
 			m_pAllocator = rCpy.m_pAllocator;
 			*m_pRef = *rCpy.m_pRef;
@@ -272,6 +279,10 @@ namespace NWL
 		MType* m_pRef;
 		Size m_szData;
 	};
+	// --constructors&destructors
+	template <typename MType>
+	RefOwner<MType>::RefOwner(AMemAllocator& rAllocator, MType* pRef, Size szData) :
+		m_pAllocator(*rAllocator), m_pRef(pRef), m_szData(szData) { if (pRef == nullptr) { Reset(); } }
 	// --setters
 	template <typename MType>
 	inline void RefOwner<MType>::Reset() {
@@ -283,6 +294,97 @@ namespace NWL
 		m_pRef = nullptr;
 		m_szData = 0;
 	}
+	/// RefKeeper class
+	/// Description:
+	/// -- Smart "shared" pointer in nw implementation
+	/// -- Allocates object due to given allocator
+	/// -- The reference gets deleted if there is no any other RefKeepers for it
+	/// Interface:
+	/// -> Create RefKeeper -> MakeRef with particular allocator -> SetRef for other keepers -> use as a pointer
+	template <typename MType>
+	class NWL_API RefKeeper
+	{
+	public:
+		RefKeeper() :
+			m_pAllocator(nullptr), m_pRef(nullptr), m_pRefCounter(nullptr), m_szData(0) { }
+		RefKeeper(AMemAllocator& rAllocator, MType* pRef, Size szData = sizeof(MType));
+		RefKeeper(RefKeeper& rCpy) :
+			m_pAllocator(rCpy.m_pAllocator), * m_pRef(*rCpy.m_pRef), m_szData(rCpy.m_szData) { }
+		~RefKeeper() { Reset(); }
+
+		// --getters
+		inline AMemAllocator* GetAllocator() { return m_pAllocator; }
+		inline MType* GetRef() { return m_pRef; }
+		inline UInt16* GetRefCounter() { return m_pRefCounter; }
+		inline Size GetSize() const { return m_szData; }
+		// --setters
+		inline void SetRef(RefKeeper<MType>& rRefKeeper);
+		inline void Reset();
+		// --core_methods
+		template <typename VType, typename...Args>
+		inline void MakeRef(AMemAllocator& rAllocator, Args...Arguments) {
+			Reset();
+			m_pAllocator = &rAllocator;
+			m_szData = GetAligned(sizeof(VType), __alignof(VType));
+			m_pRef = NewT<VType>(rAllocator, Arguments...);
+			m_pRefCounter = NewT<UInt16>(rAllocator);
+			*m_pRefCounter = 1;
+		}
+		template <typename VType>
+		inline void MakeRef(AMemAllocator& rAllocator, VType& rCpy) {
+			Reset();
+			m_pAllocator = &rAllocator;
+			m_szData = GetAligned(sizeof(VType), __alignof(VType));
+			m_pRef = NewT<VType>(rAllocator, rCpy);
+			m_pRefCounter = NewT<UInt16>(rAllocator);
+			*m_pRefCounter = 1;
+		}
+		// --operators
+		inline MType* operator->() { return m_pRef; }
+		inline MType& operator*() { return *m_pRef; }
+		inline void operator=(RefKeeper& rCpy) { SetRef(rCpy); }
+	private:
+		AMemAllocator* m_pAllocator;
+		MType* m_pRef;
+		Size m_szData;
+		UInt16* m_pRefCounter;
+	};
+	// --constructors&destructors
+	template <typename MType>
+	RefKeeper<MType>::RefKeeper(AMemAllocator& rAllocator, MType* pRef, Size szData) :
+		m_pAllocator(*rAllocator), m_pRef(pRef),
+		m_pRefCounter(NewT<UInt16>(rAllocator)), m_szData(szData) { *m_pRefCounter = 1; if (pRef == nullptr) { Reset(); } }
+	// --setters
+	template <typename MType>
+	inline void RefKeeper<MType>::SetRef(RefKeeper<MType>& rRefKeeper) {
+		Reset();
+		m_pAllocator = rRefKeeper.m_pAllocator;
+		m_pRef = rRefKeeper.m_pRef;
+		m_pRefCounter = rRefKeeper.m_pRefCounter;
+		if (m_pRefCounter != nullptr) { (*m_pRefCounter) += 1; }
+		m_szData = rRefKeeper.m_szData;
+	}
+	template <typename MType>
+	inline void RefKeeper<MType>::Reset() {
+		if (m_pRef != nullptr && m_pAllocator != nullptr && m_pRefCounter != nullptr) {
+			if (*m_pRefCounter == 1) {
+				m_pRef->~MType();
+				m_pAllocator->Dealloc(m_pRef, m_szData);
+				DelT<UInt16>(*m_pAllocator, m_pRefCounter);
+			}
+			else { (*m_pRefCounter) -= 1; }
+		}
+		m_pAllocator = nullptr;
+		m_pRef = nullptr;
+		m_pRefCounter = nullptr;
+		m_szData = 0;
+	}
 }
-// --==</RefOwner>==--
+// --==</Refs>==--
+
+#define NWL_DEF_METHODS_NEWDEL(allocator)						\
+typename <template MType, typename...Args>						\
+	NewT(Args...Arguments){return NewT<MType>(Arguments);}		\
+typename <template MType>										\
+
 #endif // NWL_MEMORY_H

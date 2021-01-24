@@ -10,7 +10,7 @@ namespace NWL
 		ET_WINDOW_CLOSE, ET_WINDOW_RESIZE, ET_WINDOW_MOVE, ET_WINDOW_FOCUS,
 		ET_APP_TICK, ET_APP_UPDATE, ET_APP_RENDER,
 		ET_MOUSE_MOVE, ET_MOUSE_SCROLL, ET_MOUSE_PRESS, ET_MOUSE_RELEASE,
-		ET_KEY_RELEASE, ET_KEY_PRESS, ET_KEY_TYPE
+		ET_KEY_RELEASE, ET_KEY_PRESS, ET_KEY_CHAR
 	};
 }
 
@@ -56,7 +56,7 @@ namespace NWL
 			AEvent(kevtType), unKeyCode(unKeyCode), unRepeatCount(unRepeatCount), cChar(' ') {}
 		// TypeEvent
 		KeyboardEvent(Char Char) :
-			AEvent(ET_KEY_TYPE), unKeyCode(0), unRepeatCount(0), cChar(Char) {}
+			AEvent(ET_KEY_CHAR), unKeyCode(0), unRepeatCount(0), cChar(Char) {}
 		UInt32 unKeyCode = 0;
 		UInt32 unRepeatCount = 0;
 		Char cChar = ' ';
