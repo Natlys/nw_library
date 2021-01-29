@@ -31,6 +31,9 @@
     <Filter Include="glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2">
       <UniqueIdentifier>{7723E71C-E341-FBE9-2C0F-01FC986C36F3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdC">
+      <UniqueIdentifier>{D15024C3-3D71-6D6D-0674-A86B7253E9DC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdCXX">
       <UniqueIdentifier>{C1D47B1D-2DC0-8E7E-3699-95F7A2038CBC}</UniqueIdentifier>
     </Filter>
@@ -911,6 +914,9 @@
     <ClInclude Include="src_cpp\nwlib\nwl_data_res.h">
       <Filter>nwlib</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_engine.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\nwlib\nwl_event.h">
       <Filter>nwlib</Filter>
     </ClInclude>
@@ -958,8 +964,14 @@
     <ClCompile Include="src_cpp\glm\detail\glm.cpp">
       <Filter>glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdC\CMakeCCompilerId.c">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdC</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdCXX\CMakeCXXCompilerId.cpp">
       <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdCXX</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\ShowIncludes\main.c">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\ShowIncludes</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\nwlib\nwl_code_res.cpp">
       <Filter>nwlib</Filter>
@@ -979,5 +991,25 @@
     <ClCompile Include="src_cpp\nwlib\nwl_types.cpp">
       <Filter>nwlib</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCCompiler.cmake">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2</Filter>
+    </None>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCXXCompiler.cmake">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2</Filter>
+    </None>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeRCCompiler.cmake">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2</Filter>
+    </None>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeSystem.cmake">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2</Filter>
+    </None>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\cmake.check_cache">
+      <Filter>glm\out\build\x64-Debug (default)\CMakeFiles</Filter>
+    </None>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\cmake_install.cmake">
+      <Filter>glm\out\build\x64-Debug (default)</Filter>
+    </None>
   </ItemGroup>
 </Project>

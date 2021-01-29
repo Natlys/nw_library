@@ -41,14 +41,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
-    <OutDir>..\bin\debug-windows-x86_64\nw_lib\</OutDir>
-    <IntDir>..\bin\debug-windows-x86_64\nw_lib\</IntDir>
+    <OutDir>bin\debug-windows-x86_64\nw_lib\</OutDir>
+    <IntDir>bin\debug-windows-x86_64\nw_lib\</IntDir>
     <TargetName>nw_lib</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
-    <OutDir>..\bin\release-windows-x86_64\nw_lib\</OutDir>
-    <IntDir>..\bin\release-windows-x86_64\nw_lib\</IntDir>
+    <OutDir>bin\release-windows-x86_64\nw_lib\</OutDir>
+    <IntDir>bin\release-windows-x86_64\nw_lib\</IntDir>
     <TargetName>nw_lib</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -57,7 +57,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NWL_LINK_STATIC;NWL_BUILD_LIB;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src_cpp;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src_cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -73,7 +73,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NWL_LINK_STATIC;NWL_BUILD_LIB;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src_cpp;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src_cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -379,6 +379,7 @@
     <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_container.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_data_res.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_engine.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_event.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_id_stack.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_io.h" />
@@ -396,13 +397,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\glm\detail\glm.cpp" />
+    <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdC\CMakeCCompilerId.c" />
     <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CompilerIdCXX\CMakeCXXCompilerId.cpp" />
+    <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\ShowIncludes\main.c" />
     <ClCompile Include="src_cpp\nwlib\nwl_code_res.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_data_res.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_memory.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_random.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_string.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCCompiler.cmake" />
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCXXCompiler.cmake" />
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeRCCompiler.cmake" />
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeSystem.cmake" />
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\cmake.check_cache" />
+    <None Include="src_cpp\glm\out\build\x64-Debug (default)\cmake_install.cmake" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

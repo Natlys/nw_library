@@ -25,7 +25,7 @@ namespace NWL
 		ADataRes(const char* strName, UInt32 unId);
 	public:
 		ADataRes(const char* strName);
-		ADataRes(const ADataRes& rDataRes);
+		ADataRes(ADataRes& rDataRes) = delete;
 		virtual ~ADataRes();
 
 		// --getters
@@ -52,6 +52,9 @@ namespace NWL
 		template <class DRType> static inline void AddDataRes(DRType* pDataRes);
 		template <class DRType> static inline void RmvDataRes(UInt32 unId);
 		template <class DRType> static inline void RmvDataRes(const char* strName);
+		// --operators
+		void operator delete(Ptr pBlock) = delete;
+		void operator delete[](Ptr pBlock) = delete;
 	protected:
 		UInt32 m_unId;
 		String m_strName;

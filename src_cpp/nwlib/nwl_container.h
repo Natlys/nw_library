@@ -26,6 +26,23 @@ namespace NWL
 
 namespace NWL
 {
+	/// Pair struct
+	template<typename Type1, typename Type2>
+	struct NWL_API Pair
+	{
+	public:
+		Type1 First;
+		Type2 Second;
+	public:
+		Pair(Type1 val1, Type2 val2) :
+			Firts(val1), Second(val2) { }
+		Pair(const Pair<Type1, Type2>& rCpy) :
+			Firts(rCpy.First), Second(rCpy.Second) { }
+	};
+}
+
+namespace NWL
+{
 #if false
 	template <typename Type, int size>
 	class NW_API SArray

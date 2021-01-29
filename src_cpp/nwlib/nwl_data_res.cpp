@@ -17,8 +17,6 @@ namespace NWL
 	{
 		AddADataRes(this);
 	}
-	ADataRes::ADataRes(const ADataRes& rDataRes) :
-		m_unId(rDataRes.m_unId), m_strName(rDataRes.m_strName) { AddADataRes(this); }
 	ADataRes::~ADataRes()
 	{
 		s_IdStack.SetFreeId(m_unId);

@@ -44,8 +44,9 @@ using Char16 = wchar_t;
 #define NWL_STR_FORM(format, args);
 #define NWL_STR_PART_L(str, symb) ( ( str.substr(0, str.rfind(symb) + 1) ).c_str() )
 #define NWL_STR_PART_R(str, symb) ( ( str.substr(str.rfind(symb) + 1, str.size()) ).c_str() )
-#define NWL_FNAME_APATH(path) ( NW_STR_PART_R(std::string(path), '\\') )
-#define NWL_FDIR_APATH(path) ( NW_STR_PART_L(std::string(path), '\\') )
+#define NWL_FNAME_APATH(path) ( NWL_STR_PART_R(std::string(path), '\\') )
+#define NWL_FDIR_APATH(path) ( NWL_STR_PART_L(std::string(path), '\\') )
+
 #define NWL_BIND_FN(func) (std::bind(&func, this, std::placeholders::_1))
 
 #define NWL_XY_TO_X(x, y, w) (y * w + x)
@@ -104,5 +105,23 @@ namespace NWL
 	struct NWL_API MouseEvent;
 	struct NWL_API KeyboardEvent;
 }
+
+// --==<nwl_error_codes>==--
+#define NWL_ERR_DATA_LOSS				0b1110'0000'0000
+
+#define NWL_ERR_NO_SUPPORT				0b1110'0000'0001
+#define NWL_ERR_NO_DATA					0b1110'0000'0001
+#define NWL_ERR_NO_INIT					0b1110'0000'0010
+#define NWL_ERR_NO_QUIT					0b1110'0000'0011
+#define NWL_ERR_NO_STATE				0b1110'0000'0100
+
+#define NWL_ERR_UNKNOWN_ID				0b1111'0000'0000
+
+#define NWL_ERR_SHADER_INVALID_FORMAT	0b0011'0000'0000
+#define NWL_ERR_SHADER_LOAD_PATH		0b1000'0000'0000
+#define NWL_ERR_SHADER_LOAD_FAIL		0b1001'0000'0000
+#define NWL_ERR_SHADER_LINK				0b1011'0000'0000
+#define NWL_ERR_SHADER_COMPILE			0b1100'0000'0000
+// --==</nwl_error_codes>==--
 
 #endif	// NWL_CORE_HPP
