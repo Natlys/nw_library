@@ -65,20 +65,22 @@ namespace NWL
 		bool bHeld = false;
 		bool bNew = false, bOld = false;
 	};
+	template<UInt16 ButtonsCount>
 	struct NWL_API KeyboardState
 	{
-		ButtonState bsKeys[KC_COUNT]{ 0 };
-		Char8 aChars[1 << 8]{ 0 };
-		Char16 wChars[1 << 16]{ 0 };
+		ButtonState bsKeys[ButtonsCount]{ 0 };
+		Char8 aChars[ButtonsCount]{ 0 };
+		Char16 wChars[ButtonsCount]{ 0 };
 		InputModes iMode = IM_KEYBOARD_NORMAL;
 	};
+	template<UInt16 ButtonsCount>
 	struct NWL_API MouseState
 	{
 		double xMove = 0.0, yMove = 0.0;
-		double xHeld[MSB_COUNT]{ 0 }, yHeld[MSB_COUNT]{ 0 };
+		double xHeld[ButtonsCount]{ 0 }, yHeld[ButtonsCount]{ 0 };
 		double xMoveDelta = 0.0, yMoveDelta = 0.0;
 		double xScroll = 0.0, yScroll = 0.0;
-		ButtonState bsButtons[MSB_COUNT]{ 0 };
+		ButtonState bsButtons[ButtonsCount]{ 0 };
 		InputModes iMode = IM_CURSOR_NORMAL;
 	};
 }
