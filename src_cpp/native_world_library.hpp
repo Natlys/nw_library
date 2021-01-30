@@ -1,6 +1,8 @@
 #ifndef NATIVE_WORLD_LIBRARY_HPP
 #define NATIVE_WORLD_LIBRARY_HPP
 
+#define NWL_DEBUG
+
 #include <nwlib/nwl_container.h>
 #include <nwlib/nwl_data_res.h>
 #include <nwlib/nwl_code_res.h>

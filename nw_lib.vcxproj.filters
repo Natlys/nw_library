@@ -959,6 +959,8 @@
     <ClInclude Include="src_cpp\nwlib\nwl_types.h">
       <Filter>nwlib</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_test.h" />
+    <ClInclude Include="src_cpp\nwlib\nw_core_state.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\glm\detail\glm.cpp">

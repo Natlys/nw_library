@@ -93,7 +93,11 @@ namespace NWL
 			m_Info.szAlloc = 0; m_Info.unAlloc = 0;
 			m_Info.pLoc = pBlock;
 		}
-		virtual ~AMemAllocator() { NWL_ASSERT(GetAllocSize() == 0 && GetAllocCount() == 0, "memory leak"); }
+		virtual ~AMemAllocator()
+		{
+			if (GetAllocSize() != 0 || GetAllocCount() != 0) {
+			printf("MEM_ALLOCATOR::NOT_FREED_MEMORY: %d bytes/%d blocks",
+			static_cast<Int32>(GetAllocSize()), static_cast<Int32>(GetAllocCount())); }; }
 
 		// --getters
 		inline Ptr GetDataBeg() { return &m_pBeg[0]; }
@@ -117,9 +121,6 @@ namespace NWL
 		Byte* m_pBeg;
 		MemInfo m_Info;
 	};
-	static inline AMemAllocator* s_pGlobalMemory = nullptr;
-	static inline AMemAllocator& GetGlobalMemory() { return *s_pGlobalMemory; }
-	static inline void SetGlobalMemory(AMemAllocator& rGlobal) { s_pGlobalMemory = &rGlobal; }
 }
 // --==</AMemAllocator>==--
 // --==<MemArena>==--
@@ -243,41 +244,25 @@ namespace NWL
 {
 	// --declaration
 	template<typename MType, typename ... Args>
-	static inline MType* NewT(Args& ... Arguments);
-	template<typename MType, typename ... Args>
-	static inline MType* NewT(AMemAllocator& rmAllocator, Args& ... Arguments);
-	template <typename MType>
-	static inline MType* NewTArr(UInt64 unAlloc, AMemAllocator& rmAllocator = GetGlobalMemory());
-	template<typename MType>
-	static inline void DelT(MType* pBlock, AMemAllocator& rmAllocator = GetGlobalMemory());
-	template <typename MType>
-	static inline void DelTArr(MType* pBlock, UInt64 unDealloc, AMemAllocator& rmAllocator = GetGlobalMemory());
-	template<typename MType, typename ... Args>
 	static inline void* NewPlaceT(MType* pBlock, Args& ... Arguments) { return new(pBlock)MType(std::forward<Args>(Arguments)...); }
 	// --implementation
 	template<typename MType, typename ... Args>
-	inline MType* NewT(Args& ... Arguments) {
-		MType* pBlock = reinterpret_cast<MType*>(GetGlobalMemory().Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, Arguments...);
-		return pBlock;
-	}
-	template<typename MType, typename ... Args>
 	inline MType* NewT(AMemAllocator& rmAllocator, Args& ... Arguments) {
 		MType* pBlock = reinterpret_cast<MType*>(rmAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, Arguments...);
+		NewPlaceT<MType>(pBlock, std::forward<Args&>(Arguments)...);
 		return pBlock;
 	}
 	template <typename MType>
-	inline MType* NewTArr(UInt64 unAlloc, AMemAllocator& rmAllocator) {
+	inline MType* NewTArr(AMemAllocator& rmAllocator, UInt64 unAlloc) {
 		return reinterpret_cast<MType*>(rmAllocator.Alloc(unAlloc * sizeof(MType), __alignof(MType)));
 	}
 	template<typename MType>
-	inline void DelT(MType* pBlock, AMemAllocator& rmAllocator) {
+	inline void DelT(AMemAllocator& rmAllocator, MType* pBlock) {
 		pBlock->~MType();
 		rmAllocator.Dealloc(pBlock, 1 * sizeof(MType));
 	}
 	template <typename MType>
-	inline void DelTArr(MType* pBlock, UInt64 unDealloc, AMemAllocator& rmAllocator) {
+	inline void DelTArr(AMemAllocator& rmAllocator, MType* pBlock, UInt64 unDealloc) {
 		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
 		rmAllocator.Dealloc(pBlock, unDealloc * sizeof(MType));
 	}
@@ -297,30 +282,28 @@ namespace NWL
 	class NWL_API RefOwner
 	{
 	public:
-		RefOwner(AMemAllocator& rAllocator = GetGlobalMemory());
-		RefOwner(MType* pRef, Size szData = sizeof(MType), AMemAllocator& rAllocator = GetGlobalMemory());
+		RefOwner(AMemAllocator& rAllocator);
+		RefOwner(AMemAllocator& rAllocator, MType* pRef, Size szData = sizeof(MType));
 		explicit RefOwner(const RefOwner& rCpy) :
 			m_pAllocator(rCpy.m_pAllocator), m_pRef(rCpy.m_pRef), m_szData(rCpy.m_szData) { }
 		~RefOwner() { Reset(); }
 
 		// --getters
-		inline AMemAllocator* GetAllocator() { return m_pAllocator; }
-		inline MType* GetRef() { return m_pRef; }
-		inline Size GetSize() const { return m_szData; }
+		inline AMemAllocator* GetAllocator()	{ return m_pAllocator; }
+		inline MType* GetRef()					{ return m_pRef; }
+		inline Size GetSize() const				{ return m_szData; }
 		// --setters
 		inline void Reset();
 		// --core_methods
 		template <typename VType, typename ... Args>
-		inline void MakeRef(Args ... Arguments) {
+		inline void MakeRef(Args& ... Arguments) {
 			Reset();
-			m_szData = GetAligned(sizeof(VType), __alignof(VType));
-			VType* pRef = static_cast<VType*>(m_pAllocator->Alloc(m_szData));
-			new(pRef)VType(std::forward<Args>(Arguments)...);
-			m_pRef = pRef;
+			m_szData = GetAligned(sizeof(VType), alignof(VType));
+			m_pRef = NewT<VType>(*m_pAllocator, std::forward<Args&>(Arguments)...);
 		}
 		// --operators
-		inline MType* operator->() { return m_pRef; }
-		inline MType& operator*() { return *m_pRef; }
+		inline MType* operator->()			{ return m_pRef; }
+		inline MType& operator*()			{ return *m_pRef; }
 		inline void operator=(const RefOwner& rCpy) = delete;
 	private:
 		AMemAllocator* m_pAllocator;
@@ -332,7 +315,7 @@ namespace NWL
 	RefOwner<MType>::RefOwner(AMemAllocator& rAllocator) :
 		m_pAllocator(&rAllocator), m_pRef(nullptr), m_szData(0) { }
 	template <typename MType>
-	RefOwner<MType>::RefOwner(MType* pRef, Size szData, AMemAllocator& rAllocator) :
+	RefOwner<MType>::RefOwner(AMemAllocator& rAllocator, MType* pRef, Size szData) :
 		m_pAllocator(&rAllocator), m_pRef(pRef), m_szData(szData) { if (pRef == nullptr) { Reset(); } }
 	// --setters
 	template <typename MType>
@@ -355,8 +338,8 @@ namespace NWL
 	class NWL_API RefKeeper
 	{
 	public:
-		RefKeeper(AMemAllocator& rAllocator = GetGlobalMemory());
-		RefKeeper(MType* pRef, Size szData = sizeof(MType), AMemAllocator& rAllocator = GetGlobalMemory());
+		RefKeeper(AMemAllocator& rAllocator);
+		RefKeeper(AMemAllocator& rAllocator, MType* pRef, Size szData = sizeof(MType));
 		RefKeeper(RefKeeper& rCpy) :
 			m_pAllocator(rCpy.m_pAllocator), m_pRef(rCpy.m_pRef), m_pRefCounter(rCpy.m_pRefCounter), m_szData(rCpy.m_szData)
 		{ if (m_pRefCounter != nullptr) { (*m_pRefCounter)++; } }
@@ -366,10 +349,10 @@ namespace NWL
 		~RefKeeper() { Reset(); }
 
 		// --getters
-		inline AMemAllocator* GetAllocator() { return m_pAllocator; }
-		inline MType* GetRef() { return m_pRef; }
-		inline UInt16* GetRefCounter() { return m_pRefCounter; }
-		inline Size GetSize() const { return m_szData; }
+		inline AMemAllocator* GetAllocator()	{ return m_pAllocator; }
+		inline MType* GetRef()					{ return m_pRef; }
+		inline UInt16* GetRefCounter()			{ return m_pRefCounter; }
+		inline Size GetSize() const				{ return m_szData; }
 		// --setters
 		inline void SetRef(RefKeeper<MType>& rRefKeeper);
 		inline void Reset();
@@ -377,17 +360,9 @@ namespace NWL
 		template <typename VType, typename...Args>
 		inline void MakeRef(Args ... Arguments) {
 			Reset();
-			m_szData = GetAligned(sizeof(VType), __alignof(VType));
+			m_szData = GetAligned(sizeof(VType), alignof(VType));
 			m_pRef = NewT<VType>(*m_pAllocator, Arguments...);
 			m_pRefCounter = NewT<UInt16>(*m_pAllocator);
-			*m_pRefCounter = 1;
-		}
-		template <typename VType>
-		inline void MakeRef(VType& rCpy) {
-			Reset();
-			m_szData = GetAligned(sizeof(VType), __alignof(VType));
-			m_pRef = NewT<VType>(rAllocator, rCpy);
-			m_pRefCounter = NewT<UInt16>(rAllocator);
 			*m_pRefCounter = 1;
 		}
 		// --operators
@@ -405,7 +380,7 @@ namespace NWL
 	RefKeeper<MType>::RefKeeper(AMemAllocator& rAllocator) :
 		m_pAllocator(&rAllocator), m_pRef(nullptr), m_pRefCounter(nullptr), m_szData(0) { }
 	template <typename MType>
-	RefKeeper<MType>::RefKeeper(MType* pRef, Size szData, AMemAllocator& rAllocator) :
+	RefKeeper<MType>::RefKeeper(AMemAllocator& rAllocator, MType* pRef, Size szData) :
 		m_pAllocator(*rAllocator), m_pRef(pRef),
 		m_pRefCounter(NewT<UInt16>(rAllocator)), m_szData(szData) { *m_pRefCounter = 1; if (pRef == nullptr) { Reset(); } }
 	// --setters
@@ -424,7 +399,7 @@ namespace NWL
 			if (*m_pRefCounter == 1) {
 				m_pRef->~MType();
 				m_pAllocator->Dealloc(m_pRef, m_szData);
-				DelT<UInt16>(m_pRefCounter, *m_pAllocator);
+				DelT<UInt16>(*m_pAllocator, m_pRefCounter);
 			}
 			else { (*m_pRefCounter) -= 1; }
 		}

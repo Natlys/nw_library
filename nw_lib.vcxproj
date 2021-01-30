@@ -375,6 +375,8 @@
     <ClInclude Include="src_cpp\glm\vec4.hpp" />
     <ClInclude Include="src_cpp\glm\vector_relational.hpp" />
     <ClInclude Include="src_cpp\native_world_library.hpp" />
+    <ClInclude Include="src_cpp\nwlib\nwl_test.h" />
+    <ClInclude Include="src_cpp\nwlib\nw_core_state.h" />
     <ClInclude Include="src_cpp\nwl_core.hpp" />
     <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_container.h" />

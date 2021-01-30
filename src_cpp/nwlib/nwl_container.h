@@ -2,6 +2,7 @@
 #define NWL_CONTAINER_H
 
 #include <nwl_core.hpp>
+#include <nwlib/nwl_memory.h>
 
 #include <array>
 #include <vector>
@@ -12,8 +13,6 @@
 
 namespace NWL
 {
-	template <typename ValType, Size szCapacity>
-	using SArray = std::array<ValType, szCapacity>;
 	template <typename ValType>
 	using DArray = std::vector<ValType>;
 	template <typename ValType>
@@ -43,141 +42,66 @@ namespace NWL
 
 namespace NWL
 {
-#if false
-	template <typename Type, int size>
-	class NW_API SArray
+	/// StaticArray class
+	template <typename ValType, UInt64 unSize>
+	class NWL_API SArray
 	{
 	public:
-		SArray()
-		{
-			//
-		}
-		SArray(UInt16 size)
-		{
-			//
-		}
-		SArray(SArray& saCopied)
-		{
-			//
-		}
-		SArray(SArray&& saMoved)
-		{
-			//
-		}
-		~SArray() {}
-		
-		// Getters
-		inline const UInt32 GetCount() const
-		{
-			return m_unCount;
-		}
-		inline const UInt32 GetSlots() const
-		{
-			return m_unSlots;
-		}
-		// Setters
-		inline void SetCount()
-		{
-			//
-		}
-		
-		// Interface Methods
-		inline void PushBack(Type)
-		{
-			//
-		}
-		inline void Clear()
-		{
-			//
-		}
-
-		// Operators
-		SArray& operator=(SArray& saCopied)
-		{
-		}
-		SArray& operator=(SArray&& saMoved)
-		{
-		}
-		Type& operator[](int index)
-		{
-		}
-		const Type& operator[](int index) const
-		{
-		}
+		// --getters
+		inline const UInt64 GetSize() const { return unSize; }
+		// --setters
+		// --operators
+		inline ValType& operator[](UInt64 unIdx) { return m_Data[unIdx]; }
+		inline const ValType& operator[](UInt64 unIdx) const { return m_Data[unIdx]; }
+		// --core_methods
 	private:
-		Type* m_tElems;
-		UInt m_unCount;
-		UInt m_unSlots;
+		ValType m_Data[unSize];
 	};
-	template <typename Type>
-	class NW_API DArray
-	{
-	public:
-		DArray()
-		{
-			//
-		}
-		explicit DArray(UInt16 size)
-		{
-			//
-		}
-		DArray(DArray& daCopied)
-		{
-			//
-		}
-		DArray(DArray&& daMoved)
-		{
-			//
-		}
-		~DArray()
-		{
-			//
-		}
-
-		// Getters
-		inline const UInt32 GetCount() const
-		{
-			return m_unCount;
-		}
-		inline const UInt32 GetSlots() const
-		{
-			return m_unSlots;
-		}
-		// Setters
-		inline void SetCount()
-		{
-			//
-		}
-		inline void SetSlots()
-		{
-			//
-		}
-
-		// Interface Methods
-		inline void PushBack(Type)
-		{
-			//
-		}
-		inline void Clear()
-		{
-			//
-		}
-
-		// Operators
-		DArray& operator=(DArray& daCopied)
-		{
-		}
-		DArray& operator=(DArray&& daMoved)
-		{
-		}
-		DArray& operator[](int index)
-		{
-		}
-	private:
-		Type* m_tElems;
-		UInt32 m_unCount;
-		UInt32 m_unSlots;
-	};
-#endif
 }
+#if false
+namespace NWL
+{
+	/// DynamicArray class
+	template <typename ValType>
+	class NWL_API DArray
+	{
+	public:
+		DArray(const DArray& rCpy) { }
+		~DArray() { Clear(); }
+
+		// --getters
+		inline const UInt64 GetCount() const { return m_unCount; }
+		inline const UInt64 GetSlots() const { return m_unSlots; }
+		// --setters
+		inline void SetSize(UInt64 unSize) {
+			if (m_unSlots > unSize) {
+				DelTArr<ValType>(&m_Data[0], m_unSlots);
+			}
+			else if (m_unSlots < unSize){
+				DelTArr<ValType>(&m_Data[0], m_unSlots);
+			}
+			m_unSlots = unSlots;
+		}
+		inline void Push(UInt64 unIdx, ValType& rCpy) {
+			if (unIdx > m_unSlots) { NWL_ERR("there is not enough space"); return; }
+		}
+		inline void PushBack(ValType& rCpy) {
+			if (m_unCount >= m_unSlots) { SetSlots(m_unSlots * 2); }
+			NewPlaceT<ValType>(&m_Data[m_unCount++], rCpy);
+		}
+
+		// --core_methods
+		inline void Clear() { DelTArr<ValType>(m_Data, m_unSize); m_unCount = 0; m_unSize = 0; }
+
+		// Operators
+		inline DArray& operator=(const DArray& rCpy) { }
+		inline DArray& operator=(DArray&& rCpy) { }
+		inline ValType& operator[](UInt64 unIdx) { return m_Data[unIdx]; }
+	private:
+		ValType* m_Data;
+		UInt64 m_unCount;
+		UInt64 m_unSize;
+	};
+}
+#endif
 #endif // NWL_CONTAINER_H
