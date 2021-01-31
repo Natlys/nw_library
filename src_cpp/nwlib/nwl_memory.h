@@ -149,6 +149,7 @@ namespace NWL
 		Ptr pBlock = nullptr;
 		if (szMemory == 0) { return nullptr; }
 		szMemory = GetAligned(szMemory, szAlign);
+		if (szMemory < sizeof(MemLink)) { szMemory = sizeof(MemLink); }
 		if (m_FreeList != nullptr) {
 			if (MemLink* pLink = m_FreeList->GetBlock(szMemory)) {
 				pBlock = pLink->GetCasted<Byte>();
@@ -169,13 +170,15 @@ namespace NWL
 	}
 	inline void MemArena::Dealloc(Ptr pBlock, Size szMemory) {
 		if (HasBlock(pBlock)) {
+			szMemory = GetAligned(szMemory, sizeof(MemLink));
+			if (szMemory < sizeof(MemLink)) { szMemory = sizeof(MemLink); }
 			if ((static_cast<Int64>(m_Info.szAlloc) - static_cast<Int64>(szMemory)) < 0) { return; }
 			MemLink* pNextFreeList = new(pBlock)MemLink();
 			pNextFreeList->pNext = m_FreeList;
 			pNextFreeList->szBlock = szMemory;
 			m_FreeList = pNextFreeList;
 		}
-		else { NWL_ERR("the memory is exhausted!"); }
+		else { NWL_ERR("the pointer is outside!"); }
 		m_Info.unAlloc--;
 		m_Info.szAlloc -= szMemory;
 	}
@@ -296,10 +299,11 @@ namespace NWL
 		inline void Reset();
 		// --core_methods
 		template <typename VType, typename ... Args>
-		inline void MakeRef(Args& ... Arguments) {
+		inline void MakeRef(Args ... Arguments) {
 			Reset();
 			m_szData = GetAligned(sizeof(VType), alignof(VType));
-			m_pRef = NewT<VType>(*m_pAllocator, std::forward<Args&>(Arguments)...);
+			m_pRef = reinterpret_cast<MType*>(m_pAllocator->Alloc(m_szData, alignof(VType)));
+			new(m_pRef)VType(std::forward<Args>(Arguments)...);
 		}
 		// --operators
 		inline MType* operator->()			{ return m_pRef; }
@@ -357,11 +361,12 @@ namespace NWL
 		inline void SetRef(RefKeeper<MType>& rRefKeeper);
 		inline void Reset();
 		// --core_methods
-		template <typename VType, typename...Args>
+		template <typename VType, typename ... Args>
 		inline void MakeRef(Args ... Arguments) {
 			Reset();
 			m_szData = GetAligned(sizeof(VType), alignof(VType));
-			m_pRef = NewT<VType>(*m_pAllocator, Arguments...);
+			m_pRef = reinterpret_cast<MType*>(m_pAllocator->Alloc(m_szData, alignof(VType)));
+			new(m_pRef)VType(std::forward<Args>(Arguments)...);
 			m_pRefCounter = NewT<UInt16>(*m_pAllocator);
 			*m_pRefCounter = 1;
 		}

@@ -1,7 +1,7 @@
 #ifndef NWL_CORE_HPP
 #define NWL_CORE_HPP
 
-// --==<linking>==--
+// --==<configuration>==--
 #if defined NWL_LINK_DYNAMIC
 #ifdef NWL_BUILD_DLL
 #define NWL_API __declspec(dllexport)
@@ -11,7 +11,7 @@
 #else
 #define NWL_API
 #endif
-// --==</linking>==--
+// --==</configuration>==--
 
 // --==<alias>==--
 using Int8 = __int8;

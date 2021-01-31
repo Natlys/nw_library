@@ -25,7 +25,7 @@ namespace NWL
 		ADataRes(const char* strName, UInt32 unId);
 	public:
 		ADataRes(const char* strName);
-		ADataRes(ADataRes& rDataRes) = delete;
+		ADataRes(const ADataRes& rDataRes) = delete;
 		virtual ~ADataRes();
 
 		// --getters
