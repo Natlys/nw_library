@@ -299,7 +299,7 @@ namespace NWL
 		inline void Reset();
 		// --core_methods
 		template <typename VType, typename ... Args>
-		inline void MakeRef(Args ... Arguments) {
+		inline void MakeRef(Args& ... Arguments) {
 			Reset();
 			m_szData = GetAligned(sizeof(VType), alignof(VType));
 			m_pRef = reinterpret_cast<MType*>(m_pAllocator->Alloc(m_szData, alignof(VType)));
