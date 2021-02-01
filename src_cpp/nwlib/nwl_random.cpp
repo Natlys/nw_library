@@ -2,7 +2,7 @@
 
 #include <nwlib/nwl_time.h>
 
-std::mt19937 NWL::Random::s_RandEngine(time(0));
+std::mt19937 NWL::Random::s_RandEngine(time(nullptr));
 
 namespace NW
 {

@@ -30,12 +30,12 @@ namespace NWL
 	{
 	public:
 		bool bIsHandled = false;
-		EventTypes EvtType = ET_NONE;
+		EventTypes evType = ET_NONE;
 	public:
-		AEvent(EventTypes evtType) : EvtType(evtType), bIsHandled(false) { }
+		AEvent(EventTypes evtType) : evType(evtType), bIsHandled(false) { }
 		virtual ~AEvent() = default;
 		// --predicates
-		inline bool IsInCategory(EventCategories EvtCat) { return (EvtType & EvtCat); }
+		inline bool IsInCategory(EventCategories EvtCat) { return (evType & EvtCat); }
 	};
 	/// MouseEvent struct
 	struct NWL_API MouseEvent : public AEvent

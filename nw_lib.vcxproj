@@ -375,8 +375,6 @@
     <ClInclude Include="src_cpp\glm\vec4.hpp" />
     <ClInclude Include="src_cpp\glm\vector_relational.hpp" />
     <ClInclude Include="src_cpp\native_world_library.hpp" />
-    <ClInclude Include="src_cpp\nwlib\nwl_test.h" />
-    <ClInclude Include="src_cpp\nwlib\nw_core_state.h" />
     <ClInclude Include="src_cpp\nwl_core.hpp" />
     <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_container.h" />
@@ -390,9 +388,11 @@
     <ClInclude Include="src_cpp\nwlib\nwl_math_transform.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_math_vector.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_memory.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_physics_2d.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_random.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_singleton.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_string.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_test.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_thread.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_time.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_types.h" />
@@ -407,6 +407,7 @@
     <ClCompile Include="src_cpp\nwlib\nwl_memory.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_random.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_string.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_time.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_types.cpp" />
   </ItemGroup>
   <ItemGroup>

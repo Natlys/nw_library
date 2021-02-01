@@ -941,6 +941,9 @@
     <ClInclude Include="src_cpp\nwlib\nwl_memory.h">
       <Filter>nwlib</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_physics_2d.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\nwlib\nwl_random.h">
       <Filter>nwlib</Filter>
     </ClInclude>
@@ -948,6 +951,9 @@
       <Filter>nwlib</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\nwlib\nwl_string.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_test.h">
       <Filter>nwlib</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\nwlib\nwl_thread.h">
@@ -959,8 +965,6 @@
     <ClInclude Include="src_cpp\nwlib\nwl_types.h">
       <Filter>nwlib</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\nwlib\nwl_test.h" />
-    <ClInclude Include="src_cpp\nwlib\nw_core_state.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\glm\detail\glm.cpp">
@@ -993,6 +997,7 @@
     <ClCompile Include="src_cpp\nwlib\nwl_types.cpp">
       <Filter>nwlib</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\nwlib\nwl_time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCCompiler.cmake">

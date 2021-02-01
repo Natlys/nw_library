@@ -1,6 +1,6 @@
-﻿  nwl_code_res.cpp
-  nwl_data_res.cpp
-  nwl_memory.cpp
+﻿  nwl_random.cpp
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_random.cpp(5,44): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  nwl_time.cpp
   Generating Code...
 CMakeCXXCompilerId.obj : warning LNK4006: main already defined in main.obj; second definition ignored
 CMakeCCompilerId.obj : warning LNK4006: main already defined in main.obj; second definition ignored

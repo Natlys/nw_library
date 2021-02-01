@@ -3,6 +3,7 @@
 
 #include <nwl_core.hpp>
 #include <nwlib/nwl_string.h>
+#include <nwlib/nwl_thread.h>
 
 #include <ctime>
 #include <time.h>
@@ -62,6 +63,8 @@ namespace NWL
 		static inline TimeCounter& GetCounter()	{ static TimeCounter s_tc; return s_tc; }
 		// --core_methods
 		static inline void Update();
+	private:
+		static Mutex s_Mtx;
 	};
 	inline void TimeSys::Update() {
 		TimeInfo& tm = GetInfo();

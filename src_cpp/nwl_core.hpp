@@ -24,7 +24,7 @@ using UInt32 = unsigned __int32;
 using UInt64 = unsigned long int;
 using Float32 = float;
 using Float64 = double;
-using float128 = long double;
+using Float128 = long double;
 using Ptr = void*;
 using Bit = bool;
 using Byte = char;
@@ -49,7 +49,7 @@ using Char16 = wchar_t;
 
 #define NWL_BIND_FN(func) (std::bind(&func, this, std::placeholders::_1))
 
-#define NWL_XY_TO_X(x, y, w) (y * w + x)
+#define NWL_XY_TO_X(x, y, w) ((static_cast<Size>(y) * static_cast<Size>(w)) + static_cast<Size>(x))
 
 #define NWL_FIND_BY_FUNC(Container, Type, val, func) std::find_if(Container.begin(), Container.end(),	\
 	[=](Type Obj)->bool {return Obj func() == val; });
@@ -99,6 +99,11 @@ using Char16 = wchar_t;
 
 namespace NWL
 {
+	template<class SType>
+	class NWL_API ASingleton;
+	template<class EType>
+	class NWL_API AEngine;
+	class NWL_API AEngineState;
 	class NWL_API ADataRes;
 	struct NWL_API AEvent;
 	struct NWL_API WindowEvent;

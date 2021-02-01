@@ -12,6 +12,7 @@
 namespace NWL
 {
 	using Thread = std::thread;
+	using Mutex = std::mutex;
 }
 
 #endif	// NWL_THREAD_H
