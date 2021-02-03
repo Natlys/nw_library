@@ -4,8 +4,10 @@ project "nw_lib"
 	staticruntime "on"
 	language "c++"
 	cppdialect "c++17"
-	targetdir("bin/"..dir_out.."%{prj.name}")
-	objdir("bin/"..dir_out.."%{prj.name}")
+	targetdir(dir_out.."%{prj.name}")
+	objdir(dir_out.."%{prj.name}")
+	pchheader "nwl_pch.hpp"
+	pchsource "src_cpp/nwl_pch.cpp"
 	files
 	{
 		"src_cpp/**.c**",
@@ -15,22 +17,13 @@ project "nw_lib"
 	{
 		"src_cpp/",
 	}
-	links
-	{
-	}
-	defines
-	{
-		--"NWL_LINK_DYNAMIC",
-		"NWL_LINK_STATIC",
-		"NWL_BUILD_LIB"
-	}
 	filter "system:windows"
 		systemversion "latest"
 		defines "NWL_PLATFORM_WINDOWS"
 	filter "configurations:debug"
-		defines {"NWL_DEBUG"}
+		defines { "NWL_DEBUG" }
 		symbols "on"
 	filter "configurations:release"
-		defines {"NWL_RELEASE"}
+		defines { "NWL_RELEASE" }
 		optimize "on"
 --==</library project>==--

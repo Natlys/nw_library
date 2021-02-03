@@ -3,15 +3,17 @@
 
 // --==<configuration>==--
 #if defined NWL_LINK_DYNAMIC
-#ifdef NWL_BUILD_DLL
-#define NWL_API __declspec(dllexport)
-#elif defined NWL_BUILD_EXE
-#define NWL_API __declspec(dllimport)
-#endif
+	#ifdef NWL_BUILD_DLL
+		#define NWL_API __declspec(dllexport)
+	#elif defined NWL_BUILD_EXE
+		#define NWL_API __declspec(dllimport)
+	#endif
 #else
-#define NWL_API
+	#define NWL_API
 #endif
 // --==</configuration>==--
+
+#include <nwl_pch.hpp>
 
 // --==<alias>==--
 using Int8 = __int8;
@@ -36,6 +38,16 @@ using Char8 = char;
 using UChar8 = unsigned char;
 using WChar = wchar_t;
 using Char16 = wchar_t;
+#if defined NWL_PLATFORM_WINDOWS
+using V2xy = COORD;
+using V2wh = COORD;
+using V4xywh = SMALL_RECT;
+using CPixel = CHAR_INFO;
+using CSBufInfo = CONSOLE_SCREEN_BUFFER_INFO;
+using CSBufInfoX = CONSOLE_SCREEN_BUFFER_INFOEX;
+using CCursorInfo = CONSOLE_CURSOR_INFO;
+using CFontInfoX = CONSOLE_FONT_INFOEX;
+#endif // NWL_PLATFORM
 // --==</alias>==--
 
 // --==<support_macroses>==--
@@ -101,7 +113,7 @@ namespace NWL
 {
 	template<class SType>
 	class NWL_API ASingleton;
-	template<class EType>
+	template<class EType, class SType>
 	class NWL_API AEngine;
 	class NWL_API AEngineState;
 	class NWL_API ADataRes;
