@@ -58,7 +58,6 @@ namespace NWL
 	protected:
 		UInt32 m_unId;
 		String m_strName;
-		String m_strDir;
 	private:
 		static IdStack s_IdStack;
 		static ADRs s_ADRs;

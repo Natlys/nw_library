@@ -14,7 +14,6 @@ namespace NWL
 	public:
 		ACodeRes(const char* strName);
 		virtual ~ACodeRes();
-
 		// --getters
 		inline const char* GetCode() { return &m_strCode[0]; }
 		// --setters
