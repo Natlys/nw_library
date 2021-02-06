@@ -8,11 +8,11 @@
 
 namespace NWL
 {
-	using InStream = std::istream;
-	using OutStream = std::ostream;
+	using IStream = std::istream;
+	using OStream = std::ostream;
 	using IOStream = std::iostream;
-	using InFStream = std::ifstream;
-	using OutFStream = std::ofstream;
+	using IFStream = std::ifstream;
+	using OFStream = std::ofstream;
 	using IOFStream = std::fstream;
 }
 

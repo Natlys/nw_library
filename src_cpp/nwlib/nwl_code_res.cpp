@@ -3,8 +3,7 @@
 namespace NWL
 {
 	// --==<ACodeRes>==--
-	ACodeRes::ACodeRes(const char* strName) :
-		ADataRes(strName),
+	ACodeRes::ACodeRes() :
 		m_strCode("") { }
 	ACodeRes::~ACodeRes() { }
 	// --==</ACodeRes>==--

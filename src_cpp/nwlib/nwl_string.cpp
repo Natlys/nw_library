@@ -2,43 +2,25 @@
 
 namespace NWL
 {
-	inline UInt32 StrLen(const char* cString) {
-		UInt32 unCounter = 0;
-		while (cString[unCounter] != '\0') unCounter++;
-		return unCounter;
+	Int32 StrFindL(const char* strSource, char cFind) { return 0; }
+	Int32 StrFindR(const char* strSource, char cFind) { return 0; }
+	const char* SubStr(const char* strSource, UInt32 unBeg) { return ""; }
+	const char* SubStr(const char* strSource, UInt32 unBeg, UInt32 unEnd) {
+		char* pStrPart = nullptr;
+		Size szChars = unBeg < unEnd ? unEnd - unBeg : unBeg - unEnd;
+		pStrPart = new char[szChars];
+		for (UInt32 nPos = unBeg; nPos != unEnd; nPos--) { }
+		const char* strRes = pStrPart;
+		delete[] pStrPart;
+		return strRes;
 	}
 
-	inline Int32 StrFindL(const char* cSource, const char cFind) {
-		UInt32 unCounter = 0;
-		while (cSource[unCounter] != '\0')
-		{
-			unCounter++;
-			if (cSource[unCounter] == cFind) return unCounter;
-		}
-		return -1;
-	}
-	inline Int32 StrFindR(const char* cSource, const char cFind) {
-		Int32 nCounter = StrLen(cSource);
-		while (nCounter != -1)
-		{
-			nCounter--;
-			if (cSource[nCounter] == cFind) return nCounter;
-		}
-		return -1;
-	}
-	const char* GetStringPart(const char* cSource, UInt32 unBegin) {
-		return "";
-	}
-	const char* GetStringPart(const char* cSource, UInt32 unBegin, UInt32 unEnd) {
-		char* pStrPart = nullptr;
-		Size szChars = unBegin < unEnd ? unEnd - unBegin : unBegin - unEnd;
-		pStrPart = new char[szChars];
-		for (UInt32 nPos = unBegin; nPos != unEnd; nPos--)
-		{
-			//
-		}
-		const char* strRes = pStrPart;
-		delete pStrPart;
-		return strRes;
+	const char* SubStrDelimR(const char* strSource, char cDelim, Int32 nStepFromDelim) {
+		Char strBuf[128]{ 0 };
+		Size nLen = strlen(strSource);
+		Size nDel = nLen;
+		while (strSource[--nDel] != cDelim) { if (nDel == 0) { return "error"; } }
+		for (Size ic = nDel + nStepFromDelim, ibuf = 0; ic < nLen && ibuf < 128; ic++, ibuf++) { strBuf[ibuf] = strSource[ic]; }
+		return &strBuf[0];
 	}
 }

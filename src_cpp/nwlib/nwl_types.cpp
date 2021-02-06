@@ -1,3 +1,3 @@
 #include "nwl_types.h"
 
-NWL::TypeId  NWL::TypeIndexator::s_unCount = 0;
+UInt32  NWL::TypeIndexator::s_unCount = 0;

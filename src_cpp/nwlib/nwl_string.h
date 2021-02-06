@@ -16,13 +16,13 @@ namespace NWL
 
 namespace NWL
 {
-	inline UInt32 StrLen(const char* cString);
+	Int32 StrFindL(const char* cSource, char cFind);
+	Int32 StrFindR(const char* cSource, char cFind);
 
-	inline Int32 StrFindL(const char* cSource, const char cFind);
-	inline Int32 StrFindR(const char* cSource, const char cFind);
+	const char* SubStr(const char* strSource, Size nBeg);
+	const char* SubStr(const char* strSource, Size nBeg, Size nEnd);
 
-	inline const char* GetStringPart(const char* cSource, UInt32 unBegin);
-	inline const char* GetStringPart(const char* cSource, UInt32 unBegin, UInt32 unEnd);
+	const char* SubStrDelimR(const char* strSource, char cDelim, Int32 nStepFromDelim = 0);
 }
 
 namespace NWL

@@ -1,7 +1,19 @@
 ﻿  nwl_code_res.cpp
   nwl_data_res.cpp
+  nwl_entity.cpp
+  nwl_log.cpp
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_log.cpp(10,39): warning C4267: 'initializing': conversion from 'size_t' to 'Int32', possible loss of data
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_log.cpp(10,39): warning C4267: 'initializing': conversion from 'size_t' to 'const Int32', possible loss of data
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_log.cpp(18,27): warning C4267: '+=': conversion from 'size_t' to 'Int32', possible loss of data
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_log.cpp(22,28): warning C4267: '+=': conversion from 'size_t' to 'Int32', possible loss of data
   nwl_memory.cpp
+  nwl_random.cpp
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_random.cpp(5,44): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  nwl_string.cpp
+  nwl_time.cpp
+  nwl_types.cpp
   Generating Code...
+D:\dev\native_world\nw_library\src_cpp\nwlib\nwl_string.cpp(24): warning C4172: returning address of local variable or temporary: strBuf
 CMakeCXXCompilerId.obj : warning LNK4006: main already defined in main.obj; second definition ignored
 CMakeCCompilerId.obj : warning LNK4006: main already defined in main.obj; second definition ignored
   nw_lib.vcxproj -> D:\dev\native_world\nw_library\bin\debug-windows-x86_64\nw_lib\nw_lib.lib

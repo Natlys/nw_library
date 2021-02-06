@@ -16,7 +16,7 @@ namespace NWL
 	class NWL_API IdStack : protected DStack<UInt32>
 	{
 	public:
-		IdStack(UInt32 nBegin = 1) : DStack<UInt32>() { push(nBegin); }
+		IdStack(UInt32 nBegin = 0) : DStack<UInt32>() { push(nBegin); }
 		// -- getters
 		inline UInt32 GetFreeId() { UInt32 unFreeId = top(); if (size() == 1) { top()++; } else { pop(); } return unFreeId; }
 		// -- setters

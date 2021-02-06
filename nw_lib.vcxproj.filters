@@ -965,6 +965,9 @@
     <ClInclude Include="src_cpp\nwlib\nwl_types.h">
       <Filter>nwlib</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_entity.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_file.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\glm\detail\glm.cpp">
@@ -998,6 +1001,8 @@
       <Filter>nwlib</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\nwlib\nwl_time.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_entity.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCCompiler.cmake">

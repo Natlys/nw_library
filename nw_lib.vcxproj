@@ -375,6 +375,9 @@
     <ClInclude Include="src_cpp\glm\vec4.hpp" />
     <ClInclude Include="src_cpp\glm\vector_relational.hpp" />
     <ClInclude Include="src_cpp\native_world_library.hpp" />
+    <ClInclude Include="src_cpp\nwlib\nwl_entity.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_file.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_log.h" />
     <ClInclude Include="src_cpp\nwl_core.hpp" />
     <ClInclude Include="src_cpp\nwlib\nwl_code_res.h" />
     <ClInclude Include="src_cpp\nwlib\nwl_container.h" />
@@ -404,11 +407,13 @@
     <ClCompile Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\ShowIncludes\main.c" />
     <ClCompile Include="src_cpp\nwlib\nwl_code_res.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_data_res.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_entity.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_memory.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_random.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_string.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_time.cpp" />
     <ClCompile Include="src_cpp\nwlib\nwl_types.cpp" />
+    <ClCompile Include="src_cpp\nwlib\nwl_log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src_cpp\glm\out\build\x64-Debug (default)\CMakeFiles\3.18.20081302-MSVC_2\CMakeCCompiler.cmake" />

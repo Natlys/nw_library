@@ -101,14 +101,28 @@ namespace NWL
 {
 	template<class SType>
 	class NWL_API ASingleton;
-	template<class EType>
-	class NWL_API AEngine;
 	class NWL_API AEngineState;
+	template<class EType, class SType = AEngineState*>
+	class NWL_API AEngine;
+
+
 	class NWL_API ADataRes;
+	
+	class NWL_API AEntity;
+	class NWL_API ACmp;
+
 	struct NWL_API AEvent;
 	struct NWL_API WindowEvent;
 	struct NWL_API MouseEvent;
 	struct NWL_API KeyboardEvent;
+}
+namespace NWL
+{
+	enum Directions : UInt32 {
+		DIR_LEFT = 0, DIR_RIGHT,
+		DIR_DOWN, DIR_UP,
+		DIR_BACK, DIR_FORTH,
+	};
 }
 
 // --==<nwl_error_codes>==--

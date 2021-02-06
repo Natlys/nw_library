@@ -7,7 +7,6 @@
 
 namespace NWL
 {
-	using TypeId = UInt32;
 	using TypeInfo = std::type_index;
 }
 namespace NWL
@@ -15,11 +14,11 @@ namespace NWL
 	class NWL_API TypeIndexator
 	{
 	public:
-		template <class Type>
-		static const TypeId Get() { static const TypeId s_unTypeIdx{ s_unCount++ }; return s_unTypeIdx; }
-		static const TypeId Get() { return s_unCount; }
+		template <class IType>
+		static const UInt32 GetIdx() { static const UInt32 s_unTypeIdx{ s_unCount++ }; return s_unTypeIdx; }
+		static const UInt32 GetIdx() { return s_unCount; }
 	private:
-		static TypeId s_unCount;
+		static UInt32 s_unCount;
 	};
 }
 

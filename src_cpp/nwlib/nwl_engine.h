@@ -15,11 +15,14 @@ namespace NWL
 	class NWL_API AEngineState
 	{
 	public:
-		virtual ~AEngineState() = default;
-
+		AEngineState(const char* strName) : m_strName(strName), m_bIsEnabled(false) {}
+		virtual ~AEngineState() {}
 		// --getters
-		virtual inline const char* GetName() = 0;
+		inline const char* GetName() const { return &m_strName[0]; };
 		// --setters
+		inline void SetEnabled(bool bIsEnabled) { m_bIsEnabled = bIsEnabled; }
+		// --predicates
+		inline bool IsEnabled() const { return m_bIsEnabled; }
 		// --core_methods
 		virtual bool Init() = 0;
 		virtual void OnQuit() = 0;
@@ -27,15 +30,18 @@ namespace NWL
 		virtual void OnEvent(MouseEvent& rmEvt) = 0;
 		virtual void OnEvent(KeyboardEvent& rkEvt) = 0;
 		virtual void OnEvent(WindowEvent& rwEvt) = 0;
+	private:
+		const char* m_strName;
+		bool m_bIsEnabled;
 	};
 }
 namespace NWL
 {
-	template<class EType>
+	template<class EType, class SType>
 	class AEngine : public ASingleton<EType>
 	{
 	public:
-		using States = DArray<AEngineState*>;
+		using States = DArray<SType*>;
 	public:
 		AEngine() : m_thrRun(Thread()), m_Memory(nullptr, 0), m_bIsRunning(false) {}
 		AEngine(const AEngine& rCpy) = delete;
@@ -45,9 +51,9 @@ namespace NWL
 		inline AMemAllocator& GetMemory() { return m_Memory; }
 		inline Thread& GetRunThread() { return m_thrRun; }
 		inline States& GetStates() { return m_States; }
-		inline AEngineState* GetState(UInt32 unIdx) { return m_States[unIdx]; }
+		inline SType* GetState(UInt32 unIdx) { return m_States[unIdx]; }
 		// --setters
-		inline void AddState(AEngineState& rState);
+		inline void AddState(SType& rState);
 		inline void RmvState(UInt32 unIdx);
 		inline void StopRunning() { m_bIsRunning = false; }
 		// --predicates
@@ -74,13 +80,13 @@ namespace NWL
 		States m_States;
 	};
 	// --setters
-	template<class EType>
-	inline void AEngine<EType>::AddState(AEngineState& rState) { m_States.push_back(&rState); }
-	template<class EType>
-	inline void AEngine<EType>::RmvState(UInt32 unIdx) { if (m_States.size() <= unIdx) { return; } m_States.erase(m_States.begin() + unIdx); }
+	template<class EType, class SType>
+	inline void AEngine<EType, SType>::AddState(SType& rState) { m_States.push_back(&rState); }
+	template<class EType, class SType>
+	inline void AEngine<EType, SType>::RmvState(UInt32 unIdx) { if (m_States.size() <= unIdx) { return; } m_States.erase(m_States.begin() + unIdx); }
 	// --core_methods
-	template<class EType>
-	void AEngine<EType>::Run() {
+	template<class EType, class SType>
+	void AEngine<EType, SType>::Run() {
 		Init();
 		if (!m_bIsRunning) { return; }
 		if (m_States.empty()) { Quit(); }
