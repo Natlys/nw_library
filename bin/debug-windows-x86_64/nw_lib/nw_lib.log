@@ -1,2 +1,8 @@
-﻿  data_sys.cpp
+﻿  data_res.cpp
+  data_sys.cpp
+  ecs_cmp_sys.cpp
+  ecs_ent_sys.cpp
+  ecs_entity.cpp
+  nwl_code_res.cpp
+  Generating Code...
   nw_lib.vcxproj -> D:\dev\native_world\nw_lib\bin\debug-windows-x86_64\nw_lib\nw_lib.lib

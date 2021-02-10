@@ -104,7 +104,7 @@ namespace NWL
 		inline bool HasEnoughSize(Size szHowMuch) { return GetFreeSize() > szHowMuch; }
 		inline bool HasEnoughCount(Size szHowMuch) { return GetFreeCount() > szHowMuch; }
 		// --core_methods
-		virtual inline Ptr Alloc(Size szMem, UInt8 szAlign = 4) = 0;
+		virtual inline Ptr Alloc(Size szMem, Size szAlign = 4) = 0;
 		virtual inline void Dealloc(Ptr pBlock, Size szDealloc) = 0;
 		virtual inline Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) = 0;
 	protected:
@@ -126,14 +126,14 @@ namespace NWL
 		~MemArena() { }
 
 		// --core_methods
-		virtual inline Ptr Alloc(Size szMemory, UInt8 szAlign = sizeof(MemLink)) override;
+		virtual inline Ptr Alloc(Size szMemory, Size szAlign = sizeof(MemLink)) override;
 		virtual inline void Dealloc(Ptr pBlock, Size szDealloc) override;
 		virtual inline Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) override;
 	private:
 		MemLink* m_FreeList;
 	};
 	// --==<core_methods>==--
-	inline Ptr MemArena::Alloc(Size szMemory, UInt8 szAlign) {
+	inline Ptr MemArena::Alloc(Size szMemory, Size szAlign) {
 		Ptr pBlock = nullptr;
 		if (szMemory == 0) { return nullptr; }
 		szMemory = GetAligned(szMemory, szAlign);
@@ -189,14 +189,14 @@ namespace NWL
 			AMemAllocator(pBlock, szMemory) { }
 		~LinearAllocator() { }
 		// --core_methods
-		virtual inline Ptr Alloc(Size szMemory, UInt8 szAlign = 4) override;
+		virtual inline Ptr Alloc(Size szMemory, Size szAlign = 4) override;
 		virtual inline void Dealloc(Ptr pBlock, Size szDealloc) override;
 		virtual inline Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) override;
 		inline void Clear();
 	private:
 	};
 	// --==<core_methods>==--
-	inline Ptr LinearAllocator::Alloc(Size szMemory, UInt8 szAlign) {
+	inline Ptr LinearAllocator::Alloc(Size szMemory, Size szAlign) {
 		Ptr pBlock = nullptr;
 		if (szMemory == 0) { return nullptr; }
 		szMemory = GetAligned(szMemory, szAlign);
@@ -231,11 +231,11 @@ namespace NWL
 namespace NWL
 {
 	template<typename MType, typename ... Args>
-	static inline void* NewPlaceT(MType* pBlock, Args& ... Arguments) { return new(pBlock)MType(std::forward<Args>(Arguments)...); }
+	static inline void* NewPlaceT(MType* pBlock, Args ... Arguments) { return new(pBlock)MType(std::forward<Args>(Arguments)...); }
 	template<typename MType, typename ... Args>
-	inline MType* NewT(AMemAllocator& rmAllocator, Args& ... Arguments) {
-		MType* pBlock = reinterpret_cast<MType*>(rmAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, std::forward<Args&>(Arguments)...);
+	inline MType* NewT(AMemAllocator& rAllocator, Args ... Arguments) {
+		MType* pBlock = reinterpret_cast<MType*>(rAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
+		NewPlaceT<MType>(pBlock, std::forward<Args>(Arguments)...);
 		return pBlock;
 	}
 	template <typename MType>

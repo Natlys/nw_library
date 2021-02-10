@@ -13,8 +13,6 @@ NWL::String NWL::DataSys::s_strRscDir = &std::filesystem::current_path().generic
 namespace NWL
 {
     // --setters
-    void DataSys::SetDirectory(const char* strDir) { s_strRscDir = strDir; }
-
     // --==<core_methods>==--
     // -- file_dialogs
     String DataSys::FDialogSave(const char* strFilter, Ptr pWindow)

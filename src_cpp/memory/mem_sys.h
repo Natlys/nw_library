@@ -29,9 +29,9 @@ namespace NWL
 		GetMemory() = MemArena(nullptr, 0);
 	}
 	template<typename MType, typename ... Args>
-	static inline MType* NewT(Args& ... Arguments) {
+	static inline MType* NewT(Args ... Arguments) {
 		MType* pBlock = reinterpret_cast<MType*>(MemSys::GetMemory().Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, std::forward<Args&>(Arguments)...);
+		NewPlaceT<MType>(pBlock, std::forward<Args>(Arguments)...);
 		return pBlock;
 	}
 	template <typename MType>
