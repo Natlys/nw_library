@@ -4,8 +4,8 @@ project "nw_lib"
 	staticruntime "on"
 	language "c++"
 	cppdialect "c++17"
-	targetdir(dir_out.."%{prj.name}")
-	objdir(dir_out.."%{prj.name}")
+	targetdir(dir_out_res)
+	objdir(dir_out_int)
 	pchheader "nwl_pch.hpp"
 	pchsource "src_cpp/nwl_pch.cpp"
 	files

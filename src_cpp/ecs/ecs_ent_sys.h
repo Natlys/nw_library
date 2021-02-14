@@ -13,7 +13,6 @@ namespace NWL
 		using Ents = DArray<RefKeeper<AEntity>>;
 	public:
 		// --getters
-		static inline AMemAllocator& GetMemory() { static MemArena s_Memory; return s_Memory; }
 		static inline Ents& GetEnts() { static Ents s_Ents; return s_Ents; }
 		static inline AEntity* GetEnt(UInt32 eId);
 		// --setters
@@ -34,7 +33,7 @@ namespace NWL
 		Ents& rEnts = GetEnts();
 		UInt32 eId = GetIdStack().GetFreeId();
 		if (rEnts.size() <= eId) { rEnts.resize((rEnts.size() + 1) * 2); }
-		rEnts[eId].MakeRef<AEntity>(GetMemory(), eId);
+		rEnts[eId].MakeRef<AEntity>(eId);
 		return eId;
 	}
 	inline void EntSys::RmvEnt(UInt32 eId) {

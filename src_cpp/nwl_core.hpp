@@ -2,15 +2,19 @@
 #define NWL_CORE_HPP
 
 // --==<configuration>==--
-#if defined NWL_LINK_DYNAMIC
-	#ifdef NWL_BUILD_DLL
-		#define NWL_API __declspec(dllexport)
-	#elif defined NWL_BUILD_EXE
-		#define NWL_API __declspec(dllimport)
+#if (defined NWL_PLATFORM_WINDOWS)
+	#if defined NWL_LINK_DYNAMIC
+		#ifdef NWL_BUILD_DLL
+			#define NWL_API __declspec(dllexport)
+		#elif defined NWL_BUILD_EXE
+			#define NWL_API __declspec(dllimport)
+		#endif
+	#elif defined NWL_LINK_STATIC
+		#define NWL_API
 	#endif
-#else
-	#define NWL_API
-#endif
+#endif	// NWL_PLATFORM
+// --==</linking>==--
+
 // --==</configuration>==--
 
 #include <nwl_pch.hpp>
@@ -45,7 +49,7 @@ using V4xywh = SMALL_RECT;
 using CPixel = CHAR_INFO;
 using CSBufInfo = CONSOLE_SCREEN_BUFFER_INFO;
 using CSBufInfoX = CONSOLE_SCREEN_BUFFER_INFOEX;
-using CCursorInfo = CONSOLE_CURSOR_INFO;
+using CCursorInfoT = CONSOLE_CURSOR_INFO;
 using CFontInfoX = CONSOLE_FONT_INFOEX;
 #endif // NWL_PLATFORM
 // --==</alias>==--
@@ -119,7 +123,7 @@ namespace NWL
 	class NWL_API ADataRes;
 	struct NWL_API AEvent;
 	struct NWL_API WindowEvent;
-	struct NWL_API MouseEvent;
+	struct NWL_API CursorEvent;
 	struct NWL_API KeyboardEvent;
 }
 

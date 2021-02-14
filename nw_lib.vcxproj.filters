@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{4E40957C-3A77-960D-E363-7C10CF79120F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="data">
       <UniqueIdentifier>{5F91957C-4BC8-960D-F4B4-7C10E0CA120F}</UniqueIdentifier>
     </Filter>
@@ -19,11 +22,38 @@
     <Filter Include="physx">
       <UniqueIdentifier>{01D22410-6DE6-4CC1-3668-F020A23B49F2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="utility">
-      <UniqueIdentifier>{79DE5C48-E5BD-DBE3-EED5-66BA5A344245}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src_cpp\core\nwl_code_res.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_container.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_engine.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_id_stack.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_random.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_singleton.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_string.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_thread.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_time.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_type.h">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\data\data_res.h">
       <Filter>data</Filter>
     </ClInclude>
@@ -42,6 +72,9 @@
     <ClInclude Include="src_cpp\ecs\ecs_entity.h">
       <Filter>ecs</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\io\io_device.h">
+      <Filter>io</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\io\io_event.h">
       <Filter>io</Filter>
     </ClInclude>
@@ -49,9 +82,6 @@
       <Filter>io</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\io\io_stream.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\io\io_sys.h">
       <Filter>io</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\math\math_matrix.h">
@@ -81,43 +111,23 @@
     <ClInclude Include="src_cpp\nwl_memory.hpp" />
     <ClInclude Include="src_cpp\nwl_pch.hpp" />
     <ClInclude Include="src_cpp\nwl_physx.hpp" />
+    <ClInclude Include="src_cpp\nwl_platform.hpp" />
     <ClInclude Include="src_cpp\nwl_test.h" />
-    <ClInclude Include="src_cpp\nwl_utility.hpp" />
     <ClInclude Include="src_cpp\physx\physx_collision.h">
       <Filter>physx</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_code_res.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_container.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_engine.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_id_stack.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_random.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_singleton.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_string.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_thread.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_time.h">
-      <Filter>utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\utility\nwl_type.h">
-      <Filter>utility</Filter>
-    </ClInclude>
+    <ClInclude Include="src_cpp\io\io_exception.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_code_res.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_random.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_type.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\data\data_res.cpp">
       <Filter>data</Filter>
     </ClCompile>
@@ -139,18 +149,6 @@
     <ClCompile Include="src_cpp\io\io_log.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="src_cpp\io\io_sys.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
     <ClCompile Include="src_cpp\nwl_pch.cpp" />
-    <ClCompile Include="src_cpp\utility\nwl_code_res.cpp">
-      <Filter>utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\utility\nwl_random.cpp">
-      <Filter>utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\utility\nwl_type.cpp">
-      <Filter>utility</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,6 @@ namespace NWL
 		using Cmps = DArray<CType*>;
 	public:
 		// --getters
-		static inline AMemAllocator& GetMemory() { static MemArena s_Memory; return s_Memory; }
 		template <class CType>
 		static inline Cmps<CType>& GetCmps() { static Cmps<CType> s_Cmps; return s_Cmps; }
 		template<class CType>
@@ -42,9 +41,10 @@ namespace NWL
 		AEntity* pEnt = EntSys::GetEnt(eId);
 		if (pEnt == nullptr) { return 0; }
 		if (pEnt->HasCmp<CType>()) { return nullptr; }
-		CType* pCmp = NewT<CType>(GetMemory(), std::forward<Args>(Arguments)...);
-		pEnt->AddCmp(GetMemory(), *pCmp, sizeof(*pCmp));
-		return pCmp;
+		RefKeeper<ACmp> pCmp;
+		pCmp.MakeRef<CType>(std::forward<Args&>(Arguments)...);
+		pEnt->AddCmp(pCmp);
+		return pCmp.GetRef<CType>();
 	}
 	template<class CType>
 	static inline void CmpSys::RmvCmp(UInt32 eId) {

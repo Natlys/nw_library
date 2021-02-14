@@ -3,10 +3,10 @@
 
 #include <nwl_core.hpp>
 
-#include <utility/nwl_container.h>
-#include <utility/nwl_id_stack.h>
-#include <utility/nwl_string.h>
-#include <utility/nwl_type.h>
+#include <core/nwl_container.h>
+#include <core/nwl_id_stack.h>
+#include <core/nwl_string.h>
+#include <core/nwl_type.h>
 
 namespace NWL
 {

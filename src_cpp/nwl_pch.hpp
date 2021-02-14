@@ -63,13 +63,6 @@
 #include <../ext/glm/gtx/transform.hpp>
 // --</external>--
 
-// --<platform>--
-#if (defined NWL_PLATFORM_WINDOWS)
-#define NOMINMAX
-#include <windows.h>
-#include <commdlg.h>
-#pragma comment(lib, "winmm.lib")
-#endif	// NWL_PLATFORM
-// --</platform>--
+#include <nwl_platform.hpp>
 
 #endif	// NWL_PCH_HPP

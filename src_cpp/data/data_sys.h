@@ -5,8 +5,8 @@
 
 #include <data/data_res.h>
 #include <io/io_stream.h>
-#include <utility/nwl_container.h>
-#include <utility/nwl_string.h>
+#include <core/nwl_container.h>
+#include <core/nwl_string.h>
 
 namespace NWL
 {
@@ -40,6 +40,9 @@ namespace NWL
 		template<class DRType>
 		static inline void RmvDR(const char* strName);
 		// --core_methods
+		static void OnInit() { }
+		static void OnQuit() { GetStorage().clear(); }
+
 		static String FDialogSave(const char* strFilter, Ptr pWindow);
 		static String FDialogLoad(const char* strFilter, Ptr pWindow);
 
@@ -100,7 +103,7 @@ namespace NWL
 	inline UInt32 DataSys::NewDR(Args ... Arguments) {
 		auto& s_Drs = GetStorage();
 		UInt32 drId = GetIdStack().GetFreeId();
-		s_Drs[drId].MakeRef<DRType>(std::forward<Args>(Arguments)...);
+		s_Drs[drId].MakeRef<DRType>(Arguments...);
 		s_Drs[drId]->m_drId = drId;
 		GetStorage<DRType>()[drId] = s_Drs[drId].GetRef<DRType>();
 		return drId;

@@ -5,6 +5,10 @@
 
 namespace NWL
 {
+	inline Size GetAligned(Size szData, Size szAlign) { return (szData + (szAlign - 1)) & ~(szAlign - 1); }
+}
+namespace NWL
+{
 	/// MemInfo struct
 	struct NWL_API MemInfo
 	{
@@ -59,13 +63,23 @@ namespace NWL
 			}
 			return nullptr;
 		}
-		template <typename MType>
-		inline MType* GetCasted() { return reinterpret_cast<MType*>(this); }
+		template <typename MType> inline operator MType*() { return reinterpret_cast<MType*>(this); }
 	};
-}
-namespace NWL
-{
-	inline Size GetAligned(Size szData, Size szAlign) { return (szData + (szAlign - 1)) & ~(szAlign - 1); }
+	/// MemRef struct
+	template <typename MType>
+	struct NWL_API MemRef
+	{
+	public:
+		MType* pData;
+		Size szData;
+	public:
+		MemRef() : pData(nullptr), szData(0) { }
+		MemRef(MemRef<MType>& rCpy): pData(rCpy.pData), szData(rCpy.szData) { }
+		MemRef(MType pRef, Size szData = GetAligned(sizeof(MType), alignof(MType))) : pData(pRef), szData(0) { }
+		// --operators
+		inline operator MType* () { return pData; }
+		template<typename VType> inline operator VType* () { return static_cast<VType*>(pData); }
+	};
 }
 
 namespace NWL
@@ -81,13 +95,7 @@ namespace NWL
 			m_Info.szAlloc = 0; m_Info.unAlloc = 0;
 			m_Info.pLoc = pBlock;
 		}
-		virtual ~AMemAllocator()
-		{
-			if (GetAllocSize() != 0 || GetAllocCount() != 0) {
-				printf("MEM_ALLOCATOR::NOT_FREED_MEMORY: %d bytes/%d blocks",
-					static_cast<Int32>(GetAllocSize()), static_cast<Int32>(GetAllocCount()));
-			};
-		}
+		virtual ~AMemAllocator() { }
 
 		// --getters
 		inline Ptr GetDataBeg() { return &m_pBeg[0]; }
@@ -104,7 +112,7 @@ namespace NWL
 		inline bool HasEnoughSize(Size szHowMuch) { return GetFreeSize() > szHowMuch; }
 		inline bool HasEnoughCount(Size szHowMuch) { return GetFreeCount() > szHowMuch; }
 		// --core_methods
-		virtual inline Ptr Alloc(Size szMem, Size szAlign = 4) = 0;
+		virtual inline Ptr Alloc(Size szMem, Size szAlign = sizeof(int)) = 0;
 		virtual inline void Dealloc(Ptr pBlock, Size szDealloc) = 0;
 		virtual inline Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) = 0;
 	protected:
@@ -140,7 +148,7 @@ namespace NWL
 		if (szMemory < sizeof(MemLink)) { szMemory = sizeof(MemLink); }
 		if (m_FreeList != nullptr) {
 			if (MemLink* pLink = m_FreeList->GetBlock(szMemory)) {
-				pBlock = pLink->GetCasted<Byte>();
+				pBlock = pLink;
 				if (pLink == m_FreeList && m_FreeList->szBlock == 0) { m_FreeList = m_FreeList->pNext; }
 			}
 			else {
@@ -231,11 +239,9 @@ namespace NWL
 namespace NWL
 {
 	template<typename MType, typename ... Args>
-	static inline void* NewPlaceT(MType* pBlock, Args ... Arguments) { return new(pBlock)MType(std::forward<Args>(Arguments)...); }
-	template<typename MType, typename ... Args>
 	inline MType* NewT(AMemAllocator& rAllocator, Args ... Arguments) {
 		MType* pBlock = reinterpret_cast<MType*>(rAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, std::forward<Args>(Arguments)...);
+		new(pBlock)MType(Arguments...);
 		return pBlock;
 	}
 	template <typename MType>

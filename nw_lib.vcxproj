@@ -41,14 +41,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
-    <OutDir>bin\debug-windows-x86_64\nw_lib\</OutDir>
-    <IntDir>bin\debug-windows-x86_64\nw_lib\</IntDir>
+    <OutDir>bin\</OutDir>
+    <IntDir>bin\int\debug\</IntDir>
     <TargetName>nw_lib</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
-    <OutDir>bin\release-windows-x86_64\nw_lib\</OutDir>
-    <IntDir>bin\release-windows-x86_64\nw_lib\</IntDir>
+    <OutDir>bin\</OutDir>
+    <IntDir>bin\int\release\</IntDir>
     <TargetName>nw_lib</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_LINK_STATIC;NWL_LINK_STATIC;CMD_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;CMD_PLATFORM_WINDOWS;NW_DEBUG;CMD_DEBUG;NWG_DEBUG;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NWL_LINK_STATIC;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NW_DEBUG;NWC_DEBUG;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -74,7 +74,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_LINK_STATIC;NWL_LINK_STATIC;CMD_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;CMD_PLATFORM_WINDOWS;NW_RELEASE;CMD_RELEASE;NWG_RELEASE;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NWL_LINK_STATIC;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NW_RELEASE;NWC_RELEASE;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -91,16 +91,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src_cpp\core\nwl_code_res.h" />
+    <ClInclude Include="src_cpp\core\nwl_container.h" />
+    <ClInclude Include="src_cpp\core\nwl_engine.h" />
+    <ClInclude Include="src_cpp\core\nwl_id_stack.h" />
+    <ClInclude Include="src_cpp\core\nwl_random.h" />
+    <ClInclude Include="src_cpp\core\nwl_singleton.h" />
+    <ClInclude Include="src_cpp\core\nwl_string.h" />
+    <ClInclude Include="src_cpp\core\nwl_thread.h" />
+    <ClInclude Include="src_cpp\core\nwl_time.h" />
+    <ClInclude Include="src_cpp\core\nwl_type.h" />
     <ClInclude Include="src_cpp\data\data_res.h" />
     <ClInclude Include="src_cpp\data\data_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_component.h" />
     <ClInclude Include="src_cpp\ecs\ecs_ent_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_entity.h" />
+    <ClInclude Include="src_cpp\io\io_device.h" />
     <ClInclude Include="src_cpp\io\io_event.h" />
+    <ClInclude Include="src_cpp\io\io_exception.h" />
     <ClInclude Include="src_cpp\io\io_log.h" />
     <ClInclude Include="src_cpp\io\io_stream.h" />
-    <ClInclude Include="src_cpp\io\io_sys.h" />
     <ClInclude Include="src_cpp\math\math_matrix.h" />
     <ClInclude Include="src_cpp\math\math_transform.h" />
     <ClInclude Include="src_cpp\math\math_vector.h" />
@@ -116,21 +127,14 @@
     <ClInclude Include="src_cpp\nwl_memory.hpp" />
     <ClInclude Include="src_cpp\nwl_pch.hpp" />
     <ClInclude Include="src_cpp\nwl_physx.hpp" />
+    <ClInclude Include="src_cpp\nwl_platform.hpp" />
     <ClInclude Include="src_cpp\nwl_test.h" />
-    <ClInclude Include="src_cpp\nwl_utility.hpp" />
     <ClInclude Include="src_cpp\physx\physx_collision.h" />
-    <ClInclude Include="src_cpp\utility\nwl_code_res.h" />
-    <ClInclude Include="src_cpp\utility\nwl_container.h" />
-    <ClInclude Include="src_cpp\utility\nwl_engine.h" />
-    <ClInclude Include="src_cpp\utility\nwl_id_stack.h" />
-    <ClInclude Include="src_cpp\utility\nwl_random.h" />
-    <ClInclude Include="src_cpp\utility\nwl_singleton.h" />
-    <ClInclude Include="src_cpp\utility\nwl_string.h" />
-    <ClInclude Include="src_cpp\utility\nwl_thread.h" />
-    <ClInclude Include="src_cpp\utility\nwl_time.h" />
-    <ClInclude Include="src_cpp\utility\nwl_type.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_code_res.cpp" />
+    <ClCompile Include="src_cpp\core\nwl_random.cpp" />
+    <ClCompile Include="src_cpp\core\nwl_type.cpp" />
     <ClCompile Include="src_cpp\data\data_res.cpp" />
     <ClCompile Include="src_cpp\data\data_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
@@ -138,13 +142,9 @@
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_entity.cpp" />
     <ClCompile Include="src_cpp\io\io_log.cpp" />
-    <ClCompile Include="src_cpp\io\io_sys.cpp" />
     <ClCompile Include="src_cpp\nwl_pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src_cpp\utility\nwl_code_res.cpp" />
-    <ClCompile Include="src_cpp\utility\nwl_random.cpp" />
-    <ClCompile Include="src_cpp\utility\nwl_type.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

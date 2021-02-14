@@ -4,7 +4,7 @@
 #include <nwl_core.hpp>
 #include <nwl_data.hpp>
 
-#include <utility/nwl_string.h>
+#include <core/nwl_string.h>
 
 namespace NWL
 {

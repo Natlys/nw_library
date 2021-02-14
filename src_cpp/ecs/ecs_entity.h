@@ -3,8 +3,11 @@
 
 #include <nwl_core.hpp>
 #include <nwl_memory.hpp>
-#include <nwl_utility.hpp>
 
+#include <core/nwl_container.h>
+#include <core/nwl_id_stack.h>
+#include <core/nwl_string.h>
+#include <core/nwl_type.h>
 #include <ecs/ecs_component.h>
 
 namespace NWL
@@ -25,9 +28,9 @@ namespace NWL
 		template<class CType>
 		inline CType* GetCmp() { return static_cast<CType*>(GetCmp(CType::GetStaticTypeId())); }
 		// --setters
-		void SetEnabled(bool bIsEnabled);
-		inline void AddCmp(AMemAllocator& rAllocator, ACmp& rCmp, Size szData);
+		inline void AddCmp(RefKeeper<ACmp>& rCmp);
 		inline void RmvCmp(UInt32 tId);
+		void SetEnabled(bool bIsEnabled);
 		// --predicates
 		inline bool IsEnabled() { return m_bIsEnabled; }
 		inline bool HasCmp(UInt32 tId) { return GetCmp(tId) != nullptr; }
@@ -39,8 +42,8 @@ namespace NWL
 		inline void operator delete[](Ptr pBlock) = delete;
 	private:
 		UInt32 m_eId;
-		bool m_bIsEnabled;
 		ACmps m_ACmps;
+		bool m_bIsEnabled;
 	};
 	// --getters
 	inline ACmp* AEntity::GetCmp(UInt32 tId) {
@@ -48,12 +51,12 @@ namespace NWL
 		return m_ACmps[tId].IsValid() ? m_ACmps[tId].GetRef() : nullptr;
 	}
 	// --setters
-	inline void AEntity::SetEnabled(bool bIsEnabled) { m_bIsEnabled = bIsEnabled; }
-	inline void AEntity::AddCmp(AMemAllocator& rAllocator, ACmp& rCmp, Size szData) {
-		if (m_ACmps.size() <= rCmp.GetTypeId()) { m_ACmps.resize((rCmp.GetTypeId() + 1) * 2); }
-		else if (m_ACmps[rCmp.GetTypeId()].IsValid()) { return; }
-		m_ACmps[rCmp.GetTypeId()].SetRef(rAllocator, rCmp, szData);
-		rCmp.m_eId = GetEntId();
+	inline void AEntity::AddCmp(RefKeeper<ACmp>& rCmp) {
+		if (!rCmp.IsValid()) { return; }
+		if (m_ACmps.size() <= rCmp->GetTypeId()) { m_ACmps.resize((rCmp->GetTypeId() + 1ul) * 2ul); }
+		else if (m_ACmps[rCmp->GetTypeId()].IsValid()) { return; }
+		m_ACmps[rCmp->GetTypeId()].SetRef(rCmp);
+		rCmp->m_eId = GetEntId();
 	}
 	inline void AEntity::RmvCmp(UInt32 tId) {
 		if (m_ACmps.size() <= tId) { return; }

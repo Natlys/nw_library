@@ -3,7 +3,7 @@
 
 #include <nwl_core.hpp>
 
-#include <utility/nwl_id_stack.h>
+#include <core/nwl_id_stack.h>
 
 namespace NWL
 {

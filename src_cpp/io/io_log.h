@@ -3,7 +3,7 @@
 
 #include <nwl_core.hpp>
 
-#include <utility/nwl_string.h>
+#include <core/nwl_string.h>
 #include <io/io_stream.h>
 
 namespace NWL

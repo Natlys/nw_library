@@ -5,9 +5,9 @@
 #include <nwl_memory.hpp>
 #include <nwl_io.hpp>
 
-#include <utility/nwl_container.h>
-#include <utility/nwl_singleton.h>
-#include <utility/nwl_thread.h>
+#include <core/nwl_container.h>
+#include <core/nwl_singleton.h>
+#include <core/nwl_thread.h>
 
 namespace NWL
 {
@@ -26,9 +26,9 @@ namespace NWL
 		// --setters
 		// --core_methods
 		virtual bool Init() = 0;
-		virtual void OnQuit() = 0;
+		virtual void Quit() = 0;
 		virtual void Update() = 0;
-		virtual void OnEvent(MouseEvent& rmEvt) = 0;
+		virtual void OnEvent(CursorEvent& rmEvt) = 0;
 		virtual void OnEvent(KeyboardEvent& rkEvt) = 0;
 		virtual void OnEvent(WindowEvent& rwEvt) = 0;
 	protected:
@@ -43,12 +43,12 @@ namespace NWL
 	public:
 		using States = DArray<SType*>;
 	public:
-		AEngine() : m_thrRun(Thread()), m_Memory(nullptr, 0), m_bIsRunning(false) {}
+		AEngine() :
+			m_thrRun(Thread()), m_bIsRunning(false),
+			m_kbd(Keyboard()), m_crs(Cursor()) { }
 		AEngine(const AEngine& rCpy) = delete;
-		virtual ~AEngine() = default;
-
+		virtual ~AEngine() { }
 		// --getters
-		inline AMemAllocator& GetMemory() { return m_Memory; }
 		inline Thread& GetRunThread() { return m_thrRun; }
 		inline States& GetStates() { return m_States; }
 		inline SType* GetState(UInt32 unIdx) { return m_States[unIdx]; }
@@ -59,25 +59,17 @@ namespace NWL
 		// --predicates
 		inline Bit IsRunning() const { return m_bIsRunning; }
 		// --core_methods
-		virtual void Run();
-		virtual bool Init() = 0;
-		virtual void Quit() = 0;
-		virtual void Update() = 0;
-		virtual void OnEvent(AEvent& rEvt) = 0;
-		// --memory_methods
-		template <typename MType, typename...Args>
-		inline MType* NewT(Args...Arguments) { return NWL::NewT<MType>(GetMemory(), Arguments...); }
-		template <typename MType>
-		inline MType* NewTArr(UInt64 unAlloc) { return NWL::NewTArr<MType>(GetMemory(), unAlloc); }
-		template <typename MType>
-		inline void DelT(MType* pBlock) { NWL::DelT<MType>(GetMemory(), pBlock); }
-		template <typename MType>
-		inline void DelTArr(MType* pBlock, UInt64 unDealloc) { NWL::DelTArr<MType>(GetMemory(), pBlock, unDealloc); }
+		void Run();
+		bool Init();
+		void Quit();
+		void Update();
+		void OnEvent(AEvent& rEvt);
 	protected:
 		Thread m_thrRun;
 		Bit m_bIsRunning;
-		MemArena m_Memory;
 		States m_States;
+		KeyboardT<KC_COUNT> m_kbd;
+		CursorT<CRS_COUNT> m_crs;
 	};
 	// --setters
 	template<class EType, class SType>
@@ -86,7 +78,8 @@ namespace NWL
 	inline void AEngine<EType, SType>::RmvState(UInt32 unIdx) { if (m_States.size() <= unIdx) { return; } m_States.erase(m_States.begin() + unIdx); }
 	// --core_methods
 	template<class EType, class SType>
-	void AEngine<EType, SType>::Run() {
+	void AEngine<EType, SType>::Run()
+	{
 		Init();
 		if (!m_bIsRunning) { return; }
 		if (m_States.empty()) { Quit(); }
@@ -94,6 +87,23 @@ namespace NWL
 		auto fnRunLoop = [this]()->void { while (m_bIsRunning) { Update(); } Quit(); };
 		m_thrRun = Thread(fnRunLoop);
 	};
+	template<class EType, class SType>
+	bool AEngine<EType, SType>::Init()
+	{
+		return true;
+	}
+	template<class EType, class SType>
+	void AEngine<EType, SType>::Quit()
+	{
+	}
+	template<class EType, class SType>
+	void AEngine<EType, SType>::Update()
+	{
+	}
+	template<class EType, class SType>
+	void AEngine<EType, SType>::OnEvent(AEvent& rEvt)
+	{
+	}
 }
 
 #endif	// NWL_ENGINE_H
