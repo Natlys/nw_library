@@ -55,7 +55,7 @@ namespace NWL
     // -- binary_data
     bool DataSys::SaveFData(const char* strFPath, void* pData, Size szBytes)
     {
-        InOutFStream fStream;
+        IOFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         try {
             fStream.open(strFPath, std::ios::out | std::ios::binary);
@@ -68,7 +68,7 @@ namespace NWL
     bool DataSys::SaveFData(const char* strDir, const char* strName, const char* strFormat, void* pData, Size szBytes)
     {
         try {
-            InOutFStream fStream;
+            IOFStream fStream;
             StrStream strStream;
             strStream << strDir << strName << "." << strFormat;
             fStream.open(strStream.str().c_str(), std::ios::out | std::ios::binary);
@@ -82,7 +82,7 @@ namespace NWL
     }
     bool DataSys::LoadFData(const char* strFPath, void* pData, Size szBytes)
     {
-        InOutFStream fStream;
+        IOFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         try {
             fStream.open(strFPath, std::ios::in | std::ios::binary);
@@ -97,7 +97,7 @@ namespace NWL
     }
     bool DataSys::LoadFData(const char* strDir, const char* strName, const char* strFormat, void* pData, Size szBytes)
     {
-        InOutFStream fStream;
+        IOFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         StrStream strStream;
         try {
@@ -115,7 +115,7 @@ namespace NWL
     // --strings
     bool DataSys::SaveFString(const char* strFPath, const char* strSrc, Size szBytes)
     {
-        InOutFStream fStream;
+        IOFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         StrStream strStream;
         try {
@@ -130,7 +130,7 @@ namespace NWL
     }
     bool DataSys::LoadFString(const char* strFPath, String& strDest)
     {
-        InOutFStream fStream;
+        IOFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         StrStream strStream;
         try {
@@ -162,6 +162,55 @@ namespace NWL
         rImage.pClrData = stbi_load(strFPath, &rImage.nWidth, &rImage.nHeight, &rImage.nChannels, 0);
         if (rImage.pClrData == nullptr) return false;
 
+        return true;
+    }
+    bool DataSys::LoadFImageBmp(const char* strFPath, ImageInfo& rImage)
+    {
+        // a bitmap file described with some chunks of data
+        // the first "file header": signature, file size, reserved1, reserved2, file offset to pixels
+        // the second one "info(dib) header": size, width, height, planes, bitcount, compression,
+        // image size, xpels per meter, ypels per meter, colors used, color important
+        try {
+            IOFStream fStream(strFPath, std::ios_base::out | std::ios_base::in | std::ios_base::binary);
+            BitMapInfo bmInfo;
+            BITMAPFILEHEADER bmfHeader{ 0 };
+            fStream.read(reinterpret_cast<Byte*>(&bmfHeader), sizeof(bmfHeader));
+            BITMAPINFOHEADER bmiHeader{ 0 };
+            fStream.read(reinterpret_cast<Byte*>(&bmiHeader), sizeof(bmiHeader));
+            {
+                memcpy(&bmInfo.File, &bmfHeader, sizeof(bmfHeader));
+                memcpy(&bmInfo.Data, &bmiHeader, sizeof(bmiHeader));
+                bmInfo.File.szOffset = bmfHeader.bfOffBits;
+                bmInfo.Data.nPxBits = bmiHeader.biBitCount;
+                bmInfo.Data.szCompression = bmiHeader.biCompression;
+                bmInfo.Data.nWidth = bmiHeader.biWidth;
+                bmInfo.Data.nHeight = bmiHeader.biHeight;
+            }
+
+
+            NWL_ASSERT(bmInfo.Data.nPxBits == 24, "unsupported format");
+            NWL_ASSERT(bmInfo.Data.szCompression == BI_RGB, "unsupported format");
+            
+            rImage.nWidth = bmInfo.Data.nWidth;
+            rImage.nHeight = bmInfo.Data.nHeight;
+            rImage.nDepth = 1;
+            rImage.nChannels = 3;
+            rImage.pClrData = MemSys::NewTArr<UByte>(static_cast<UInt64>(rImage.GetDataSize()));
+            // offset from the beginning of the file to the pixels array
+            fStream.seekg(bmInfo.File.szOffset, std::ios_base::beg);
+            // every pixel row is padded to multiple of 4 bytes;
+            const Int32 nPad = (4 - (rImage.nWidth * 3) % 4) % 4;
+            for (Int32 iy = 0; iy < rImage.nHeight; iy++) {
+                for (Int32 ix = 0; ix < rImage.nWidth; ix++) {
+                    rImage.SetPixel(ix, iy, fStream.get(), fStream.get(), fStream.get());
+                }
+                fStream.seekg(nPad, std::ios_base::cur);
+            }
+        }
+        catch (std::exception& exc) {
+            NWL_ERR(exc.what());
+            return false;
+        }
         return true;
     }
     // --meshes

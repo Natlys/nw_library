@@ -10,12 +10,13 @@ project "nw_lib"
 	pchsource "src_cpp/nwl_pch.cpp"
 	files
 	{
-		"src_cpp/**.c**",
-		"src_cpp/**.h**",
+		"%{dir_cpp.own}**.c**",
+		"%{dir_cpp.own}**.h**",
 	}
 	includedirs
 	{
-		"src_cpp/",
+		"%{dir_cpp.own}",
+		"%{dir_cpp.ext}",
 	}
 	filter "system:windows"
 		systemversion "latest"

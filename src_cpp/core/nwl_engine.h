@@ -52,6 +52,8 @@ namespace NWL
 		inline Thread& GetRunThread() { return m_thrRun; }
 		inline States& GetStates() { return m_States; }
 		inline SType* GetState(UInt32 unIdx) { return m_States[unIdx]; }
+		inline KeyboardT<KC_COUNT>& GetKeyboard() { return m_kbd; }
+		inline CursorT<CRS_COUNT>& GetCursor() { return m_crs; }
 		// --setters
 		inline void AddState(SType& rState);
 		inline void RmvState(UInt32 unIdx);

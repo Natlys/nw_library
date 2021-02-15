@@ -2,8 +2,7 @@
 #define NWL_ECS_COMPONENT_H
 
 #include <nwl_core.hpp>
-
-#include <core/nwl_id_stack.h>
+#include <nwl_memory.hpp>
 
 namespace NWL
 {
@@ -20,23 +19,23 @@ namespace NWL
 	/// explicit argument for constructor is pretty uncomfortable
 	class NWL_API ACmp
 	{
-		friend class AEntity;
+		friend class CmpEntity;
 		friend class CmpSys;
 	protected:
-		ACmp(UInt32 tId);
+		ACmp(UInt32 tId) : m_tId(tId), m_eId(0) {}
 	public:
 		virtual ~ACmp();
 		// --getters
-		inline UInt32 GetEntId() const { return m_eId; }
-		inline UInt32 GetTypeId() const { return m_tId; }
+		inline unsigned int GetEntId() const { return m_eId; }
+		inline unsigned int GetTypeId() const { return m_tId; }
 		// --operators
-		inline void operator delete(Ptr pBlock) = delete;
-		inline void operator delete[](Ptr pBlock) = delete;
+		inline void* operator new(Size szData) { return MemSys::Alloc(szData); }
+		inline void* operator new[](Size szData) { return MemSys::Alloc(szData); }
+		inline void operator delete(Ptr pData, Size szData) { MemSys::Dealloc(pData, szData); }
+		inline void operator delete[](Ptr pData, Size szData) { MemSys::Dealloc(pData, szData); }
 	protected:
-		UInt32 m_eId;
-		UInt32 m_tId;
-	protected:
-		static inline IdStack& GetIdStack() { static IdStack s_idStack; return s_idStack; }
+		unsigned int m_eId;
+		unsigned int m_tId;
 	};
 }
 

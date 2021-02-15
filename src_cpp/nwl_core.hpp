@@ -3,13 +3,11 @@
 
 // --==<configuration>==--
 #if (defined NWL_PLATFORM_WINDOWS)
-	#if defined NWL_LINK_DYNAMIC
-		#ifdef NWL_BUILD_DLL
+	#if defined NWL_BUILD_DLL
 			#define NWL_API __declspec(dllexport)
-		#elif defined NWL_BUILD_EXE
+	#elif defined NWL_BUILD_EXE
 			#define NWL_API __declspec(dllimport)
-		#endif
-	#elif defined NWL_LINK_STATIC
+	#elif defined NWL_BUILD_LIB
 		#define NWL_API
 	#endif
 #endif	// NWL_PLATFORM

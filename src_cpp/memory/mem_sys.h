@@ -14,11 +14,22 @@ namespace NWL
 		// --getters
 		static inline AMemAllocator& GetMemory() { static MemArena s_Memory; return s_Memory; }
 		static inline const MemInfo& GetInfo() { return GetMemory().GetInfo(); }
-		// --setters
 		// --core_methods
 		static inline void OnInit(Size szMemory = 1 << 20);
 		static inline void OnQuit();
+		static inline Ptr Alloc(Size szData, Size szAllign = sizeof(MemLink)) { return GetMemory().Alloc(szData, szAllign); }
+		static inline void Dealloc(Ptr pData, Size szData) { GetMemory().Dealloc(pData, szData); }
+		// --templated_methods
+		template<typename MType, typename ... Args>
+		static inline MType* NewT(Args&& ... Arguments);
+		template<typename MType>
+		static inline MType* NewTArr(UInt64 unAlloc);
+		template<typename MType>
+		static inline void DelT(MType* pBlock);
+		template <typename MType>
+		static inline void DelTArr(MType* pBlock, UInt64 unDealloc);
 	};
+	// --core_methods
 	inline void MemSys::OnInit(Size szMemory) {
 		if (GetMemory().GetDataBeg() != nullptr) { return; }
 		GetMemory() = MemArena(new Byte[szMemory], szMemory);
@@ -28,26 +39,15 @@ namespace NWL
 		delete[] GetMemory().GetDataBeg();
 		GetMemory() = MemArena(nullptr, 0);
 	}
+	// --templated_methods
 	template<typename MType, typename ... Args>
-	static inline MType* NewT(Args ... Arguments) {
-		MType* pBlock = reinterpret_cast<MType*>(MemSys::GetMemory().Alloc(1 * sizeof(MType), __alignof(MType)));
-		NewPlaceT<MType>(pBlock, std::forward<Args>(Arguments)...);
-		return pBlock;
-	}
+	inline MType* MemSys::NewT(Args&& ... Arguments) { return GetMemory().NewT<MType>(std::forward<Args>(Arguments)...); }
 	template <typename MType>
-	static inline MType* NewTArr(UInt64 unAlloc) {
-		return reinterpret_cast<MType*>(MemSys::GetMemory().Alloc(unAlloc * sizeof(MType), __alignof(MType)));
-	}
+	inline MType* MemSys::NewTArr(UInt64 unAlloc) { return GetMemory().NewTArr<MType>(unAlloc); }
 	template<typename MType>
-	static inline void DelT(MType* pBlock) {
-		pBlock->~MType();
-		MemSys::GetMemory().Dealloc(pBlock, 1 * sizeof(MType));
-	}
+	inline void MemSys::DelT(MType* pBlock) { GetMemory().DelT<MType>(pBlock); }
 	template <typename MType>
-	static inline void DelTArr(MType* pBlock, UInt64 unDealloc) {
-		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
-		MemSys::GetMemory().Dealloc(pBlock, unDealloc * sizeof(MType));
-	}
+	inline void MemSys::DelTArr(MType* pBlock, UInt64 unDealloc) { GetMemory().DelTArr<MType>(pBlock, unDealloc); }
 }
 
 #endif	// NWL_MEMORY_SYSTEM_H

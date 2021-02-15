@@ -24,12 +24,12 @@ namespace NWL
 		RefKeeper(const RefKeeper<MType>& rCpy);
 		template<typename VType> RefKeeper(const RefKeeper<VType>& rCpy);
 		~RefKeeper() { Reset(); }
-
 		// --getters
-		inline MType* GetRef()					{ return (MType*)(m_pRef); }
-		inline Size GetSize()					{ return m_szData; }
-		inline UInt64* GetCounter()				{ return m_pCounter; }
-		template<typename VType> inline VType* GetRef()		{ return static_cast<VType*>(m_pRef); }
+		inline MType* GetRef()		{ return (MType*)(m_pRef); }
+		inline Size GetSize()		{ return m_szData; }
+		inline UInt64* GetCounter()	{ return m_pCounter; }
+		template<typename VType>
+		inline VType* GetRef()		{ return static_cast<VType*>(m_pRef); }
 		// --setters
 		inline void SetRef(MType& rRef, Size szData = GetAligned(sizeof(MType), sizeof(MType)));
 		inline void SetRef(const RefKeeper<MType>& rRefKeeper);
@@ -44,9 +44,14 @@ namespace NWL
 		inline operator MType* () { return static_cast<MType*>(m_pRef); }
 		template<typename VType> inline operator RefKeeper<VType>() { RefKeeper<VType> memRefKeeper(*this); return memRefKeeper; }
 		template<typename VType> inline operator VType*() { return static_cast<VType*>(m_pRef); }
+		inline void* operator new(Size szData, Ptr pBlock) { return ::operator new(szData, pBlock); }
+		inline void* operator new(Size szData) { return MemSys::Alloc(szData); }
+		inline void* operator new[](Size szData) { return MemSys::Alloc(szData); }
+		inline void operator delete(Ptr pBlock, Size szData) { MemSys::Dealloc(pBlock, szData); }
+		inline void operator delete[](Ptr pBlock, Size szData) { MemSys::Dealloc(pBlock, szData); }
 		// --core_methods
 		template <typename VType, typename ... Args>
-		inline void MakeRef(Args ... Arguments);
+		inline void MakeRef(Args&& ... Arguments);
 	private:
 		mutable MType* m_pRef;
 		mutable Size m_szData;
@@ -94,8 +99,8 @@ namespace NWL
 			*m_pCounter -= 1;
 			if (*m_pCounter == 0) {
 				m_pRef->~MType();
-				MemSys::GetMemory().Dealloc(m_pRef, m_szData);
-				MemSys::GetMemory().Dealloc(m_pCounter, sizeof(*m_pCounter));
+				MemSys::Dealloc(m_pRef, m_szData);
+				MemSys::Dealloc(m_pCounter, sizeof(*m_pCounter));
 				m_pRef = nullptr;
 				m_szData = 0;
 				m_pCounter = nullptr;
@@ -105,11 +110,11 @@ namespace NWL
 	// --core_methods
 	template <typename MType>
 	template <typename VType, typename ... Args>
-	inline void RefKeeper<MType>::MakeRef(Args ... Arguments) {
+	inline void RefKeeper<MType>::MakeRef(Args&& ... Arguments) {
 		Reset();
-		m_pRef = NewT<VType, Args...>(MemSys::GetMemory(), Arguments...);
+		m_pRef = MemSys::NewT<VType>(std::forward<Args>(Arguments)...);
 		m_szData = GetAligned(sizeof(VType), alignof(VType));
-		m_pCounter = NewT<UInt64>(MemSys::GetMemory());
+		m_pCounter = MemSys::NewT<UInt64>();
 		*m_pCounter = 1;
 	}
 }

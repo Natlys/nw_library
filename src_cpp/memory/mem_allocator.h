@@ -115,10 +115,39 @@ namespace NWL
 		virtual inline Ptr Alloc(Size szMem, Size szAlign = sizeof(int)) = 0;
 		virtual inline void Dealloc(Ptr pBlock, Size szDealloc) = 0;
 		virtual inline Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) = 0;
+		// --templated_methods
+		template<typename MType, typename ... Args>
+		inline MType* NewT(Args&& ... Arguments);
+		template<typename MType>
+		inline MType* NewTArr(UInt64 unAlloc);
+		template<typename MType>
+		inline void DelT(MType* pBlock);
+		template<typename MType>
+		inline void DelTArr(MType* pBlock, UInt64 unDealloc);
 	protected:
 		Byte* m_pBeg;
 		MemInfo m_Info;
 	};
+	template<typename MType, typename ... Args>
+	inline MType* AMemAllocator::NewT(Args&& ... Arguments) {
+		MType* pBlock = reinterpret_cast<MType*>(Alloc(1 * sizeof(MType), __alignof(MType)));
+		new(pBlock) MType(std::forward<Args>(Arguments)...);
+		return pBlock;
+	}
+	template <typename MType>
+	inline MType* AMemAllocator::NewTArr(UInt64 unAlloc) {
+		return reinterpret_cast<MType*>(Alloc(unAlloc * sizeof(MType), __alignof(MType)));
+	}
+	template<typename MType>
+	inline void AMemAllocator::DelT(MType* pBlock) {
+		pBlock->~MType();
+		rmAllocator.Dealloc(pBlock, 1 * sizeof(MType));
+	}
+	template <typename MType>
+	inline void AMemAllocator::DelTArr(MType* pBlock, UInt64 unDealloc) {
+		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
+		Dealloc(pBlock, unDealloc * sizeof(MType));
+	}
 }
 namespace NWL
 {
@@ -234,30 +263,6 @@ namespace NWL
 		m_Info.szAlloc = 0;
 	}
 	// --==</core_methods>==--
-}
-
-namespace NWL
-{
-	template<typename MType, typename ... Args>
-	inline MType* NewT(AMemAllocator& rAllocator, Args ... Arguments) {
-		MType* pBlock = reinterpret_cast<MType*>(rAllocator.Alloc(1 * sizeof(MType), __alignof(MType)));
-		new(pBlock)MType(Arguments...);
-		return pBlock;
-	}
-	template <typename MType>
-	inline MType* NewTArr(AMemAllocator& rmAllocator, UInt64 unAlloc) {
-		return reinterpret_cast<MType*>(rmAllocator.Alloc(unAlloc * sizeof(MType), __alignof(MType)));
-	}
-	template<typename MType>
-	inline void DelT(AMemAllocator& rmAllocator, MType* pBlock) {
-		pBlock->~MType();
-		rmAllocator.Dealloc(pBlock, 1 * sizeof(MType));
-	}
-	template <typename MType>
-	inline void DelTArr(AMemAllocator& rmAllocator, MType* pBlock, UInt64 unDealloc) {
-		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
-		rmAllocator.Dealloc(pBlock, unDealloc * sizeof(MType));
-	}
 }
 
 #endif	// NWL_MEMORY_ALLOCATOR_H

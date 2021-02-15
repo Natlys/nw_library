@@ -4,8 +4,9 @@
 #include <nwl_core.hpp>
 
 #include <data/data_res.h>
-#include <io/io_stream.h>
+#include <ecs/ecs_entity.h>
 #include <core/nwl_container.h>
+#include <io/io_stream.h>
 #include <core/nwl_string.h>
 
 namespace NWL
@@ -58,6 +59,7 @@ namespace NWL
 
 		static bool SaveFImage(const char* strFPath, ImageInfo& rImage);
 		static bool LoadFImage(const char* strFPath, ImageInfo& rImage);
+		static bool LoadFImageBmp(const char* strFPath, ImageInfo& rImage);
 
 		static bool SaveFMesh(const char* strFPath, GMeshInfo& rMesh);
 		static bool LoadFMesh(const char* strFPath, GMeshInfo& rMesh);
@@ -161,7 +163,7 @@ namespace NWL
 	protected:
 		TDataRes(const char* strName) :
 			ADataRes(strName, TypeIndexator::Get<DType>()) { /*DataSys::AddDR<DType>(static_cast<DType&>(*this));*/ }
-		virtual ~TDataRes() { DataSys::RmvDR<DType>(GetId()); }
+		virtual ~TDataRes() { DataSys::RmvDR<DType>(GetDrId()); }
 	public:
 		virtual bool SaveF(const char* strFName) override { return true; }
 		virtual bool LoadF(const char* strFName) override { return true; }

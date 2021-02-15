@@ -19,6 +19,9 @@
     <Filter Include="memory">
       <UniqueIdentifier>{DEA8820D-CA4A-ADE3-B305-C1379F463434}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nwlib">
+      <UniqueIdentifier>{01A20810-6DB6-30C1-3638-D420A20B2DF2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="physx">
       <UniqueIdentifier>{01D22410-6DE6-4CC1-3668-F020A23B49F2}</UniqueIdentifier>
     </Filter>
@@ -78,6 +81,9 @@
     <ClInclude Include="src_cpp\io\io_event.h">
       <Filter>io</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\io\io_exception.h">
+      <Filter>io</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\io\io_log.h">
       <Filter>io</Filter>
     </ClInclude>
@@ -113,23 +119,22 @@
     <ClInclude Include="src_cpp\nwl_physx.hpp" />
     <ClInclude Include="src_cpp\nwl_platform.hpp" />
     <ClInclude Include="src_cpp\nwl_test.h" />
+    <ClInclude Include="src_cpp\nwlib\nwl_data_res.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\nwlib\nwl_memory.h">
+      <Filter>nwlib</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\physx\physx_collision.h">
       <Filter>physx</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\io\io_exception.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src_cpp\core\nwl_code_res.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_random.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_type.cpp">
       <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\data\data_res.cpp">
-      <Filter>data</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\data\data_sys.cpp">
       <Filter>data</Filter>
@@ -137,13 +142,7 @@
     <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp">
       <Filter>ecs</Filter>
     </ClCompile>
-    <ClCompile Include="src_cpp\ecs\ecs_component.cpp">
-      <Filter>ecs</Filter>
-    </ClCompile>
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp">
-      <Filter>ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\ecs\ecs_entity.cpp">
       <Filter>ecs</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\io\io_log.cpp">

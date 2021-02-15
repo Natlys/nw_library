@@ -15,8 +15,9 @@ namespace NWL
 	class NWL_API ACodeRes : public TDataRes<ACodeRes>
 	{
 	public:
-		ACodeRes(const char* strName);
-		virtual ~ACodeRes();
+		ACodeRes(const char* strName) :
+			TDataRes<ACodeRes>(strName), m_strCode("") { }
+		virtual ~ACodeRes() { }
 		// --getters
 		inline const char* GetCode() { return &m_strCode[0]; }
 		// --setters

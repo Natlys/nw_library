@@ -10,37 +10,36 @@ namespace NWL
 	/// EntitySystem static class
 	class NWL_API EntSys
 	{
-		using Ents = DArray<RefKeeper<AEntity>>;
+		using Ents = HashMap<UInt32, RefKeeper<AEntity>>;
 	public:
 		// --getters
 		static inline Ents& GetEnts() { static Ents s_Ents; return s_Ents; }
 		static inline AEntity* GetEnt(UInt32 eId);
 		// --setters
-		static inline UInt32 AddEnt();
+		template<class EType, typename ... Args> static inline UInt32 AddEnt(Args ... Arguments);
 		static inline void RmvEnt(UInt32 eId);
 		// --core_methods
 		static void OnInit();
 		static void OnQuit();
-	private:
-		static inline IdStack& GetIdStack() { static IdStack s_idStack; return s_idStack; }
 	};
 	inline AEntity* EntSys::GetEnt(UInt32 eId) {
 		Ents& rEnts = GetEnts();
-		if (rEnts.size() <= eId) { return nullptr; }
-		return rEnts[eId].GetRef();
+		if (rEnts.empty()) { return nullptr; }
+		auto& itEnt = rEnts.find(eId);
+		return itEnt == rEnts.end() ? nullptr : itEnt->second.GetRef();
 	}
-	inline UInt32 EntSys::AddEnt() {
+	template<class EType, typename ... Args> inline UInt32 EntSys::AddEnt(Args ... Arguments) {
 		Ents& rEnts = GetEnts();
-		UInt32 eId = GetIdStack().GetFreeId();
-		if (rEnts.size() <= eId) { rEnts.resize((rEnts.size() + 1) * 2); }
-		rEnts[eId].MakeRef<AEntity>(eId);
-		return eId;
+		RefKeeper<AEntity> pEnt;
+		pEnt.MakeRef<EType>(Arguments...);
+		rEnts[pEnt->GetId()] = pEnt;
+		return pEnt->GetId();
 	}
 	inline void EntSys::RmvEnt(UInt32 eId) {
 		Ents& rEnts = GetEnts();
-		if (rEnts.size() <= eId) { return; }
-		rEnts[eId].Reset();
-		GetIdStack().SetFreeId(eId);
+		if (rEnts.empty()) { return; }
+		auto& itEnt = rEnts.find(eId);
+		rEnts.erase(itEnt);
 	}
 }
 
