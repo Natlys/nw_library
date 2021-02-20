@@ -145,6 +145,9 @@
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp">
       <Filter>ecs</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\io\io_exception.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\io\io_log.cpp">
       <Filter>io</Filter>
     </ClCompile>

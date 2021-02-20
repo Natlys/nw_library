@@ -9,7 +9,7 @@ namespace NWL
 		String strProc;		// string for processing
 		Size nLen = strlen(strFormat);	// strFormat length
 		Size nCurr = 0;						// current position in the strFormat
-		std::stringstream strProcStream, strResStream;
+		StrStream strProcStream, strResStream;
 
 		strProcStream << strFormat;							// strFormat will be read via strStream
 
@@ -60,8 +60,8 @@ namespace NWL
 		va_start(valArgs, strFormat);	// the pointer to ... arguments is after strFormat
 		GetLogOut() << "ERROR::CODE_" << nErrCode << '\n';
 		GetLogOut() << "ERROR::MESSAGE_" << &MakeFormatStr(strFormat, valArgs)[0] << '\n';
-		NWL_BREAK();
 		va_end(valArgs);					// Essentialy close the list
+		NWL_BREAK();
 	}
 	// --==</core_methods>==--
 }

@@ -11,7 +11,12 @@ namespace NWL
 {
 	struct NWL_API TimeInfo
 	{
+		using Clock = std::chrono::high_resolution_clock;
+		using TimePoint = std::chrono::time_point<Clock>;
+		using Sec = std::chrono::duration<Float64, std::ratio<1>>;
 	public:
+		TimePoint tpLast;
+		TimePoint tpCurr;
 		String strTime = "";
 		Float64 nCurr = 0;
 		Float64 nLast = 0;
@@ -50,12 +55,12 @@ namespace NWL
 	public:
 		// --getters
 		static inline TimeInfo& GetInfo()		{ static TimeInfo s_tmInfo; return s_tmInfo; }
-		static inline Float64 GetLastS()		{ return GetInfo().nLast / 1000; }
-		static inline Float64 GetCurrS()		{ return GetInfo().nCurr / 1000; }
-		static inline Float64 GetDeltaS()		{ return GetInfo().nDelta / 1000; }
-		static inline Float64 GetLastMs()		{ return GetInfo().nLast; }
-		static inline Float64 GetCurrMs()		{ return GetInfo().nCurr; }
-		static inline Float64 GetDeltaMs()		{ return GetInfo().nDelta; }
+		static inline Float64 GetLastS()		{ return GetInfo().nLast; }
+		static inline Float64 GetCurrS()		{ return GetInfo().nCurr; }
+		static inline Float64 GetDeltaS()		{ return GetInfo().nDelta; }
+		static inline Float64 GetLastMs()		{ return GetInfo().nLast * 1000; }
+		static inline Float64 GetCurrMs()		{ return GetInfo().nCurr * 1000; }
+		static inline Float64 GetDeltaMs()		{ return GetInfo().nDelta * 1000; }
 		static inline const char* GetString()	{ GetInfo().strTime = std::ctime(0); return &(GetInfo().strTime[0]); }
 		static inline TimeCounter& GetCounter()	{ static TimeCounter s_tc; return s_tc; }
 		// --core_methods
@@ -63,9 +68,11 @@ namespace NWL
 	};
 	inline void TimeSys::Update() {
 		TimeInfo& tm = GetInfo();
-		tm.nCurr = clock();
-		tm.nDelta = tm.nCurr - tm.nLast;
+		tm.tpCurr = TimeInfo::Clock::now();
+		tm.nDelta = std::chrono::duration_cast<TimeInfo::Sec>(tm.tpCurr - tm.tpLast).count();
 		tm.nLast = tm.nCurr;
+		tm.nCurr += tm.nDelta;
+		tm.tpLast = TimeInfo::Clock::now();
 	}
 }
 

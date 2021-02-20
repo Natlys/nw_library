@@ -13,22 +13,26 @@
 namespace NWL
 {
 	/// Anstract Entity class
-	class NWL_API AEntity
+	class NWL_API Entity
 	{
 		friend class EntSys;
+	protected:
+		Entity() : m_unId(0), m_bIsEnabled(false) { }
 	public:
-		AEntity(unsigned int unId) : m_unId(unId) {}
-		AEntity(const AEntity& rCpy) = delete;
-		virtual ~AEntity() {}
+		Entity(const Entity& rCpy) : m_unId(rCpy.m_unId), m_bIsEnabled(rCpy.m_bIsEnabled) {}
+		virtual ~Entity() {}
 		// --getters
 		inline unsigned int GetId() const { return m_unId; }
-		virtual inline const char* GetStrType() const = 0;
+		virtual inline unsigned int GetTypeId() const = 0;
+		virtual inline const char* GetTypeStr() const = 0;
 		// --setters
 		void SetEnabled(bool bIsEnabled) { m_bIsEnabled = bIsEnabled; }
 		// --predicates
-		inline unsigned int IsEnabled() { return m_bIsEnabled; }
+		inline bool IsEnabled() { return m_bIsEnabled; }
+		// --predicates
+		template<class EType> inline bool IsOfType() { return TypeIndexator<EType>() == GetTypeId(); }
 		// --operators
-		inline void operator=(const AEntity& rCpy) = delete;
+		inline void operator=(const Entity& rCpy) = delete;
 		inline void* operator new(Size szData, Ptr pData) { return ::operator new(szData, pData); }
 		inline void* operator new(Size szData) { return MemSys::Alloc(szData); }
 		inline void* operator new[](Size szData) { return MemSys::Alloc(szData); }
@@ -43,15 +47,16 @@ namespace NWL
 {
 	/// Templated Entity class
 	template<class EType>
-	class NWL_API TEntity : public AEntity
+	class NWL_API TEntity : public Entity
 	{
 	public:
-		TEntity() : AEntity(GetIdStack().GetFreeId()) {}
+		TEntity() : Entity() { m_unId = GetIdStack().GetFreeId(); }
 		virtual ~TEntity() { GetIdStack().SetFreeId(m_unId); }
 		// --getters
-		virtual inline const char* GetStrType() const override { return NWL_CSTR(EType); }
+		virtual inline unsigned int GetTypeId() const override { return TypeIndexator::Get<EType>(); }
+		virtual inline const char* GetTypeStr() const override { return typeid(EType).name(); }
 	protected:
-		static inline IdStack GetIdStack() { static IdStack s_idStack(0); return s_idStack; }
+		static inline IdStack& GetIdStack() { static IdStack s_idStack(0); return s_idStack; }
 	};
 }
 namespace NWL
@@ -61,29 +66,20 @@ namespace NWL
 	{
 		using ACmps = DArray<RefKeeper<ACmp>>;
 	public:
-		CmpEntity();
-		CmpEntity(const CmpEntity& rCpy) = delete;
-		virtual ~CmpEntity();
+		CmpEntity() : TEntity() {}
+		virtual ~CmpEntity() {}
 		// --getters
 		inline ACmp* GetCmp(UInt32 tId);
 		template<class CType> inline CType* GetCmp();
 		// --setters
 		inline void AddCmp(RefKeeper<ACmp>& rCmp);
 		inline void RmvCmp(UInt32 tId);
-		void SetEnabled(bool bIsEnabled);
 		// --predicates
-		inline bool IsEnabled() { return m_bIsEnabled; }
 		inline bool HasCmp(UInt32 tId) { return GetCmp(tId) != nullptr; }
 		template<class CType>
 		inline bool HasCmp() { return GetCmp<CType>() != nullptr; }
-		// --operators
-		inline void operator=(const AEntity& rCpy) = delete;
-		inline void operator delete(Ptr pData, Size szData);
-		inline void operator delete[](Ptr pData, Size szData);
 	private:
-		UInt32 m_unId;
 		ACmps m_ACmps;
-		bool m_bIsEnabled;
 	};
 	// --getters
 	inline ACmp* CmpEntity::GetCmp(UInt32 tId) {

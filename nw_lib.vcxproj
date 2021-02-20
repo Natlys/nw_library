@@ -139,6 +139,7 @@
     <ClCompile Include="src_cpp\data\data_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp" />
+    <ClCompile Include="src_cpp\io\io_exception.cpp" />
     <ClCompile Include="src_cpp\io\io_log.cpp" />
     <ClCompile Include="src_cpp\nwl_pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

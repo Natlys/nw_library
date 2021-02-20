@@ -5,10 +5,6 @@
 
 namespace NWL
 {
-	class NWL_API AUnique
-	{
-		//
-	};
 	/// ASingleton Interface for unique global classes
 	template<class SType>
 	class NWL_API ASingleton
@@ -22,10 +18,6 @@ namespace NWL
 		static inline SType& Get() { static SType s_instance;  return s_instance; }
 		// --operators
 		void operator=(const ASingleton& rCpy) = delete;
-		Ptr operator new(Size) = delete;
-		Ptr operator new[](Size) = delete;
-		void operator delete(Ptr) = delete;
-		void operator delete[](Ptr) = delete;
 	};
 }
 

@@ -9,18 +9,19 @@
 #include <core/nwl_singleton.h>
 #include <core/nwl_thread.h>
 
+#include <ecs/ecs_entity.h>
+
 namespace NWL
 {
 	/// AEngineState class
 	/// Description:
 	/// -- This is the main interaction part for the engine.
 	/// -- State handles Lua virtual machiene which allows to use Lua scripts
-	class NWL_API AEngineState
+	class NWL_API AEngineState : public TEntity<AEngineState>
 	{
 	public:
 		AEngineState(const char* strName) : m_strName(strName) {}
-		virtual ~AEngineState() = default;
-
+		virtual ~AEngineState() { }
 		// --getters
 		virtual inline const char* GetName() { return m_strName; }
 		// --setters
@@ -38,7 +39,7 @@ namespace NWL
 namespace NWL
 {
 	template<class EType, class SType = AEngineState>
-	class AEngine : public ASingleton<EType>
+	class AEngine : public ASingleton<EType>, TEntity<EType>
 	{
 	public:
 		using States = DArray<SType*>;

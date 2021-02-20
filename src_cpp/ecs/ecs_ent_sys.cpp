@@ -7,6 +7,6 @@ namespace NWL
 	}
 	void EntSys::OnQuit()
 	{
-		GetEnts().clear();
+		GetRegistry().clear();
 	}
 }

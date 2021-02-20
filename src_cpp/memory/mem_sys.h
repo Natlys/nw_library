@@ -20,14 +20,10 @@ namespace NWL
 		static inline Ptr Alloc(Size szData, Size szAllign = sizeof(MemLink)) { return GetMemory().Alloc(szData, szAllign); }
 		static inline void Dealloc(Ptr pData, Size szData) { GetMemory().Dealloc(pData, szData); }
 		// --templated_methods
-		template<typename MType, typename ... Args>
-		static inline MType* NewT(Args&& ... Arguments);
-		template<typename MType>
-		static inline MType* NewTArr(UInt64 unAlloc);
-		template<typename MType>
-		static inline void DelT(MType* pBlock);
-		template <typename MType>
-		static inline void DelTArr(MType* pBlock, UInt64 unDealloc);
+		template<typename MType, typename ... Args> static inline MType* NewT(Args&& ... Arguments);
+		template<typename MType> static inline MType* NewTArr(UInt64 unAlloc);
+		template<typename MType> static inline void DelT(MType* pBlock);
+		template <typename MType> static inline void DelTArr(MType* pBlock, UInt64 unDealloc);
 	};
 	// --core_methods
 	inline void MemSys::OnInit(Size szMemory) {

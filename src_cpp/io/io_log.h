@@ -29,9 +29,9 @@ namespace NWL
 	class NWL_API LogSys
 	{
 	public:
-		using LogIn = InStream;
-		using LogOut = OutStream;
-		using LogErr = OutStream;
+		using LogIn = IStream;
+		using LogOut = OStream;
+		using LogErr = OStream;
 		using LogStr = StrStream;
 	public:
 		// --getters

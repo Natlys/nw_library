@@ -7,6 +7,7 @@
 #include <ecs/ecs_entity.h>
 #include <core/nwl_container.h>
 #include <io/io_stream.h>
+#include <io/io_exception.h>
 #include <core/nwl_string.h>
 
 namespace NWL
@@ -15,34 +16,11 @@ namespace NWL
 	class NWL_API DataSys
 	{
 	public:
-		using DRStorage = HashMap<UInt32, RefKeeper<ADataRes>>;
-		template<class DRType>
-		using TDRStorage = HashMap<UInt32, DRType*>;
-	public:
 		// --getters
 		static inline const char* GetDirectory() { return &s_strRscDir[0]; }
-		static inline DRStorage& GetStorage();
-		static inline RefKeeper<ADataRes>* GetDR(UInt32 unId);
-		static inline RefKeeper<ADataRes>* GetDR(const char* strName);
-		template<class DRType> static inline TDRStorage<DRType>& GetStorage();
-		template<class DRType> static inline DRType* GetDR(UInt32 unId);
-		template<class DRType> static inline DRType* GetDR(const char* strName);
-		// --setters
-		template<class DRType, typename ... Args>
-		static inline UInt32 NewDR(Args ... Arguments);
-		template<class DRType>
-		static inline void DelDR(UInt32 unId);
-		template<class DRType>
-		static inline void DelDR(const char* strName);
-		template<class DRType>
-		static inline void AddDR(DRType& rDataRes);
-		template<class DRType>
-		static inline void RmvDR(UInt32 unId);
-		template<class DRType>
-		static inline void RmvDR(const char* strName);
 		// --core_methods
 		static void OnInit() { }
-		static void OnQuit() { GetStorage().clear(); }
+		static void OnQuit() { }
 
 		static String FDialogSave(const char* strFilter, Ptr pWindow);
 		static String FDialogLoad(const char* strFilter, Ptr pWindow);
@@ -72,101 +50,6 @@ namespace NWL
 
 		static inline bool LoadFMeshObj(const char* strFile, GMeshInfo& rMesh);
 		static inline bool LoadFModelObj(const char* strFile, GModelInfo& rModel);
-	};
-	// --getters
-	inline DataSys::DRStorage& DataSys::GetStorage() { static DRStorage s_Drs; return s_Drs; }
-	inline RefKeeper<ADataRes>* DataSys::GetDR(UInt32 unId) {
-		auto& s_Drs = GetStorage();
-		auto& itDr = s_Drs.find(unId);
-		return itDr == s_Drs.end() ? nullptr : &itDr->second;
-	}
-	inline RefKeeper<ADataRes>* DataSys::GetDR(const char* strName) {
-		auto& s_Drs = GetStorage();
-		for (auto& itDr : s_Drs) {
-			if (strcmp(itDr.second->GetName(), strName) == 0) { return &itDr.second; }
-		}
-		return nullptr;
-	}
-	template<class DRType> inline DataSys::TDRStorage<DRType>& DataSys::GetStorage() { static TDRStorage<DRType> s_TDrs; return s_TDrs; }
-	template<class DRType> inline DRType* DataSys::GetDR(UInt32 unId) {
-		auto& s_Drs = GetStorage<DRType>();
-		auto& itDr = s_Drs.find(unId);
-		return itDr == s_Drs.end() ? nullptr : itDr->second;
-	}
-	template<class DRType> inline DRType* DataSys::GetDR(const char* strName) {
-		auto& s_Drs = GetStorage<DRType>();
-		for (auto& itDr : s_Drs) {
-			if (strcmp(itDr.second->GetName(), strName) == 0) { return itDr.second; }
-		}
-		return nullptr;
-	}
-	// --setters
-	template<class DRType, typename ... Args>
-	inline UInt32 DataSys::NewDR(Args ... Arguments) {
-		auto& s_Drs = GetStorage();
-		UInt32 drId = GetIdStack().GetFreeId();
-		s_Drs[drId].MakeRef<DRType>(Arguments...);
-		s_Drs[drId]->m_drId = drId;
-		GetStorage<DRType>()[drId] = s_Drs[drId].GetRef<DRType>();
-		return drId;
-	}
-	template<class DRType>
-	inline void DataSys::DelDR(UInt32 unId) {
-		auto& s_Drs = GetStorage();
-		auto& itDr = s_Drs.find(unId);
-		if (itDr == s_Drs.end()) { return; }
-		if (itDr.second->GetTypeId() != TypeIndexator::Get<DRType>()) { return; }
-		s_Drs.erase(itDr->first);
-		GetStorage<DRType>().erase(itDr->first);
-		GetIdStack().SetFreeId(itDr->first);
-	}
-	template<class DRType>
-	inline void DataSys::DelDR(const char* strName) {
-		for (auto& itDr : GetStorage()) {
-			if (strcmp(itDr.second->GetName(), strName) == 0) {
-				if (itDr.second->GetTypeId() == TypeIndexator::Get<DRType>()) {
-					GetStorage().erase(itDr.first);
-					GetStorage<DRType>().erase(itDr.first);
-					GetIdStack().SetFreeId(itDr.first);
-				}
-			}
-		}
-	}
-	template<class DRType>
-	inline void DataSys::AddDR(DRType& rDataRes) {
-		auto& s_Drs = GetStorage<DRType>();
-		s_Drs[rDataRes.GetId()] = &rDataRes;
-	}
-	template<class DRType>
-	inline void DataSys::RmvDR(UInt32 unId) {
-		auto& s_Drs = GetStorage<DRType>();
-		auto& itDr = s_Drs.find(unId);
-		if (itDr == s_Drs.end()) { return; }
-		s_Drs.erase(itDr);
-	}
-	template<class DRType>
-	inline void DataSys::RmvDR(const char* strName) {
-		auto& s_Drs = GetStorage<DRType>();
-		for (auto& itDr : s_Drs) {
-			if (strcmp(itDr.second->GetName(), strName) == 0) {
-				s_Drs.erase(itDr.first);
-			}
-		}
-	}
-}
-namespace NWL
-{
-	/// Templated DataResource class
-	template<class DType>
-	class NWL_API TDataRes : public ADataRes
-	{
-	protected:
-		TDataRes(const char* strName) :
-			ADataRes(strName, TypeIndexator::Get<DType>()) { /*DataSys::AddDR<DType>(static_cast<DType&>(*this));*/ }
-		virtual ~TDataRes() { DataSys::RmvDR<DType>(GetDrId()); }
-	public:
-		virtual bool SaveF(const char* strFName) override { return true; }
-		virtual bool LoadF(const char* strFName) override { return true; }
 	};
 }
 

@@ -10,37 +10,72 @@ namespace NWL
 	/// EntitySystem static class
 	class NWL_API EntSys
 	{
-		using Ents = HashMap<UInt32, RefKeeper<AEntity>>;
+		using Ents = HashMap<UInt32, RefKeeper<Entity>>;
+		using EntsRegistry = HashMap<UInt32, Ents>;
 	public:
 		// --getters
-		static inline Ents& GetEnts() { static Ents s_Ents; return s_Ents; }
-		static inline AEntity* GetEnt(UInt32 eId);
+		static inline EntsRegistry& GetRegistry() { static EntsRegistry s_Ents; return s_Ents; }
+		template<class EType>
+		static inline Ents& GetEnts() { return GetRegistry()[TypeIndexator::Get<EType>()]; }
+		static inline Entity* GetEnt(UInt32 tId, UInt32 eId);
+		template<typename EType>
+		static inline EType* GetEnt(UInt32 eId);
+		template<typename EType>
+		static inline EType* GetEntByName(const char* strName);
 		// --setters
-		template<class EType, typename ... Args> static inline UInt32 AddEnt(Args ... Arguments);
+		template<class EType, typename ... Args>
+		static inline RefKeeper<Entity>& AddEnt(Args&& ... Arguments);
+		static inline void RmvEnt(UInt32 tId, UInt32 eId);
+		template<class EType>
 		static inline void RmvEnt(UInt32 eId);
 		// --core_methods
 		static void OnInit();
 		static void OnQuit();
 	};
-	inline AEntity* EntSys::GetEnt(UInt32 eId) {
-		Ents& rEnts = GetEnts();
-		if (rEnts.empty()) { return nullptr; }
-		auto& itEnt = rEnts.find(eId);
-		return itEnt == rEnts.end() ? nullptr : itEnt->second.GetRef();
+	inline Entity* EntSys::GetEnt(UInt32 tId, UInt32 eId) {
+		auto& rReg = GetRegistry();
+		if (rReg.empty()) { return nullptr; }
+		auto& itEnts = rReg.find(tId);
+		if (itEnts == rReg.end()) { return nullptr; }
+		if (itEnts->second.empty()) { return nullptr; }
+		auto& itEnt = itEnts->second.find(eId);
+		if (itEnt == itEnts->second.end()) { return nullptr; }
+		return itEnt->second.GetRef();
 	}
-	template<class EType, typename ... Args> inline UInt32 EntSys::AddEnt(Args ... Arguments) {
-		Ents& rEnts = GetEnts();
-		RefKeeper<AEntity> pEnt;
-		pEnt.MakeRef<EType>(Arguments...);
-		rEnts[pEnt->GetId()] = pEnt;
-		return pEnt->GetId();
-	}
-	inline void EntSys::RmvEnt(UInt32 eId) {
-		Ents& rEnts = GetEnts();
+	template<typename EType>
+	inline EType* EntSys::GetEnt(UInt32 eId) { return static_cast<EType*>(GetEnt(TypeIndexator::Get<EType>(), eId)); }
+	template<typename EType>
+	inline EType* EntSys::GetEntByName(const char* strName) {
+		auto& rEnts = GetEnts<EType>();
 		if (rEnts.empty()) { return; }
-		auto& itEnt = rEnts.find(eId);
-		rEnts.erase(itEnt);
+		auto& itEnt = std::find_if(rEnts.begin(), rEnts.end(),
+			[&](std::pair<const UInt32, RefKeeper<Entity>>& rEnt)->bool {
+				return strcmp(static_cast<EType*>(rEnt.second.GetRef())->GetName(), strName) == 0;
+			});
+		if (itEnt == rEnts.end()) { return nullptr; }
+		return static_cast<EType*>(itEnt->second.GetRef());
 	}
+	// --setters
+	template<class EType, typename ... Args>
+	inline RefKeeper<Entity>& EntSys::AddEnt(Args&& ... Arguments) {
+		auto& rEnts = GetEnts<EType>();
+		RefKeeper<Entity> pEnt;
+		pEnt.MakeRef<EType>(std::forward<Args>(Arguments)...);
+		rEnts[pEnt->GetId()] = pEnt;
+		return rEnts[pEnt->GetId()];
+	}
+	inline void EntSys::RmvEnt(UInt32 tId, UInt32 eId) {
+		auto& rReg = GetRegistry();
+		if (rReg.empty()) { return; }
+		auto& itEnts = rReg.find(tId);
+		if (itEnts == rReg.end()) { return; }
+		if (itEnts->second.empty()) { return; }
+		auto& itEnt = itEnts->second.find(eId);
+		if (itEnt == itEnts->second.end()) { return; }
+		itEnts->second.erase(itEnt);
+	}
+	template<class EType>
+	inline void EntSys::RmvEnt(UInt32 eId) { return RmvEnt(TypeIndexator::Get<EType>(), eId); }
 }
 
 #endif // NWL_ECS_ENTITY_SYSTEM_H

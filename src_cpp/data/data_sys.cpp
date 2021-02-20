@@ -209,6 +209,7 @@ namespace NWL
         }
         catch (std::exception& exc) {
             NWL_ERR(exc.what());
+            throw NWL::Exception("Failed to load .bmp image", NWL_ERR_NO_DATA);
             return false;
         }
         return true;
@@ -222,7 +223,7 @@ namespace NWL
     {
         String strBuf;
         if (!LoadFString(strFPath, strBuf)) { return false; }
-        const char* strFormat = SubStrDelimR(strFPath, '.', 1);
+        const char* strFormat = CStrGetDelimR(&strFPath[0], '.', 1);
         if (strcmp(strFormat, "obj") == 0) { return LoadFMeshObj(&strBuf[0], rMesh); }
         else { NWL_ERR("Unsupported format"); return false; }
 
@@ -236,7 +237,7 @@ namespace NWL
     {
         String strBuf;
         if (!LoadFString(strFPath, strBuf)) { return false; }
-        const char* strFormat = SubStrDelimR(strFPath, '.', 1);
+        const char* strFormat = CStrGetDelimR(strFPath, '.', 1);
         if (strcmp(strFormat, "obj") == 0) { return LoadFModelObj(&strBuf[0], rModel); }
         else { NWL_ERR("Unsupported format"); return false; }
 

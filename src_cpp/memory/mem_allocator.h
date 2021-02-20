@@ -65,21 +65,6 @@ namespace NWL
 		}
 		template <typename MType> inline operator MType*() { return reinterpret_cast<MType*>(this); }
 	};
-	/// MemRef struct
-	template <typename MType>
-	struct NWL_API MemRef
-	{
-	public:
-		MType* pData;
-		Size szData;
-	public:
-		MemRef() : pData(nullptr), szData(0) { }
-		MemRef(MemRef<MType>& rCpy): pData(rCpy.pData), szData(rCpy.szData) { }
-		MemRef(MType pRef, Size szData = GetAligned(sizeof(MType), alignof(MType))) : pData(pRef), szData(0) { }
-		// --operators
-		inline operator MType* () { return pData; }
-		template<typename VType> inline operator VType* () { return static_cast<VType*>(pData); }
-	};
 }
 
 namespace NWL

@@ -22,13 +22,11 @@ namespace NWL
 	{
 		friend class DataSys;
 	protected:
-		ADataRes(const char* strName, UInt32 tId) : m_strName("none"), m_tId(tId), m_drId(0) { SetName(strName); }
+		ADataRes() : m_strName("none") { }
+		ADataRes(const char* strName) : m_strName("none") { SetName(strName); }
 	public:
-		ADataRes(const ADataRes& rCpy) = delete;
 		virtual ~ADataRes() { }
 		// --getters
-		inline UInt32 GetDrId() const { return m_drId; }
-		inline UInt32 GetTypeId() const { return m_tId; }
 		inline const char* GetName() const { return &m_strName[0]; }
 		// --setters
 		virtual void SetName(const char* strName) { strcpy_s(&m_strName[0], 256, &strName[0]); }
@@ -39,8 +37,6 @@ namespace NWL
 		virtual bool SaveF(const char* strFPath) = 0;
 		virtual bool LoadF(const char* strFPath) = 0;
 	protected:
-		UInt32 m_drId;
-		UInt32 m_tId;
 		Char m_strName[256];
 	};
 }

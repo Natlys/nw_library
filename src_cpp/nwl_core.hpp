@@ -126,6 +126,8 @@ namespace NWL
 }
 
 // --==<nwl_error_codes>==--
+#define NWL_ERR_DEFAULT					0b0000'0000'0000
+
 #define NWL_ERR_DATA_LOSS				0b1110'0000'0000
 
 #define NWL_ERR_NO_SUPPORT				0b1110'0000'0001
@@ -133,7 +135,6 @@ namespace NWL
 #define NWL_ERR_NO_INIT					0b1110'0000'0010
 #define NWL_ERR_NO_QUIT					0b1110'0000'0011
 #define NWL_ERR_NO_STATE				0b1110'0000'0100
-
 #define NWL_ERR_UNKNOWN_ID				0b1111'0000'0000
 
 #define NWL_ERR_SHADER_INVALID_FORMAT	0b0011'0000'0000

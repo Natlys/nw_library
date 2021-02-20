@@ -12,11 +12,11 @@ namespace NWL
 	/// Description:
 	/// -- For classes which can handle some source code and compile that
 	/// -- Scripts and shaders need to be edited, loaded, saved and compiled.
-	class NWL_API ACodeRes : public TDataRes<ACodeRes>
+	class NWL_API ACodeRes : public ADataRes
 	{
 	public:
-		ACodeRes(const char* strName) :
-			TDataRes<ACodeRes>(strName), m_strCode("") { }
+		ACodeRes() : ADataRes(), m_strCode("") { }
+		ACodeRes(const char* strName) : ADataRes(strName), m_strCode("") { }
 		virtual ~ACodeRes() { }
 		// --getters
 		inline const char* GetCode() { return &m_strCode[0]; }

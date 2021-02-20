@@ -31,14 +31,14 @@ namespace NWL
 	// --getters
 	template<class CType>
 	inline CType* CmpSys::GetCmp(UInt32 eId) {
-		AEntity* pEnt = EntSys::GetEnt(eId);
+		Entity* pEnt = EntSys::GetEnt(eId);
 		if (pEnt == nullptr) { return nullptr; }
 		return pEnt->GetCmp<CType>();
 	}
 	// --setters
 	template<class CType, typename ... Args>
 	static inline CType* CmpSys::AddCmp(UInt32 eId, Args& ... Arguments) {
-		AEntity* pEnt = EntSys::GetEnt(eId);
+		Entity* pEnt = EntSys::GetEnt(eId);
 		if (pEnt == nullptr) { return 0; }
 		if (pEnt->HasCmp<CType>()) { return nullptr; }
 		RefKeeper<ACmp> pCmp;
@@ -48,7 +48,7 @@ namespace NWL
 	}
 	template<class CType>
 	static inline void CmpSys::RmvCmp(UInt32 eId) {
-		AEntity* pEnt = EntSys::GetEnt(eId);
+		Entity* pEnt = EntSys::GetEnt(eId);
 		if (pEnt == nullptr) { return; }
 		pEnt->RmvCmp(CType::GetStaticTypeId());
 	}
