@@ -10,8 +10,8 @@
 #include <core/nwl_time.h>
 #include <core/nwl_type.h>
 #include <core/nwl_container.h>
-#include <core/nwl_code_res.h>
 
+#include <nwl_core.hpp>
 #include <nwl_data.hpp>
 #include <nwl_io.hpp>
 #include <nwl_memory.hpp>

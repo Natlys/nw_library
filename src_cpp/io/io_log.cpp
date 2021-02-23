@@ -1,66 +1,59 @@
 #include <nwl_pch.hpp>
 #include "io_log.h"
 
+NWL::LogSys::ILog* NWL::LogSys::s_piLog = nullptr;
+NWL::LogSys::OLog* NWL::LogSys::s_poLog = nullptr;
+
 namespace NWL
 {
 	// --==<core_methods>==--
-	String LogSys::MakeFormatStr(const char* strFormat, va_list& valArgs)
+	void LogSys::OnInit()
 	{
-		String strProc;		// string for processing
-		Size nLen = strlen(strFormat);	// strFormat length
-		Size nCurr = 0;						// current position in the strFormat
-		StrStream strProcStream, strResStream;
-
-		strProcStream << strFormat;							// strFormat will be read via strStream
-
-		while (!strProcStream.eof()) {		// read the format before one of '{' and append what is read
-			std::getline(strProcStream, strProc, '{');
-			nCurr += strProc.size();
-			strResStream << strProc;
-			if (nCurr < nLen && strFormat[nCurr] != '%') {		// Next can be %{ or '\0' -> then we write simple string
-				std::getline(strProcStream, strProc, '}');
-				nCurr += strProc.size();
-				if (strProc == "int") {
-					strResStream << va_arg(valArgs, Int32);
-				}
-				else if (strProc == "flt") {
-					strResStream << va_arg(valArgs, Float64);
-				}
-				else if (strProc == "chr") {
-					strResStream << va_arg(valArgs, char);
-				}
-				else if (strProc == "str") {
-					strResStream << va_arg(valArgs, const char*);
-				}
-				else {	// No type found - error
-					return strResStream.str();
-				}
-			}
-			else {			// {{ is found - we can read further
-				strResStream << strProc;
-			}
-		}
-
-		return strResStream.str();
+		if (s_piLog != nullptr) { return; }
+		s_piLog = new ILog();
+		s_poLog = &std::cout;
 	}
-	/// Read the formatted string like "some string {typ[:count[:delim]]}"
-	void LogSys::WriteStr(const char* strFormat, ...)
+	void LogSys::OnQuit()
 	{
-		va_list valArgs;					// all variadic arguments in ... will be read via this list
-		va_start(valArgs, strFormat);	// the pointer to ... arguments is after strFormat
-		GetLogOut() << &MakeFormatStr(strFormat, valArgs)[0] << '\n';
-		va_end(valArgs);					// Essentialy close the list
+		if (s_piLog == nullptr) { return; }
+		delete s_piLog;
+		s_piLog = nullptr;
+		s_poLog = nullptr;
 	}
-	void LogSys::WriteFile(void* pFile, const char* strFormat, ...)
+	void LogSys::Update()
 	{
+		if (GetILog().eof()) { return; }
+		GetOLog() << GetILog().rdbuf();
+		GetILog().clear();
 	}
-	void LogSys::WriteErrStr(Int32 nErrCode, const char* strFormat, ...)
+	void LogSys::WriteInf(const char* strFormat, ...)
 	{
-		va_list valArgs;					// all variadic arguments in ... will be read via this list
-		va_start(valArgs, strFormat);	// the pointer to ... arguments is after strFormat
-		GetLogOut() << "ERROR::CODE_" << nErrCode << '\n';
-		GetLogOut() << "ERROR::MESSAGE_" << &MakeFormatStr(strFormat, valArgs)[0] << '\n';
-		va_end(valArgs);					// Essentialy close the list
+		va_list valArgs;
+		va_start(valArgs, strFormat);
+		GetILog() << "--==<log_info>==--" << std::endl <<
+			"::message:" << &StrGetFormatVa(strFormat, valArgs)[0] << std::endl <<
+			"--==</log_info>==--" << std::endl;
+		va_end(valArgs);
+	}
+	void LogSys::WriteWrn(const char* strFormat, ...)
+	{
+		va_list valArgs;
+		va_start(valArgs, strFormat);
+		GetILog() << "--==<log_warning>==--" << std::endl <<
+			"::message:" << &StrGetFormatVa(strFormat, valArgs)[0] << std::endl <<
+			"--==</log_warning>==--" << std::endl;
+		va_end(valArgs);
+		NWL_BREAK();
+	}
+	void LogSys::WriteErr(Int32 nErrCode, const char* strFormat, ...)
+	{
+		va_list valArgs;
+		va_start(valArgs, strFormat);
+		GetILog() << "--==<log_error>==--" << std::endl <<
+			"code:" << nErrCode << std::endl <<
+			"::message:" << &StrGetFormatVa(strFormat, valArgs)[0] << std::endl <<
+			"--==</log_error>==--" << std::endl;
+		va_end(valArgs);
 		NWL_BREAK();
 	}
 	// --==</core_methods>==--

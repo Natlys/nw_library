@@ -39,7 +39,7 @@ namespace NWL
 namespace NWL
 {
 	template<class EType, class SType = AEngineState>
-	class AEngine : public ASingleton<EType>, TEntity<EType>
+	class NWL_API AEngine : public ASingleton<EType>
 	{
 	public:
 		using States = DArray<SType*>;

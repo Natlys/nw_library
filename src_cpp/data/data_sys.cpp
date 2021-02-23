@@ -2,6 +2,10 @@
 #include "data_sys.h"
 
 #include <nwl_math.hpp>
+#include <core/nwl_container.h>
+#include <core/nwl_string.h>
+#include <io/io_stream.h>
+#include <io/io_exception.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <../ext/stbi/stb_image.h>
@@ -14,10 +18,12 @@ namespace NWL
 {
     // --setters
     // --==<core_methods>==--
-    // -- file_dialogs
-    String DataSys::FDialogSave(const char* strFilter, Ptr pWindow)
+    void DataSys::OnInit() {}
+    void DataSys::OnQuit() {}
+    // --file_dialogs
+    const char* DataSys::FDialogSave(const char* strFilter, Ptr pWindow)
     {
-#if (defined NW_PLATFORM_WINDOWS)
+#if (defined NWL_PLATFORM_WINDOWS)
         constexpr Int32 nMaxChars = 256;
         char strRes[nMaxChars]{ 0 };
         OPENFILENAMEA ofn{ 0 };
@@ -27,15 +33,13 @@ namespace NWL
         ofn.nMaxFile = sizeof(strRes);
         ofn.lpstrFilter = strFilter;
         ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetSaveFileNameA(&ofn) == TRUE) {
-            return ofn.lpstrFile;
-        }
-        else { return String(); }
-#endif  // NW_PLATFORM
+        if (GetSaveFileNameA(&ofn)) { return ofn.lpstrFile; }
+        else { return ""; }
+#endif  // NWL_PLATFORM
     }
-    String DataSys::FDialogLoad(const char* strFilter, Ptr pWindow)
+    const char* DataSys::FDialogLoad(const char* strFilter, Ptr pWindow)
     {
-#if (defined NW_PLATFORM_WINDOWS)
+#if (defined NWL_PLATFORM_WINDOWS)
         constexpr Int32 nMaxChars = 256;
         char strRes[nMaxChars]{ 0 };
         OPENFILENAMEA ofn{ 0 };
@@ -45,73 +49,39 @@ namespace NWL
         ofn.nMaxFile = nMaxChars;
         ofn.lpstrFilter = strFilter;
         ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetOpenFileNameA(&ofn) == TRUE) {
-            return ofn.lpstrFile;
-        }
+        if (GetOpenFileNameA(&ofn)) { return ofn.lpstrFile; }
         else { return ""; }
-#endif  // NW_PLATFORM
+#endif  // NWL_PLATFORM
     }
 
-    // -- binary_data
+    // --binary_data
     bool DataSys::SaveFData(const char* strFPath, void* pData, Size szBytes)
     {
-        IOFStream fStream;
+        OutFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         try {
             fStream.open(strFPath, std::ios::out | std::ios::binary);
             fStream.write(static_cast<char*>(pData), szBytes);
             fStream.close();
-            return true;
         }
         catch (std::ios_base::failure ex) { return false; }
-    }
-    bool DataSys::SaveFData(const char* strDir, const char* strName, const char* strFormat, void* pData, Size szBytes)
-    {
-        try {
-            IOFStream fStream;
-            StrStream strStream;
-            strStream << strDir << strName << "." << strFormat;
-            fStream.open(strStream.str().c_str(), std::ios::out | std::ios::binary);
-            fStream.write(static_cast<char*>(pData), szBytes);
-            fStream.close();
-            return true;
-        }
-        catch (std::ios_base::failure ex) {
-            return false;
-        }
+        return true;
     }
     bool DataSys::LoadFData(const char* strFPath, void* pData, Size szBytes)
     {
-        IOFStream fStream;
+        InFStream fStream;
         fStream.exceptions(std::ios::badbit | std::ios::failbit);
         try {
             fStream.open(strFPath, std::ios::in | std::ios::binary);
             fStream.read(static_cast<char*>(pData), szBytes);
             fStream.close();
-            return true;
         }
         catch (std::ios_base::failure ex)
         {
             return false;
         }
+        return true;
     }
-    bool DataSys::LoadFData(const char* strDir, const char* strName, const char* strFormat, void* pData, Size szBytes)
-    {
-        IOFStream fStream;
-        fStream.exceptions(std::ios::badbit | std::ios::failbit);
-        StrStream strStream;
-        try {
-            strStream << strDir << strName << "." << strFormat;
-            fStream.open(strStream.str(), std::ios::in | std::ios::binary);
-            fStream.read(static_cast<char*>(pData), szBytes);
-            fStream.close();
-            return true;
-        }
-        catch (std::ios_base::failure ex) {
-            return false;
-        }
-    }
-
     // --strings
     bool DataSys::SaveFString(const char* strFPath, const char* strSrc, Size szBytes)
     {
@@ -143,110 +113,120 @@ namespace NWL
             fStream.close();
             return true;
         }
-        catch (std::ios_base::failure ex) {
-            return false;
-        }
+        catch (std::ios_base::failure ex) { return false; }
+        return true;
     }
 
     // --images
-    bool DataSys::SaveFImage(const char* strFPath, ImageInfo& rImage)
+    bool DataSys::SaveFImage(const char* strFPath, Image& rImage)
     {
-        stbi_write_png(strFPath, rImage.nWidth, rImage.nHeight, 0, rImage.pClrData, 0);
+        stbi_write_png(strFPath, rImage.GetSizeW(), rImage.GetSizeH(), 0, rImage.GetData(), 0);
+        return true;
+    }
+    bool DataSys::LoadFImage(const char* strFPath, Image& rImage)
+    {
+        try {
+            const char* strFormat = CStrGetDelimR(&strFPath[0], '.');
+            if (CStrIsEqual(strFormat, ".bmp")) { return LoadFImageBmp(strFPath, rImage); }
+            else if (CStrIsEqual(strFormat, ".png")) { return LoadFImagePng(strFPath, rImage); }
+            else { return false; }
+        }
+        catch (std::ios_base::failure ex) { return false; }
 
         return true;
     }
-    bool DataSys::LoadFImage(const char* strFPath, ImageInfo& rImage)
-    {
-        stbi_set_flip_vertically_on_load(true);
-
-        rImage.pClrData = stbi_load(strFPath, &rImage.nWidth, &rImage.nHeight, &rImage.nChannels, 0);
-        if (rImage.pClrData == nullptr) return false;
-
-        return true;
-    }
-    bool DataSys::LoadFImageBmp(const char* strFPath, ImageInfo& rImage)
+    bool DataSys::LoadFImageBmp(const char* strFPath, Image& rImage)
     {
         // a bitmap file described with some chunks of data
         // the first "file header": signature, file size, reserved1, reserved2, file offset to pixels
         // the second one "info(dib) header": size, width, height, planes, bitcount, compression,
         // image size, xpels per meter, ypels per meter, colors used, color important
-        try {
-            IOFStream fStream(strFPath, std::ios_base::out | std::ios_base::in | std::ios_base::binary);
-            BitMapInfo bmInfo;
-            BITMAPFILEHEADER bmfHeader{ 0 };
-            fStream.read(reinterpret_cast<Byte*>(&bmfHeader), sizeof(bmfHeader));
-            BITMAPINFOHEADER bmiHeader{ 0 };
-            fStream.read(reinterpret_cast<Byte*>(&bmiHeader), sizeof(bmiHeader));
-            {
-                memcpy(&bmInfo.File, &bmfHeader, sizeof(bmfHeader));
-                memcpy(&bmInfo.Data, &bmiHeader, sizeof(bmiHeader));
-                bmInfo.File.szOffset = bmfHeader.bfOffBits;
-                bmInfo.Data.nPxBits = bmiHeader.biBitCount;
-                bmInfo.Data.szCompression = bmiHeader.biCompression;
-                bmInfo.Data.nWidth = bmiHeader.biWidth;
-                bmInfo.Data.nHeight = bmiHeader.biHeight;
-            }
+        IOFStream fStream(strFPath, std::ios_base::out | std::ios_base::in | std::ios_base::binary);
+        BitMapInfo bmInfo;
+        ImageInfo imgInfo;
+        fStream.read(reinterpret_cast<Byte*>(&bmInfo.File), sizeof(bmInfo.File));
+        fStream.read(reinterpret_cast<Byte*>(&bmInfo.Desc), sizeof(bmInfo.Desc));
+        fStream.read(reinterpret_cast<Byte*>(&bmInfo.Clut), sizeof(bmInfo.Clut));
 
+        imgInfo.nWidth = bmInfo.Desc.nWidth;
+        imgInfo.nHeight = bmInfo.Desc.nHeight;
+        imgInfo.nChannels = bmInfo.Desc.nPxBits / 8;
+        rImage.SetData(nullptr, imgInfo);
 
-            NWL_ASSERT(bmInfo.Data.nPxBits == 24, "unsupported format");
-            NWL_ASSERT(bmInfo.Data.szCompression == BI_RGB, "unsupported format");
-            
-            rImage.nWidth = bmInfo.Data.nWidth;
-            rImage.nHeight = bmInfo.Data.nHeight;
-            rImage.nDepth = 1;
-            rImage.nChannels = 3;
-            rImage.pClrData = MemSys::NewTArr<UByte>(static_cast<UInt64>(rImage.GetDataSize()));
-            // offset from the beginning of the file to the pixels array
-            fStream.seekg(bmInfo.File.szOffset, std::ios_base::beg);
-            // every pixel row is padded to multiple of 4 bytes;
-            const Int32 nPad = (4 - (rImage.nWidth * 3) % 4) % 4;
-            for (Int32 iy = 0; iy < rImage.nHeight; iy++) {
-                for (Int32 ix = 0; ix < rImage.nWidth; ix++) {
+        const Int32 nStride = ((bmInfo.Desc.nWidth * bmInfo.Desc.nPxBits + (32 - 1)) & (32 - 1)) >> 3;
+        const Int32 nPad = (4 - (rImage.GetSizeW() * rImage.GetChannels()) % 4) % 4;
+
+        switch (rImage.GetChannels()) {
+        case 1: {
+            for (Int32 iy = 0; iy < rImage.GetSizeH(); iy++) {
+                for (Int32 ix = 0; ix < rImage.GetSizeW(); ix++) {
                     rImage.SetPixel(ix, iy, fStream.get(), fStream.get(), fStream.get());
                 }
                 fStream.seekg(nPad, std::ios_base::cur);
             }
+            break;
         }
-        catch (std::exception& exc) {
-            NWL_ERR(exc.what());
-            throw NWL::Exception("Failed to load .bmp image", NWL_ERR_NO_DATA);
-            return false;
+        case 2: {
+            break;
         }
+        case 3: {
+            fStream.seekg(bmInfo.File.szOffset, std::ios_base::beg);
+            for (Int32 iy = 0; iy < rImage.GetSizeW(); iy++) {
+                for (Int32 ix = 0; ix < rImage.GetSizeH(); ix++) {
+                    rImage.SetPixel(ix, iy, fStream.get(), fStream.get(), fStream.get());
+                }
+                fStream.seekg(nPad, std::ios_base::cur);
+            }
+            break;
+        }
+        case 4: {
+            fStream.seekg(bmInfo.File.szOffset, std::ios_base::beg);
+            for (Int32 iy = 0; iy < rImage.GetSizeH(); iy++) {
+                for (Int32 ix = 0; ix < rImage.GetSizeW(); ix++) {
+                    rImage.SetPixel(ix, iy, fStream.get(), fStream.get(), fStream.get(), fStream.get());
+                }
+                fStream.seekg(nPad, std::ios_base::cur);
+            }
+            break;
+        }default: throw(Exception("unsupported format", ERC_NO_SUPPORT)); break;
+        }
+
+        return true;
+    }
+    bool DataSys::LoadFImagePng(const char* strFPath, Image& rImage) {
+        UByte* pData = nullptr;
+        ImageInfo imgInfo = rImage.GetInfo();
+        pData = stbi_load(strFPath, &imgInfo.nWidth, &imgInfo.nHeight, &imgInfo.nChannels, 0);
+        
+        if (pData == nullptr) { return false; }
+        else { rImage.SetData(pData, imgInfo); }
+        stbi_image_free(pData);
+        
         return true;
     }
     // --meshes
-    bool DataSys::SaveFMesh(const char* strFPath, GMeshInfo& rMesh)
+    bool DataSys::SaveFMesh(const char* strFPath, GfxMeshInfo& rMesh)
     {
+        try {
+        }
+        catch (std::ios_base::failure ex) { return false; }
+           
         return true;
     }
-    bool DataSys::LoadFMesh(const char* strFPath, GMeshInfo& rMesh)
-    {
-        String strBuf;
-        if (!LoadFString(strFPath, strBuf)) { return false; }
-        const char* strFormat = CStrGetDelimR(&strFPath[0], '.', 1);
-        if (strcmp(strFormat, "obj") == 0) { return LoadFMeshObj(&strBuf[0], rMesh); }
-        else { NWL_ERR("Unsupported format"); return false; }
-
-        return true;
-    }
-    bool DataSys::SaveFModel(const char* strFPath, GModelInfo& rModel)
-    {
-        return true;
-    }
-    bool DataSys::LoadFModel(const char* strFPath, GModelInfo& rModel)
+    bool DataSys::LoadFMesh(const char* strFPath, GfxMeshInfo& rMesh)
     {
         String strBuf;
-        if (!LoadFString(strFPath, strBuf)) { return false; }
-        const char* strFormat = CStrGetDelimR(strFPath, '.', 1);
-        if (strcmp(strFormat, "obj") == 0) { return LoadFModelObj(&strBuf[0], rModel); }
-        else { NWL_ERR("Unsupported format"); return false; }
+        try {
+            if (!LoadFString(strFPath, strBuf)) { return false; }
+            const char* strFormat = CStrGetDelimR(&strFPath[0], '.');
+            if (strcmp(strFormat, ".obj") == 0) { return LoadFMeshObj(&strBuf[0], rMesh); }
+            else { return false; }
+        }
+        catch (std::ios_base::failure ex) { return false; }
 
         return true;
     }
-    // --==</core_methods>==--
-
-    // --==<implementation_methods>==--
-    inline bool DataSys::LoadFMeshObj(const char* strFile, GMeshInfo& rMesh) {
+    bool DataSys::LoadFMeshObj(const char* strFile, GfxMeshInfo& rMesh) {
         String strBuf;
         StrStream strStream(strFile);
         DArray<V3f> vtxCrd;
@@ -306,7 +286,29 @@ namespace NWL
 
         return true;
     }
-    inline bool DataSys::LoadFModelObj(const char* strFile, GModelInfo& rModel) {
+    // --models
+    bool DataSys::SaveFModel(const char* strFPath, GfxModelInfo& rModel)
+    {
+        try {
+        }
+        catch (std::ios_base::failure ex) { return false; }
+        
+        return true;
+    }
+    bool DataSys::LoadFModel(const char* strFPath, GfxModelInfo& rModel)
+    {
+        String strBuf;
+        try {
+            if (!LoadFString(strFPath, strBuf)) { return false; }
+            const char* strFormat = CStrGetDelimR(strFPath, '.', 1);
+            if (strcmp(strFormat, ".obj") == 0) { return LoadFModelObj(&strBuf[0], rModel); }
+            else { return false; }
+        }
+        catch (std::ios_base::failure ex) { return false; }
+
+        return true;
+    }
+    bool DataSys::LoadFModelObj(const char* strFile, GfxModelInfo& rModel) {
         String strBuf;
         StrStream strStream(strFile);
         DArray<V3f> vtxCrd;
@@ -314,7 +316,7 @@ namespace NWL
         DArray<V3f> nrmCrd;
         DArray<UInt32> idxData;
 
-        auto fnUploadMesh = [&](GMeshInfo& rMesh)->bool {
+        auto fnUploadMesh = [&](GfxMeshInfo& rMesh)->bool {
             if (vtxCrd.size() == 0 || texCrd.size() == 0 || nrmCrd.size() == 0 || idxData.size() == 0) { return false; }
             Size nMin = 0;
             nMin = nMin > vtxCrd.size() ? nMin : vtxCrd.size();
@@ -350,7 +352,7 @@ namespace NWL
         idxData.reserve(1 << 12);
         while (strStream >> strBuf) {
             if (strBuf == "g") {
-                rModel.Meshes.push_back(GMeshInfo());
+                rModel.Meshes.push_back(GfxMeshInfo());
                 strStream >> rModel.Meshes.back().strName;
                 while (strStream >> strBuf) {
                     if (strBuf == "usemtl") { strStream >> rModel.Meshes.back().strMtlName; }
@@ -384,5 +386,5 @@ namespace NWL
         }
         return true;
     }
-    // --==</implementation_methods>==--
+    // --==</core_methods>==--
 }

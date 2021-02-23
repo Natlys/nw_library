@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src_cpp\core\nwl_code_res.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_container.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -56,6 +53,15 @@
     </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_type.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\data\data_code_res.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\data\data_image.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\data\data_mesh.h">
+      <Filter>data</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\data\data_res.h">
       <Filter>data</Filter>
@@ -133,8 +139,20 @@
     <ClCompile Include="src_cpp\core\nwl_random.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_string.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_time.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_type.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\data\data_image.cpp">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\data\data_mesh.cpp">
+      <Filter>data</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\data\data_sys.cpp">
       <Filter>data</Filter>
@@ -142,7 +160,13 @@
     <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp">
       <Filter>ecs</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\ecs\ecs_component.cpp">
+      <Filter>ecs</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp">
+      <Filter>ecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\ecs\ecs_entity.cpp">
       <Filter>ecs</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\io\io_exception.cpp">
@@ -151,6 +175,15 @@
     <ClCompile Include="src_cpp\io\io_log.cpp">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\memory\mem_allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\memory\mem_sys.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\nwl_pch.cpp" />
+    <ClCompile Include="src_cpp\physx\physx_collision.cpp">
+      <Filter>physx</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

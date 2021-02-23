@@ -9,7 +9,7 @@
 namespace NWL
 {
 	template<typename MType>
-	struct NWL_API MemRef
+	struct NWL_API MemRef : public AMemUser
 	{
 	public:
 		MType mData;
@@ -27,7 +27,7 @@ namespace NWL
 	/// Interface:
 	/// -> Create RefKeeper -> MakeRef with particular allocator -> SetRef for other keepers -> use as a pointer
 	template <typename MType>
-	class NWL_API RefKeeper
+	class NWL_API RefKeeper : public AMemUser
 	{
 	public:
 		RefKeeper();
@@ -55,11 +55,6 @@ namespace NWL
 		template<typename VType> inline operator VType*() { return static_cast<VType*>(m_pRef); }
 		inline RefKeeper<MType>& operator=(const RefKeeper<MType>& rCpy) { SetRef(rCpy); return *this; }
 		template<typename VType> inline operator RefKeeper<VType>()	{ RefKeeper<VType> memRefKeeper(*this); return memRefKeeper; }
-		inline void* operator new(Size szData, Ptr pBlock)		{ return ::operator new(szData, pBlock); }
-		inline void* operator new(Size szData)					{ return MemSys::Alloc(szData); }
-		inline void* operator new[](Size szData)				{ return MemSys::Alloc(szData); }
-		inline void operator delete(Ptr pBlock, Size szData)	{ MemSys::Dealloc(pBlock, szData); }
-		inline void operator delete[](Ptr pBlock, Size szData)	{ MemSys::Dealloc(pBlock, szData); }
 		// --core_methods
 		template <typename VType, typename ... Args>
 		inline void MakeRef(Args&& ... Arguments);

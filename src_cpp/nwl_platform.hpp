@@ -5,11 +5,8 @@
 #define NOMINMAX
 #include <windows.h>
 #include <commdlg.h>
+#include <tchar.h>
 #pragma comment(lib, "winmm.lib")
-namespace NWL
-{
-	struct NativeWindow { HWND pHandle = NULL; inline operator HWND& () { return pHandle; } };
-}
 #endif	// NWL_PLATFORM_WINDOWS
 
 #endif	// NWL_PLATFORM_HPP

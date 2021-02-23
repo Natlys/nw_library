@@ -44,7 +44,7 @@ namespace glm
 #		if GLM_CONFIG_XYZW_ONLY
 			T x, y, z;
 #			if GLM_CONFIG_SWIZZLE == GLM_SWIZZLE_FUNCTION
-			GLM_SWIZZLE_GEN_VEC_FROM_VEC3_COMP(T, Q, x, y, z)
+			GLM_SWIZZLE_GEN_EC_FROM_VEC3_COMP(T, Q, x, y, z)
 #			endif//GLM_CONFIG_SWIZZLE
 #		elif GLM_CONFIG_ANONYMOUS_STRUCT == GLM_ENABLE
 			union
@@ -73,7 +73,7 @@ namespace glm
 			union { T z, b, p; };
 
 #			if GLM_CONFIG_SWIZZLE == GLM_SWIZZLE_FUNCTION
-				GLM_SWIZZLE_GEN_VEC_FROM_VEC3(T, Q)
+				GLM_SWIZZLE_GEN_EC_FROM_VEC3(T, Q)
 #			endif//GLM_CONFIG_SWIZZLE
 #		endif//GLM_LANG
 

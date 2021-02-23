@@ -3,46 +3,31 @@
 
 #include <nwl_core.hpp>
 
-#include <core/nwl_string.h>
-
-#pragma warning (disable : 4996)
-
-namespace NWL
-{
-	struct NWL_API TimeInfo
-	{
-		using Clock = std::chrono::high_resolution_clock;
-		using TimePoint = std::chrono::time_point<Clock>;
-		using Sec = std::chrono::duration<Float64, std::ratio<1>>;
-	public:
-		TimePoint tpLast;
-		TimePoint tpCurr;
-		String strTime = "";
-		Float64 nCurr = 0;
-		Float64 nLast = 0;
-		Float64 nDelta = 0;
-	};
-}
 namespace NWL
 {
 	/// TimeCounter class
 	class NWL_API TimeCounter
 	{
+		using Clock = std::chrono::high_resolution_clock;
+		using TimePoint = std::chrono::time_point<Clock>;
+		using Sec = std::chrono::duration<Float64, std::ratio<1>>;
 	public:
-		TimeCounter() : m_nBegTime(0), m_nEndTime(0), m_nCreationTime(0) {}
-
+		TimeCounter();
 		// --getters
-		inline float GetCreationTime() { return m_nCreationTime; }
-		inline float GetCountedTime() { return m_nEndTime - m_nBegTime; }
+		inline Float64 GetCurr()	{ return m_nLast; }
+		inline Float64 GetLast()	{ return m_nLast; }
+		inline Float64 GetDelta()	{ return m_nCurr - m_nLast; }
+		inline Float64 GetBegin()	{ return m_nBegin; }
 		// --setters
-		void BeginCount() {}
-		void EndCount() {}
-
+		void Update();
 		// --core_methods
 	private:
-		float m_nBegTime;
-		float m_nEndTime;
-		float m_nCreationTime;
+		TimePoint m_tpLast;
+		TimePoint m_tpCurr;
+		Float64 m_nCurr;
+		Float64 m_nLast;
+		Float64 m_nDelta;
+		Float64 m_nBegin;
 	};
 }
 namespace NWL
@@ -54,26 +39,19 @@ namespace NWL
 	{
 	public:
 		// --getters
-		static inline TimeInfo& GetInfo()		{ static TimeInfo s_tmInfo; return s_tmInfo; }
-		static inline Float64 GetLastS()		{ return GetInfo().nLast; }
-		static inline Float64 GetCurrS()		{ return GetInfo().nCurr; }
-		static inline Float64 GetDeltaS()		{ return GetInfo().nDelta; }
-		static inline Float64 GetLastMs()		{ return GetInfo().nLast * 1000; }
-		static inline Float64 GetCurrMs()		{ return GetInfo().nCurr * 1000; }
-		static inline Float64 GetDeltaMs()		{ return GetInfo().nDelta * 1000; }
-		static inline const char* GetString()	{ GetInfo().strTime = std::ctime(0); return &(GetInfo().strTime[0]); }
-		static inline TimeCounter& GetCounter()	{ static TimeCounter s_tc; return s_tc; }
+		static inline const TimeCounter& GetCounter()			{ return s_tCounter; }
+		static inline Float64 GetCurr(Float64 nRatio = 1.0)		{ return s_tCounter.GetCurr() * nRatio; }
+		static inline Float64 GetLast(Float64 nRatio = 1.0)		{ return s_tCounter.GetLast() * nRatio; }
+		static inline Float64 GetDelta(Float64 nRatio = 1.0)	{ return s_tCounter.GetDelta() * nRatio; }
+		static inline Float64 GetGlobal(Float64 nRatio = 1.0)	{ return s_tCounter.GetBegin() * nRatio; }
+		static inline Float64 GetFPS(Float64 nRatio = 1.0)		{ return 1.0 / GetDelta(nRatio); }
 		// --core_methods
-		static inline void Update();
+		static void OnInit();
+		static void OnQuit();
+		static void Update();
+	private:
+		static TimeCounter s_tCounter;
 	};
-	inline void TimeSys::Update() {
-		TimeInfo& tm = GetInfo();
-		tm.tpCurr = TimeInfo::Clock::now();
-		tm.nDelta = std::chrono::duration_cast<TimeInfo::Sec>(tm.tpCurr - tm.tpLast).count();
-		tm.nLast = tm.nCurr;
-		tm.nCurr += tm.nDelta;
-		tm.tpLast = TimeInfo::Clock::now();
-	}
 }
 
 #endif // NW_TIME_H

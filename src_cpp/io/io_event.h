@@ -6,18 +6,17 @@
 
 namespace NWL
 {
-
 	enum EventTypes : UInt32 {
-		ET_DEFAULT = 1 << 0,
-		ET_CURSOR_MOVE = 1 << 1, ET_CURSOR_SCROLL = 1 << 2, ET_CURSOR_PRESS = 1 << 3, ET_CURSOR_RELEASE = 1 << 4,
-		ET_KEYBOARD_RELEASE = 1 << 8, ET_KEYBOARD_PRESS = 1 << 9, ET_KEYBOARD_CHAR = 1 << 10,
-		ET_WINDOW_CLOSE = 1 << 12, ET_WINDOW_RESIZE = 1 << 13, ET_WINDOW_MOVE = 1 << 14, ET_WINDOW_FOCUS = 1 << 15, ET_WINDOW_DEFOCUS = 1 << 16
+		EVT_DEFAULT = 1 << 0,
+		EVT_CURSOR_MOVE = 1 << 1, EVT_CURSOR_SCROLL = 1 << 2, EVT_CURSOR_PRESS = 1 << 3, EVT_CURSOR_RELEASE = 1 << 4,
+		EVT_KEYBOARD_RELEASE = 1 << 8, EVT_KEYBOARD_PRESS = 1 << 9, EVT_KEYBOARD_CHAR = 1 << 10,
+		EVT_WINDOW_CLOSE = 1 << 12, EVT_WINDOW_RESIZE = 1 << 13, EVT_WINDOW_MOVE = 1 << 14, EVT_WINDOW_FOCUS = 1 << 15, EVT_WINDOW_DEFOCUS = 1 << 16
 	};
 	enum EventCategories : UInt32 {
-		EC_DEFAULT = ET_DEFAULT,
-		EC_CURSOR = ET_CURSOR_MOVE | ET_CURSOR_SCROLL | ET_CURSOR_PRESS | ET_CURSOR_RELEASE,
-		EC_KEYBOARD = ET_KEYBOARD_PRESS | ET_KEYBOARD_RELEASE | ET_KEYBOARD_CHAR,
-		EC_WINDOW = ET_WINDOW_CLOSE | ET_WINDOW_RESIZE | ET_WINDOW_MOVE | ET_WINDOW_FOCUS | ET_WINDOW_DEFOCUS,
+		EVC_DEFAULT = EVT_DEFAULT,
+		EVC_CURSOR = EVT_CURSOR_MOVE | EVT_CURSOR_SCROLL | EVT_CURSOR_PRESS | EVT_CURSOR_RELEASE,
+		EVC_KEYBOARD = EVT_KEYBOARD_PRESS | EVT_KEYBOARD_RELEASE | EVT_KEYBOARD_CHAR,
+		EVC_WINDOW = EVT_WINDOW_CLOSE | EVT_WINDOW_RESIZE | EVT_WINDOW_MOVE | EVT_WINDOW_FOCUS | EVT_WINDOW_DEFOCUS,
 	};
 }
 
@@ -32,13 +31,17 @@ namespace NWL
 	{
 	public:
 		Bit bIsHandled = false;
-		EventTypes evType = ET_DEFAULT;
+		EventTypes evType = EVT_DEFAULT;
 	public:
 		AEvent(EventTypes evtType) : evType(evtType), bIsHandled(false) { }
 		virtual ~AEvent() = default;
 		// --predicates
 		inline bool IsInCategory(EventCategories evCat) { return (evType & evCat); }
 	};
+	using EventCallback = std::function<void(AEvent&)>;
+}
+namespace NWL
+{
 	/// CursorEvent struct
 	struct NWL_API CursorEvent : public AEvent
 	{

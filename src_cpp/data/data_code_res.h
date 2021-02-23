@@ -1,10 +1,10 @@
-#ifndef NWL_CODE_RES_H
-#define NWL_CODE_RES_H
+#ifndef NWL_DATA_CODE_RES_H
+#define NWL_DATA_CODE_RES_H
 
 #include <nwl_core.hpp>
-#include <nwl_data.hpp>
 
 #include <core/nwl_string.h>
+#include <data/data_res.h>
 
 namespace NWL
 {

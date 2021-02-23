@@ -6,8 +6,6 @@
 #include <random>
 
 #pragma warning(disable : 4067)
-#undef max(a,b) (((a) > (b)) ? (a) : (b))
-#undef min(a,b) (((a) < (b)) ? (a) : (b))
 
 namespace NWL
 {
@@ -15,15 +13,9 @@ namespace NWL
 	{
 	public:
 		// --getters
-		static inline bool GetBool() {
-			return  static_cast<bool>(GetInt(0, 1));
-		}
-		static inline bool GetByte() {
-			return  static_cast<Byte>(GetInt(-128, 127));
-		}
-		static inline bool GetUByte() {
-			return  static_cast<UByte>(GetInt(0, 255));
-		}
+		static inline bool GetBool() { return  static_cast<bool>(GetInt(0, 1)); }
+		static inline bool GetByte() { return  static_cast<Byte>(GetInt(-128, 127)); }
+		static inline bool GetUByte() { return  static_cast<UByte>(GetInt(0, 255)); }
 		static inline Int32 GetInt(Int32 nMin = 0xFF'FF'00'00, Int32 nMax = 0x00'00'FF'FF) {
 			constexpr Float64 nFraction = 1.0 / ( static_cast<Float64>(s_RandEngine.max()) );
 			return  static_cast<Int32>(std::round(static_cast<Float64>(s_RandEngine()) * nFraction * (nMax - nMin))) + nMin;

@@ -40,14 +40,14 @@ typedef union
 		(ix1) = ew_u.parts.lsw;				\
 	} while (0)
 
-#define GLM_GET_FLOAT_WORD(i,d)				\
+#define GLM_GEVT_FLOAT_WORD(i,d)				\
 	do {									\
 		ieee_float_shape_type gf_u;			\
 		gf_u.value = (d);					\
 		(i) = gf_u.word;					\
 	} while (0)
 
-#define GLM_SET_FLOAT_WORD(d,i)				\
+#define GLM_SEVT_FLOAT_WORD(d,i)				\
 	do {									\
 		ieee_float_shape_type sf_u;			\
 		sf_u.word = (i);					\
@@ -70,8 +70,8 @@ namespace detail
 		volatile float t;
 		int hx, hy, ix, iy;
 
-		GLM_GET_FLOAT_WORD(hx, x);
-		GLM_GET_FLOAT_WORD(hy, y);
+		GLM_GEVT_FLOAT_WORD(hx, x);
+		GLM_GEVT_FLOAT_WORD(hy, y);
 		ix = hx & 0x7fffffff;		// |x|
 		iy = hy & 0x7fffffff;		// |y|
 
@@ -82,7 +82,7 @@ namespace detail
 			return y;		// x=y, return y
 		if(ix == 0)
 		{				// x == 0
-			GLM_SET_FLOAT_WORD(x, (hy & 0x80000000) | 1);// return +-minsubnormal
+			GLM_SEVT_FLOAT_WORD(x, (hy & 0x80000000) | 1);// return +-minsubnormal
 			t = x * x;
 			if(abs(t - x) <= epsilon<float>())
 				return t;
@@ -111,11 +111,11 @@ namespace detail
 			t = x * x;
 			if(abs(t - x) > epsilon<float>())
 			{					// raise underflow flag
-				GLM_SET_FLOAT_WORD(y, hx);
+				GLM_SEVT_FLOAT_WORD(y, hx);
 				return y;
 			}
 		}
-		GLM_SET_FLOAT_WORD(x, hx);
+		GLM_SEVT_FLOAT_WORD(x, hx);
 		return x;
 	}
 
