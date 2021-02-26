@@ -10,6 +10,9 @@
     <Filter Include="ecs">
       <UniqueIdentifier>{C06D880B-2C77-887C-B5F2-9E7C21FB937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gfx">
+      <UniqueIdentifier>{AA76880B-1680-887C-9FFB-9E7C0B04947C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="io">
       <UniqueIdentifier>{3D785900-2904-880B-92B2-880B7E5D880B}</UniqueIdentifier>
     </Filter>
@@ -53,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_type.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\data\data_code_res.h">
-      <Filter>data</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\data\data_image.h">
       <Filter>data</Filter>
@@ -134,6 +134,7 @@
     <ClInclude Include="src_cpp\physx\physx_collision.h">
       <Filter>physx</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_switch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\core\nwl_random.cpp">
@@ -185,5 +186,6 @@
     <ClCompile Include="src_cpp\physx\physx_collision.cpp">
       <Filter>physx</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
   </ItemGroup>
 </Project>

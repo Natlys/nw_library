@@ -1,12 +1,7 @@
 #ifndef NWL_DATA_SYSTEM_H
 #define NWL_DATA_SYSTEM_H
-
 #include <nwl_core.hpp>
-
 #include <data/data_res.h>
-#include <data/data_mesh.h>
-#include <data/data_image.h>
-
 namespace NWL
 {
 	/// DataSys static class
@@ -14,33 +9,20 @@ namespace NWL
 	{
 	public:
 		// --getters
-		static inline const char* GetDirectory() { return &s_strRscDir[0]; }
+		static inline const char* GetDirectory() { return &s_strDir[0]; }
 		// --core_methods
 		static void OnInit();
 		static void OnQuit();
 
-		static const char* FDialogSave(const char* strFilter, Ptr pWindow);
-		static const char* FDialogLoad(const char* strFilter, Ptr pWindow);
+		static String DialogSave(const char* strFilter, Ptr pWindow);
+		static String DialogLoad(const char* strFilter, Ptr pWindow);
 
-		static bool SaveFData(const char* strFPath, void* pData, Size szBytes);
-		static bool LoadFData(const char* strFPath, void* pData, Size szBytes);
-
-		static bool SaveFString(const char* strFPath, const char* strSrc, Size szBytes);
-		static bool LoadFString(const char* strFPath, String& strDest);
-
-		static bool SaveFImage(const char* strFPath, Image& rImage);
-		static bool LoadFImage(const char* strFPath, Image& rImage);
-		static bool LoadFImageBmp(const char* strFPath, Image& rImage);
-		static bool LoadFImagePng(const char* strFPath, Image& rImage);
-
-		static bool SaveFMesh(const char* strFPath, GfxMeshInfo& rMesh);
-		static bool LoadFMesh(const char* strFPath, GfxMeshInfo& rMesh);
-		static bool LoadFMeshObj(const char* strFile, GfxMeshInfo& rMesh);
-		static bool SaveFModel(const char* strFPath, GfxModelInfo& rModel);
-		static bool LoadFModel(const char* strFPath, GfxModelInfo& rModel);
-		static bool LoadFModelObj(const char* strFile, GfxModelInfo& rModel);
+		static bool SaveFile(const char* strFPath, Ptr pData, Size szBytes);
+		static bool LoadFile(const char* strFPath, Ptr pData, Size szBytes);
+		template<typename DType> static bool SaveFile(const char* strFPath, DType& rData);
+		template<typename DType> static bool LoadFile(const char* strFPath, DType& rData);
 	private:
-		static String s_strRscDir;
+		static String s_strDir;
 	};
 }
 

@@ -1,6 +1,7 @@
 #ifndef NATIVE_WORLD_LIBRARY_HPP
 #define NATIVE_WORLD_LIBRARY_HPP
 
+#include <core/nwl_switch.h>
 #include <core/nwl_engine.h>
 #include <core/nwl_singleton.h>
 #include <core/nwl_id_stack.h>

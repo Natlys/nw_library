@@ -13,7 +13,7 @@ namespace NWL
 	enum KeyCodes : Char16 {
 		KC_BACKSPACE = 8, KC_VTAB = 9, KC_HTAB = 11, KC_ENTER = 13,
 		KC_LSHIFT = 17,	KC_RSHIFT = 17,
-		KC_LCTRL = 18,	KC_RCTRL = 18,
+		KC_LCTRL = 17,	KC_RCTRL = 18,
 		KC_PAUSE = 20,	KC_CAPS_LOCK = 26,	KC_ESCAPE = 27,
 		KC_LEFT = 37,	KC_UP = 38,		KC_RIGHT = 39,	KC_DOWN = 40,
 		KC_INSERT = 45,	KC_DEL = 46,	KC_HOME = 47,
@@ -46,11 +46,11 @@ namespace NWL
 		KC_RECT_DITHER = 177,	KC_QUAD = 254,
 		KC_COUNT = 255
 	};
-	enum CursorCodes : Char16 {
-		CRS_0 = 1 << 0,	CRS_1 = 1 << 1,	CRS_2 = 1 << 2,
-		CRS_3 = 1 << 3, CRS_4 = 1 << 4, CRS_5 = 1 << 5,
-		CRS_6 = 1 << 6, CRS_7 = 1 << 7,
-		CRS_LEFT = CRS_0,	CRS_RIGHT = CRS_1,
+	enum CursorCodes : Char8 {
+		CRS_0 = 0,	CRS_1 = 1,	CRS_2  = 2,
+		CRS_3, CRS_4, CRS_5,
+		CRS_6, CRS_7,
+		CRS_LEFT = CRS_0, CRS_RIGHT = CRS_1, CRS_MIDDLE = CRS_2,
 		CRS_COUNT = CRS_7
 	};
 	enum CursorModes : UInt32 {

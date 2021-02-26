@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NW_DEBUG;NWG_DEBUG;NWC_DEBUG;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;DEBUG;NW_DEBUG;NWG_DEBUG;NWC_DEBUG;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -75,7 +75,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NW_RELEASE;NWG_RELEASE;NWC_RELEASE;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NDEBUG;NW_RELEASE;NWG_RELEASE;NWC_RELEASE;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="src_cpp\core\nwl_container.h" />
     <ClInclude Include="src_cpp\core\nwl_engine.h" />
+    <ClInclude Include="src_cpp\core\nwl_switch.h" />
     <ClInclude Include="src_cpp\core\nwl_id_stack.h" />
     <ClInclude Include="src_cpp\core\nwl_random.h" />
     <ClInclude Include="src_cpp\core\nwl_singleton.h" />
@@ -102,7 +103,6 @@
     <ClInclude Include="src_cpp\core\nwl_thread.h" />
     <ClInclude Include="src_cpp\core\nwl_time.h" />
     <ClInclude Include="src_cpp\core\nwl_type.h" />
-    <ClInclude Include="src_cpp\data\data_code_res.h" />
     <ClInclude Include="src_cpp\data\data_image.h" />
     <ClInclude Include="src_cpp\data\data_mesh.h" />
     <ClInclude Include="src_cpp\data\data_res.h" />
@@ -138,6 +138,7 @@
     <ClInclude Include="src_cpp\physx\physx_collision.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
     <ClCompile Include="src_cpp\core\nwl_random.cpp" />
     <ClCompile Include="src_cpp\core\nwl_string.cpp" />
     <ClCompile Include="src_cpp\core\nwl_time.cpp" />

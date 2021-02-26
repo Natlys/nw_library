@@ -30,7 +30,7 @@ namespace NWL
 		virtual void SetName(const char* strName) { m_strName = strName; }
 		// --predicates
 		template<class DType>
-		inline bool IsOfType() { return TypeIndexator::Get<DType>() == GetTypeId(); }
+		inline bool IsOfType() { return TypeIndexator::GetId<DType>() == GetTypeId(); }
 		// --core_methods
 		virtual bool SaveF(const char* strFPath) = 0;
 		virtual bool LoadF(const char* strFPath) = 0;

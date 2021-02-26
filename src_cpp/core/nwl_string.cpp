@@ -65,11 +65,19 @@ namespace NWL
 }
 namespace NWL
 {
-	const char* CStrGetDelimR(const char* strSource, char cDelim, Size szOffset) {
-		Size szLen = strlen(strSource);
-		Size szCurr = szLen - szOffset;
-		while(strSource[--szCurr] != cDelim && szCurr <= szLen) { }
-		return &strSource[szCurr];
+	const char* CStrGetPartL(const char* strSource, char cDelim, int nFromL) {
+		int nLen = strlen(strSource);
+		if (nLen == 0) { return ""; }
+		int nCurr = nFromL % nLen;
+		while (strSource[nCurr] != cDelim && nCurr <= nLen) { nCurr += 1; }
+		return &strSource[nCurr];
+	}
+	const char* CStrGetPartR(const char* strSource, char cDelim, int nFromR) {
+		int nLen = strlen(strSource);
+		if (nLen == 0) { return ""; }
+		int nCurr = nLen - (nFromR % nLen);
+		while (strSource[nCurr] != cDelim && nCurr <= nLen) { nCurr -= 1; }
+		return &strSource[nCurr];
 	}
 	const char* CStrGetFormat(const char* strFormat, ...) {
 		va_list argList;

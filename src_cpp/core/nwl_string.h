@@ -12,11 +12,12 @@ namespace NWL
 
 namespace NWL
 {
-	String StrGetFormatVa(const char* strFormat, va_list& argList);
-	String StrGetFormat(const char* strFormat, ...);
-	const char* CStrGetDelimR(const char* strSource, char cDelim, Size szOffset = 0);
-	const char* CStrGetFormat(const char* strFormat, ...);
-	bool CStrIsEqual(const char* strL, const char* strR);
+	NWL_API String StrGetFormatVa(const char* strFormat, va_list& argList);
+	NWL_API String StrGetFormat(const char* strFormat, ...);
+	NWL_API const char* CStrGetPartL(const char* strSource, char cDelim, int nFromL = 0);
+	NWL_API const char* CStrGetPartR(const char* strSource, char cDelim, int nFromR = 0);
+	NWL_API const char* CStrGetFormat(const char* strFormat, ...);
+	NWL_API bool CStrIsEqual(const char* strL, const char* strR);
 }
 
 #endif // NWL_STRING_H

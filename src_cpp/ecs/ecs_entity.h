@@ -44,7 +44,7 @@ namespace NWL
 	class NWL_API TEntity : public Entity
 	{
 	protected:
-		TEntity() : Entity(TypeIndexator::Get()) { }
+		TEntity() : Entity(TypeIndexator::GetId()) { }
 	public:
 		virtual ~TEntity() { }
 		// --getters

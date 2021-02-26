@@ -20,17 +20,17 @@ namespace NWL
 		static inline CmpsRegistry& GetRegistry() { return s_cReg; }
 		static inline Cmps& GetCmps(UInt32 eId) { return GetRegistry()[eId]; }
 		static inline ACmp* GetCmp(UInt32 eId, UInt32 tId) { return HasCmp(eId, tId) ? GetCmps(eId)[tId].GetRef() : nullptr; }
-		template<class CType> static ACmp* GetCmp(UInt32 eId) { return HasCmp<CType>(eId) ? GetCmps(eId)[TypeIndexator::Get<CType>()].GetRef<CType>() : nullptr; }
-		template<class CType> static Cmps& GetCmps() { return GetRegistry()[TypeIndexator::Get<CType>()]; }
-		template<class CType> static CType* GetCmp(UInt32 eId) { return static_cast<CType*>(GetCmp(eId, TypeIndexator::Get<CType>())); }
+		template<class CType> static ACmp* GetCmp(UInt32 eId) { return HasCmp<CType>(eId) ? GetCmps(eId)[TypeIndexator::GetId<CType>()].GetRef<CType>() : nullptr; }
+		template<class CType> static Cmps& GetCmps() { return GetRegistry()[TypeIndexator::GetId<CType>()]; }
+		template<class CType> static CType* GetCmp(UInt32 eId) { return static_cast<CType*>(GetCmp(eId, TypeIndexator::GetId<CType>())); }
 		// --setters
 		static void RmvCmp(UInt32 eId, UInt32 tId);
 		template<class CType, typename ... Args> static CType* AddCmp(UInt32 eId, Args& ... Arguments);
-		template<class CType> static void RmvCmp(UInt32 eId) { RmvCmp(eId, TypeIndexator::Get<CType>(eId)); }
+		template<class CType> static void RmvCmp(UInt32 eId) { RmvCmp(eId, TypeIndexator::GetId<CType>(eId)); }
 		// --predicates
 		static inline bool HasEnt(UInt32 eId) { if (GetRegistry().empty()) { return false; } return GetRegistry().find(eId) != GetRegistry().end(); }
 		static inline bool HasCmp(UInt32 eId, UInt32 tId) { if (!HasEnt(eId)) { return false; } return GetRegistry()[eId][tId].IsValid(); }
-		template<class CType> static bool HasCmp(UInt32 eId) { return HasCmp(eId, TypeIndexator::Get<>()); }
+		template<class CType> static bool HasCmp(UInt32 eId) { return HasCmp(eId, TypeIndexator::GetId<>()); }
 		// --core_methods
 		static void OnInit();
 		static void OnQuit();
@@ -56,7 +56,7 @@ namespace NWL
 	class NWL_API TCmp : public ACmp
 	{
 	protected:
-		TCmp() : ACmp(TypeIndexator::Get<CType>()GetStaticTypeId()) { }
+		TCmp() : ACmp(TypeIndexator::GetId<CType>()GetStaticTypeId()) { }
 	public:
 		virtual ~TCmp() { }
 	};

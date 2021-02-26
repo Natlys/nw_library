@@ -1,13 +1,61 @@
 #ifndef NWL_DATA_IMAGE_H
 #define NWL_DATA_IMAGE_H
-
 #include <nwl_core.hpp>
-
+#include <core/nwl_container.h>
+#include <core/nwl_switch.h>
 #include <memory/mem_sys.h>
-
 namespace NWL
 {
-	/// BitMapInfo struct
+	/// Pixel struct
+	struct NWL_API Pixel
+	{
+	public:
+		union {
+			unsigned int rgbaVal;
+			struct { UByte r, g, b, a; };
+			UByte rgba[4]{ 0 };
+		};
+	public:
+		Pixel() = default;
+		Pixel(UInt32 nValue) : rgbaVal(nValue) { }
+		Pixel(UByte red, UByte green, UByte blue, UByte alpha) :
+			rgba{ red, green, blue, alpha } { }
+		// --operators
+		inline UByte& operator[](UInt8 nIdx) { return rgba[nIdx]; }
+		inline const UByte& operator[](UInt8 nIdx) const { return rgba[nIdx]; }
+		inline void operator=(UInt32 nValue) { rgbaVal = nValue; }
+		inline void operator=(const Pixel& rCpy) { rgbaVal = rCpy.rgbaVal; }
+	};
+}
+namespace NWL
+{
+	/// ImageInfo struct
+	struct NWL_API ImageInfo
+	{
+	public:
+		PixelFormats pxlFormat = PXF_R8G8B8A8_UINT32;
+		Int32 nWidth = 1;
+		Int32 nHeight = 1;
+		Int32 nChannels = 1;
+		DArray<Pixel> pxlData = { Pixel(255u, 255u, 255u, 255u) };
+	public:
+		// --getters
+		inline Size GetDataSize() const { return static_cast<Size>(abs(nChannels) * abs(nWidth) * abs(nHeight)); }
+		inline UInt64 GetPxlCount() const { return static_cast<UInt64>(abs(nWidth) * abs(nHeight)); }
+		inline Pixel GetPixel(UInt32 nX, UInt32 nY) { return pxlData[NWL_XY_TO_X(nX, nY, nWidth) % GetDataSize()]; }
+		// --setters
+		void SetPixel(UInt32 szX, UInt32 nY, Pixel pxlColor);
+		void SetPixels(UByte* pData);
+		// --operators
+		std::ostream& operator<<(std::ostream& rStream) const;
+		std::istream& operator>>(std::istream& rStream);
+	};
+	std::ostream& operator<<(std::ostream& rStream, const ImageInfo& rInfo);
+	std::istream& operator>>(std::istream& rStream, ImageInfo& rInfo);
+}
+namespace NWL
+{
+	/// ImageBmpInfo struct
 	/// Description:
 	/// --used for loading of .bmp formatted files
 	/// Interface:
@@ -15,13 +63,14 @@ namespace NWL
 	/// ->if the image is indexed - load color pallete
 	/// ->read pixel data with offset which is defined in "file" header
 	/// ->in the case of 24bit and not multiple-of-4 sizes, we need to consider padding
-	struct NWL_API BitMapInfo
+	struct NWL_API ImageBmpInfo : public ImageInfo
 	{
+	public:
 #pragma pack(push, 1) // add padding 16->14
 		struct {
-			UInt16 nType = 0; // two encoded letters;usually "bm"
+			UInt16 nType = 0x4d; // two encoded letters;usually "bm"
 			UInt32 szData = 3; // size of the file in bytes
-			UInt16 nReserved1 = 0; // it is reserved
+			UInt16 nReserved1 = 0; // it is reserved, (can be used by a programmer)
 			UInt16 nReserved2 = 0; // so it is always zero
 			UInt32 szOffset = 54; // offset to the pixel data
 		}File;	// file info
@@ -50,60 +99,27 @@ namespace NWL
 			UInt32 nAMask = 0xff'00'00'00; // bit mask for the alpha channel
 			UInt32 nColorSpaceType = 0x73'52'47'42; // default s'rgb
 			UInt32 nUnused = 0x73'52'47'42; // unused data for s'rgb clr space
-		}Clut;	// color lookup table
+		} Clut;	// color lookup table
 #pragma pack(pop)
-	};
-}
-namespace NWL
-{
-	/// ImageInfo struct
-	struct NWL_API ImageInfo
-	{
 	public:
-		Int32 nWidth = 1;
-		Int32 nHeight = 1;
-		Int32 nChannels = 1;
-		PixelFormats pxlFormat = PXF_R8G8B8A8_UINT32;
-	public:
-		ImageInfo(Int32 nX = 1, Int32 nY = 1, UInt8 nCh = 3);
-		// --getters
-		inline Size GetSize()	{ return static_cast<Size>(abs(nChannels) * abs(nWidth) * abs(nHeight)); }
 		// --operators
 		std::ostream& operator<<(std::ostream& rStream) const;
 		std::istream& operator>>(std::istream& rStream);
 	};
-	std::ostream& operator<<(std::ostream& rStream, const ImageInfo& rInfo);
-	std::istream& operator>>(std::istream& rStream, ImageInfo& rInfo);
+	std::ostream& operator<<(std::ostream& rStream, const ImageBmpInfo& rInfo);
+	std::istream& operator>>(std::istream& rStream, ImageBmpInfo& rInfo);
+	/// ImagePngInfo struct
 }
 namespace NWL
 {
-	class NWL_API Image : public AMemUser
+	struct NWL_API ImagePngInfo : public ImageInfo
 	{
 	public:
-		Image();
-		Image(const ImageInfo& rInfo, UByte* pData);
-		Image(const Image& rImg);
-		virtual ~Image();
-		// --getters
-		inline UByte* GetData()					{ return m_pData; }
-		inline Size GetSize() const				{ return static_cast<Size>(abs(m_Info.nChannels) * abs(m_Info.nWidth) * abs(m_Info.nHeight)); }
-		inline Int32 GetSizeW() const			{ return m_Info.nWidth; }
-		inline Int32 GetSizeH() const			{ return m_Info.nHeight; }
-		inline Int32 GetChannels() const		{ return m_Info.nChannels; }
-		inline PixelFormats GetFormat() const	{ return m_Info.pxlFormat; }
-		inline const ImageInfo& GetInfo() const	{ return m_Info; }
-		// --setters
-		void SetData(UByte* pData, Size nW, Size nH, Size nCh);
-		void SetData(UByte* pData, const ImageInfo& rInfo);
-		void SetPixel(Int32 nX, Int32 nY, UByte nR, UByte nG, UByte nB);
-		void SetPixel(Int32 nX, Int32 nY, UByte nR, UByte nG, UByte nB, UByte nA);
-		void SetPixel(Int32 nX, Int32 nY, UInt32 unColor);
 		// --operators
-		void operator=(const Image& rImg);
-	private:
-		ImageInfo m_Info;
-		UByte* m_pData;
+		std::ostream& operator<<(std::ostream& rStream) const;
+		std::istream& operator>>(std::istream& rStream);
 	};
+	std::ostream& operator<<(std::ostream& rStream, const ImagePngInfo& rInfo);
+	std::istream& operator>>(std::istream& rStream, ImagePngInfo& rInfo);
 }
-
 #endif	// NWL_DATA_IMAGE_H
