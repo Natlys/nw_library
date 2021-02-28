@@ -2,53 +2,56 @@
 #define NWL_ECS_ENTITY_H
 
 #include <nwl_core.hpp>
-
-#include <memory/mem_sys.h>
 #include <core/nwl_id_stack.h>
 #include <core/nwl_type.h>
+#include <core/nwl_container.h>
+#include <memory/mem_sys.h>
+#include <ecs/ecs_component.h>
 
 namespace NWL
 {
-	/// Anstract Entity class
-	class NWL_API Entity : public AMemUser
+	/// Abstract AEnt class
+	/// --main object base class for complex objects;
+	/// --allows to construct an object of different components;
+	/// --takes responsibility for creation and destruction of all components
+	class NWL_API AEnt : public AMemUser
 	{
+		friend class ACmp;
+		using Cmps = HashMap<UInt32, RefKeeper<ACmp>>;
 	protected:
-		Entity(unsigned int tId);
+		AEnt(UInt32 tId);
+		AEnt(const AEnt& rCpy) = delete;
 	public:
-		Entity(const Entity& rCpy);
-		virtual ~Entity();
+		virtual ~AEnt();
 		// --getters
-		inline unsigned int GetEntId() const	{ return m_eId; }
-		inline unsigned int GetTypeId() const	{ return m_tId; }
-		virtual inline const char* GetTypeStr() const = 0;
+		inline UInt32 GetTypeId() const { return m_tId; }
+		inline UInt32 GetEntId() const { return m_eId; }
 		// --setters
-		void SetEnabled(bool bIsEnabled);
+		void SetEnabled(Bit bIsEnabled);
 		// --predicates
-		inline bool IsEnabled() { return m_bIsEnabled; }
+		inline Bit IsEnabled() { return m_bIsEnabled; }
 		// --predicates
-		template<class EType> inline bool IsOfType() { return TypeIndexator<EType>() == GetTypeId(); }
+		template<class EType> bool IsOfType() { return TypeIndexator<EType>() == GetTypeId(); }
 		// --operators
-		inline void operator=(const Entity& rCpy) = delete;
+		inline void operator=(const AEnt& rCpy) = delete;
 	protected:
-		static inline IdStack& GetIdStack() { static IdStack s_idStack(1); return s_idStack; }
-	protected:
-		unsigned int m_eId;
-		unsigned int m_tId;
-		bool m_bIsEnabled;
+		const UInt32 m_tId;
+		UInt32 m_eId;
+		Bit m_bIsEnabled;
+	private:
+		static IdStack s_idStack;
 	};
 }
 namespace NWL
 {
-	/// Templated Entity class
+	/// Templated AEnt class
 	template<class EType>
-	class NWL_API TEntity : public Entity
+	class NWL_API TEnt : public AEnt
 	{
 	protected:
-		TEntity() : Entity(TypeIndexator::GetId()) { }
+		TEnt() : AEnt(TypeIndexator::GetId()) { }
 	public:
-		virtual ~TEntity() { }
-		// --getters
-		virtual inline const char* GetTypeStr() const override { return typeid(EType).name(); }
+		virtual ~TEnt() { }
 	};
 }
 #endif	// NWL_ECS_ENTITY_H

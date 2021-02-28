@@ -1,9 +1,17 @@
 #ifndef NWL_DATA_IMAGE_H
 #define NWL_DATA_IMAGE_H
 #include <nwl_core.hpp>
+#include <core/nwl_info.h>
 #include <core/nwl_container.h>
 #include <core/nwl_switch.h>
 #include <memory/mem_sys.h>
+namespace NWL
+{
+	struct Pixel;
+	struct ImageInfo;
+	struct ImageBmpInfo;
+	struct ImagePngInfo;
+}
 namespace NWL
 {
 	/// Pixel struct
@@ -30,13 +38,13 @@ namespace NWL
 namespace NWL
 {
 	/// ImageInfo struct
-	struct NWL_API ImageInfo
+	struct NWL_API ImageInfo : public AInfo
 	{
 	public:
 		PixelFormats pxlFormat = PXF_R8G8B8A8_UINT32;
 		Int32 nWidth = 1;
 		Int32 nHeight = 1;
-		Int32 nChannels = 1;
+		Int32 nChannels = 4;
 		DArray<Pixel> pxlData = { Pixel(255u, 255u, 255u, 255u) };
 	public:
 		// --getters
@@ -47,11 +55,12 @@ namespace NWL
 		void SetPixel(UInt32 szX, UInt32 nY, Pixel pxlColor);
 		void SetPixels(UByte* pData);
 		// --operators
-		std::ostream& operator<<(std::ostream& rStream) const;
-		std::istream& operator>>(std::istream& rStream);
+		ImageInfo& operator=(const ImageBmpInfo& rInfo);
+		ImageInfo& operator=(const ImagePngInfo& rInfo);
+		ImageInfo& operator=(const ImageInfo& rInfo);
+		virtual std::ostream& operator<<(std::ostream& rStream) const override;
+		virtual std::istream& operator>>(std::istream& rStream) override;
 	};
-	std::ostream& operator<<(std::ostream& rStream, const ImageInfo& rInfo);
-	std::istream& operator>>(std::istream& rStream, ImageInfo& rInfo);
 }
 namespace NWL
 {
@@ -103,11 +112,9 @@ namespace NWL
 #pragma pack(pop)
 	public:
 		// --operators
-		std::ostream& operator<<(std::ostream& rStream) const;
-		std::istream& operator>>(std::istream& rStream);
+		virtual std::ostream& operator<<(std::ostream& rStream) const override;
+		virtual std::istream& operator>>(std::istream& rStream) override;
 	};
-	std::ostream& operator<<(std::ostream& rStream, const ImageBmpInfo& rInfo);
-	std::istream& operator>>(std::istream& rStream, ImageBmpInfo& rInfo);
 	/// ImagePngInfo struct
 }
 namespace NWL
@@ -116,10 +123,8 @@ namespace NWL
 	{
 	public:
 		// --operators
-		std::ostream& operator<<(std::ostream& rStream) const;
-		std::istream& operator>>(std::istream& rStream);
+		virtual std::ostream& operator<<(std::ostream& rStream) const override;
+		virtual std::istream& operator>>(std::istream& rStream) override;
 	};
-	std::ostream& operator<<(std::ostream& rStream, const ImagePngInfo& rInfo);
-	std::istream& operator>>(std::istream& rStream, ImagePngInfo& rInfo);
 }
 #endif	// NWL_DATA_IMAGE_H

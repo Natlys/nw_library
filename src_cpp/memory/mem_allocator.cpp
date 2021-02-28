@@ -18,7 +18,12 @@ namespace NWL
 			"allocated blocks: " << unAlloc << std::endl <<
 			"====<memory_info>====" << std::endl;
 	}
-	std::ostream& operator<<(std::ostream& rStream, const MemInfo& rInfo) { return rInfo.operator<<(rStream); }
+	std::istream& MemInfo::operator>>(std::istream& rStream) {
+		return rStream >>
+			szMem >> unMem >>
+			szAlloc >> unAlloc >>
+			pLoc;
+	}
 	// --==</MemInfo>==--
 
 	// --==<MemLink>==--

@@ -9,18 +9,15 @@
 #include <io/io_stream.h>
 #include <io/io_exception.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <../ext/stbi/stb_image.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <../ext/stbi/stb_image_write.h>
-
 NWL::String NWL::DataSys::s_strDir = &std::filesystem::current_path().generic_string()[0];
 
 namespace NWL
 {
     // --setters
     // --==<core_methods>==--
-    void DataSys::OnInit() {}
+    void DataSys::OnInit()
+    {
+    }
     void DataSys::OnQuit() {}
     // --file_dialogs
     String DataSys::DialogSave(const char* strFilter, Ptr pWindow)
@@ -81,7 +78,7 @@ namespace NWL
         return true;
     }
     // --strings
-    template<> bool DataSys::SaveFile<String>(const char* strFPath, String& rData)
+    bool DataSys::SaveFile(const char* strFPath, String& rData)
     {
         OutFStream fStream;
         fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
@@ -93,7 +90,7 @@ namespace NWL
         catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
         return true;
     }
-    template<> bool DataSys::LoadFile<String>(const char* strFPath, String& rData)
+    bool DataSys::LoadFile(const char* strFPath, String& rData)
     {
         InFStream fStream;
         fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
@@ -109,8 +106,19 @@ namespace NWL
         return true;
     }
     // --images
-    template<> bool DataSys::LoadFile<ImageBmpInfo>(const char* strFPath, ImageBmpInfo& rData)
+    bool DataSys::SaveFile(const char* strFPath, AInfo& rData)
     {
+        OutFStream fStream;
+        fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+        try {
+            fStream.open(strFPath, std::ios_base::out | std::ios_base::binary);
+            fStream << rData;
+            fStream.close();
+        }
+        catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
+        return true;
+    }
+    bool DataSys::LoadFile(const char* strFPath, AInfo& rData) {
         InFStream fStream;
         fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         try {
@@ -118,39 +126,7 @@ namespace NWL
             fStream >> rData;
             fStream.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("loading fail"); return false; }
-        return true;
-    }
-    template<> bool DataSys::LoadFile<ImagePngInfo>(const char* strFPath, ImagePngInfo& rData) {
-        UByte* pData = nullptr;
-        try {
-            pData = stbi_load(strFPath, &rData.nWidth, &rData.nHeight, &rData.nChannels, 0);
-            if (pData == nullptr) { return false; }
-            rData.SetPixels(pData);
-            stbi_image_free(pData);
-        }
-        catch (std::ios_base::failure exc) { throw Exception("loading fail"); return false; }
-
-        return true;
-    }
-    template<> bool DataSys::LoadFile<ImageInfo>(const char* strFPath, ImageInfo& rData)
-    {
-        try {
-            const char* strFormat = CStrGetPartR(&strFPath[0], '.');
-            if (CStrIsEqual(strFormat, ".bmp")) {
-                ImageBmpInfo bmpInfo;
-                if (!LoadFile<ImageBmpInfo>(strFPath, bmpInfo)) { return false; }
-                rData = bmpInfo;
-            }
-            else if (CStrIsEqual(strFormat, ".png")) {
-                ImagePngInfo pngInfo;
-                if (!LoadFile<ImagePngInfo>(strFPath, pngInfo)) { return false; }
-                rData = pngInfo;
-            }
-            else { return false; }
-        }
-        catch (std::ios_base::failure exc) { throw Exception("loading fail"); return false; }
-
+        catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
         return true;
     }
     // --==</core_methods>==--

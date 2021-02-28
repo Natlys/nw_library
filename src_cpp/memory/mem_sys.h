@@ -19,6 +19,7 @@ namespace NWL
 		static void OnQuit();
 		static inline Ptr Alloc(Size szData, Size szAllign = sizeof(MemLink)) { return GetMemory().Alloc(szData, szAllign); }
 		static inline void Dealloc(Ptr pData, Size szData) { GetMemory().Dealloc(pData, szData); }
+		static inline Ptr Realloc(Ptr pData, Size szNew, Size szOld) { return GetMemory().Realloc(pData, szOld, szNew); }
 		// --templated_methods
 		template<typename MType, typename ... Args> static inline MType* NewT(Args&& ... Arguments);
 		template<typename MType> static inline MType* NewTArr(UInt64 unAlloc);

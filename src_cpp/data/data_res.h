@@ -2,7 +2,7 @@
 #define NWL_DATA_RES_H
 
 #include <nwl_core.hpp>
-
+#include <core/nwl_info.h>
 #include <core/nwl_string.h>
 #include <memory/mem_sys.h>
 

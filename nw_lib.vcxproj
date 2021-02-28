@@ -94,7 +94,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src_cpp\core\nwl_container.h" />
-    <ClInclude Include="src_cpp\core\nwl_engine.h" />
+    <ClInclude Include="src_cpp\core\nwl_info.h" />
     <ClInclude Include="src_cpp\core\nwl_switch.h" />
     <ClInclude Include="src_cpp\core\nwl_id_stack.h" />
     <ClInclude Include="src_cpp\core\nwl_random.h" />
@@ -138,6 +138,7 @@
     <ClInclude Include="src_cpp\physx\physx_collision.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_info.cpp" />
     <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
     <ClCompile Include="src_cpp\core\nwl_random.cpp" />
     <ClCompile Include="src_cpp\core\nwl_string.cpp" />

@@ -41,23 +41,23 @@ namespace NWL
 		template<typename VType>
 		inline VType* GetRef()		{ return static_cast<VType*>(m_pRef); }
 		// --setters
-		inline void SetRef(MType& rRef);
-		inline void SetRef(const RefKeeper<MType>& rRefKeeper);
-		template<typename VType> inline void SetRef(const RefKeeper<VType>& rRefKeeper);
-		inline void Reset();
+		void SetRef(MType& rRef);
+		void SetRef(const RefKeeper<MType>& rRefKeeper);
+		template<typename VType> void SetRef(const RefKeeper<VType>& rRefKeeper);
+		void Reset();
 		// --predicates
 		inline bool IsValid() { return m_pRef != nullptr && m_pCounter != nullptr; }
 		// --operators
+		inline operator bool() { return m_pRef != nullptr; }
 		inline MType* operator->()	{ return (m_pRef); }
 		inline MType& operator*()	{ return *(m_pRef); }
 		inline operator MType* ()	{ return static_cast<MType*>(m_pRef); }
 		inline operator MType& ()	{ return static_cast<MType&>(*m_pRef); }
-		template<typename VType> inline operator VType*() { return static_cast<VType*>(m_pRef); }
 		inline RefKeeper<MType>& operator=(const RefKeeper<MType>& rCpy) { SetRef(rCpy); return *this; }
-		template<typename VType> inline operator RefKeeper<VType>()	{ RefKeeper<VType> memRefKeeper(*this); return memRefKeeper; }
+		template<typename VType> operator VType*() { return static_cast<VType*>(m_pRef); }
+		template<typename VType> operator RefKeeper<VType>() { RefKeeper<VType> memRefKeeper(*this); return memRefKeeper; }
 		// --core_methods
-		template <typename VType, typename ... Args>
-		inline void MakeRef(Args&& ... Arguments);
+		template <typename VType, typename ... Args> void MakeRef(Args&& ... Arguments);
 	private:
 		mutable MType* m_pRef;
 		mutable UInt64* m_pCounter;
@@ -73,14 +73,14 @@ namespace NWL
 	template <typename VType> RefKeeper<MType>::RefKeeper(const RefKeeper<VType>& rCpy) : RefKeeper() { SetRef<VType>(rCpy); }
 	// --setters
 	template <typename MType>
-	inline void RefKeeper<MType>::SetRef(MType& rRef) {
+	void RefKeeper<MType>::SetRef(MType& rRef) {
 		Reset();
 		m_pRef = &rRef;
 		m_pCounter = MemSys::NewT<UInt64>();
 		*m_pCounter = 1;
 	}
 	template <typename MType>
-	inline void RefKeeper<MType>::SetRef(const RefKeeper<MType>& rRefKeeper) {
+	void RefKeeper<MType>::SetRef(const RefKeeper<MType>& rRefKeeper) {
 		Reset();
 		RefKeeper<MType>& rKeeper = const_cast<RefKeeper<MType>&>(rRefKeeper);
 		m_pRef = rKeeper.GetRef<MType>();
@@ -88,7 +88,7 @@ namespace NWL
 		if (m_pCounter != nullptr) { *m_pCounter += 1; }
 	}
 	template <typename MType>
-	template <typename VType> inline void RefKeeper<MType>::SetRef(const RefKeeper<VType>& rRefKeeper) {
+	template <typename VType> void RefKeeper<MType>::SetRef(const RefKeeper<VType>& rRefKeeper) {
 		Reset();
 		RefKeeper<VType>& rKeeper = const_cast<RefKeeper<VType>&>(rRefKeeper);
 		m_pRef = rKeeper.GetRef<MType>();
@@ -96,7 +96,7 @@ namespace NWL
 		if (m_pCounter != nullptr) { *m_pCounter += 1; }
 	}
 	template <typename MType>
-	inline void RefKeeper<MType>::Reset() {
+	void RefKeeper<MType>::Reset() {
 		if (m_pCounter != nullptr) {
 			*m_pCounter -= 1;
 			if (*m_pCounter == 0) {
@@ -111,8 +111,7 @@ namespace NWL
 	}
 	// --core_methods
 	template <typename MType>
-	template <typename VType, typename ... Args>
-	inline void RefKeeper<MType>::MakeRef(Args&& ... Arguments) {
+	template <typename VType, typename ... Args> void RefKeeper<MType>::MakeRef(Args&& ... Arguments) {
 		Reset();
 		m_pRef = new VType(std::forward<Args>(Arguments)...);
 		m_pCounter = MemSys::NewT<UInt64>();

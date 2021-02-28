@@ -33,9 +33,6 @@
     <ClInclude Include="src_cpp\core\nwl_container.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\core\nwl_engine.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_id_stack.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -68,9 +65,6 @@
     </ClInclude>
     <ClInclude Include="src_cpp\data\data_sys.h">
       <Filter>data</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h">
-      <Filter>ecs</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\ecs\ecs_component.h">
       <Filter>ecs</Filter>
@@ -135,6 +129,8 @@
       <Filter>physx</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_switch.h" />
+    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
+    <ClInclude Include="src_cpp\core\nwl_info.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\core\nwl_random.cpp">
@@ -157,9 +153,6 @@
     </ClCompile>
     <ClCompile Include="src_cpp\data\data_sys.cpp">
       <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp">
-      <Filter>ecs</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\ecs\ecs_component.cpp">
       <Filter>ecs</Filter>
@@ -187,5 +180,7 @@
       <Filter>physx</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
+    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
+    <ClCompile Include="src_cpp\core\nwl_info.cpp" />
   </ItemGroup>
 </Project>

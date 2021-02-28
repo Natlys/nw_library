@@ -1,22 +1,20 @@
 #include <nwl_pch.hpp>
 #include "ecs_entity.h"
+#include <ecs/ecs_cmp_sys.h>
 
-#include "ecs_cmp_sys.h"
+NWL::IdStack NWL::AEnt::s_idStack = IdStack(1);
 
 namespace NWL
 {
-	Entity::Entity(unsigned int tId) :
-		m_eId(GetIdStack().GetFreeId()), m_tId(tId),
+	AEnt::AEnt(UInt32 tId) :
+		m_eId(s_idStack.GetFreeId()), m_tId(tId),
 		m_bIsEnabled(true) { }
-	Entity::Entity(const Entity& rCpy) :
-		m_eId(rCpy.m_eId), m_tId(rCpy.m_tId),
-		m_bIsEnabled(rCpy.m_bIsEnabled) { }
-	Entity::~Entity()
-	{
-		GetIdStack().SetFreeId(m_eId);
-		if (CmpSys::HasEnt(m_eId)) { CmpSys::GetRegistry().erase(m_eId); }
+	AEnt::~AEnt() {
+		auto& rCmps = CmpSys::GetEntCmps(m_eId);
+		while (!rCmps.empty()) { CmpSys::RmvCmp(m_eId, rCmps.begin()->first); }
+		CmpSys::GetEntCmpRegistry().erase(m_eId);
+		s_idStack.SetFreeId(m_eId);
 	}
 	// --setters
-	void Entity::SetEnabled(bool bIsEnabled) { m_bIsEnabled = bIsEnabled; }
-	// --core_methods
+	void AEnt::SetEnabled(Bit bIsEnabled) { m_bIsEnabled = bIsEnabled; }
 }

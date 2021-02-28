@@ -1,12 +1,11 @@
 #ifndef NWL_MEMORY_ALLOCATOR_H
 #define NWL_MEMORY_ALLOCATOR_H
-
 #include <nwl_core.hpp>
-
+#include <core/nwl_info.h>
 namespace NWL
 {
 	/// MemInfo struct
-	struct NWL_API MemInfo
+	struct NWL_API MemInfo : public AInfo
 	{
 	public:
 		Size szMem = 0;
@@ -21,7 +20,8 @@ namespace NWL
 		void SetAllocation(Size szData, UInt64 unData);
 		void SetDeallocation(Size szData, UInt64 unData);
 		// --operators
-		std::ostream& operator<<(std::ostream& rStream) const;
+		virtual std::ostream& operator<<(std::ostream& rStream) const override;
+		virtual std::istream& operator>>(std::istream& rStream) override;
 	};
 	/// MemLink struct
 	struct NWL_API MemLink

@@ -9,18 +9,32 @@ namespace NWL
 	/// Abstract Component class
 	class NWL_API ACmp : public AMemUser
 	{
-		friend class CmpEntity;
 		friend class CmpSys;
 	protected:
-		ACmp(unsigned int tId);
+		ACmp(UInt32 tId);
+		ACmp(const ACmp& rCpy) = delete;
 	public:
 		virtual ~ACmp();
 		// --getters
-		inline unsigned int GetEntId() const { return m_eId; }
-		inline unsigned int GetTypeId() const { return m_tId; }
+		inline UInt32 GetTypeId() const	{ return m_tId; }
+		inline UInt32 GetEntId() const	{ return m_eId; }
+		// --operators
+		inline void operator=(const ACmp& rCpy) = delete;
 	protected:
-		unsigned int m_eId;
-		unsigned int m_tId;
+		const UInt32 m_tId;
+		UInt32 m_eId;
+	};
+}
+namespace NWL
+{
+	/// Templated Component class
+	template <class CType>
+	class NWL_API TCmp : public ACmp
+	{
+	protected:
+		TCmp() : ACmp(TypeIndexator::GetId<CType>()) { }
+	public:
+		virtual ~TCmp() { }
 	};
 }
 
