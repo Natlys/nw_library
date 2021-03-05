@@ -1,94 +1,83 @@
 #include <nwl_pch.hpp>
 #include "nwl_string.h"
-
 namespace NWL
 {
-	String StrGetFormatVa(const char* strFormat, va_list& argList) {
-		Char cCurr = ' ';
-		Size szCurr = 0;
-		Size szLen = strlen(strFormat);
-		String strRes;
+	dstring str_format_var(cstring format, va_list& arg_list) {
+		char8 ccurr = ' ';
+		size ncurr = 0;
+		size nlen = strlen(format);
+		dstring result;
 
-		while (szCurr < szLen) {
-			cCurr = strFormat[szCurr++];
-			switch (cCurr) {
+		while (ncurr < nlen) {
+			ccurr = format[ncurr++];
+			switch (ccurr) {
 			case '%':
-				switch (cCurr = strFormat[++szCurr]) {
-				case '%': strRes.back() = cCurr; break;
+				switch (ccurr = format[++ncurr]) {
+				case '%': result.back() = ccurr; break;
 
-				case 's': switch (cCurr = strFormat[++szCurr]) {
-				case 'b': _itoa_s(va_arg(argList, Int8), &strRes.back(), strRes.size(), 10); break;
-				case 's': _itoa_s(va_arg(argList, Int16), &strRes.back(), strRes.size(), 10); break;
-				case 'i': _itoa_s(va_arg(argList, Int32), &strRes.back(), strRes.size(), 10); break;
-				case 'l': _itoa_s(va_arg(argList, Int64), &strRes.back(), strRes.size(), 10); break;
-				default: return strRes;
+				case 's': switch (ccurr = format[++ncurr]) {
+				case 'b': _itoa_s(va_arg(arg_list, si8), &result.back(), result.size(), 10); break;
+				case 's': _itoa_s(va_arg(arg_list, si16), &result.back(), result.size(), 10); break;
+				case 'i': _itoa_s(va_arg(arg_list, si32), &result.back(), result.size(), 10); break;
+				case 'l': _itoa_s(va_arg(arg_list, si64), &result.back(), result.size(), 10); break;
+				default: return result;
 					break;
 				}
 						break;
 
-				case 'u': switch (cCurr = strFormat[++szCurr]) {
-				case 'b': _itoa_s(va_arg(argList, UInt8), &strRes.back(), strRes.size(), 10); break;
-				case 's': _itoa_s(va_arg(argList, UInt16), &strRes.back(), strRes.size(), 10); break;
-				case 'i': _itoa_s(va_arg(argList, UInt32), &strRes.back(), strRes.size(), 10); break;
-				case 'l': _itoa_s(va_arg(argList, UInt64), &strRes.back(), strRes.size(), 10); break;
-				default: return strRes;
+				case 'u': switch (ccurr = format[++ncurr]) {
+				case 'b': _itoa_s(va_arg(arg_list, ui8), &result.back(), result.size(), 10); break;
+				case 's': _itoa_s(va_arg(arg_list, ui16), &result.back(), result.size(), 10); break;
+				case 'i': _itoa_s(va_arg(arg_list, ui32), &result.back(), result.size(), 10); break;
+				case 'l': _itoa_s(va_arg(arg_list, ui64), &result.back(), result.size(), 10); break;
+				default: return result;
 				}
 						break;
 
-				case 'f': switch (cCurr = strFormat[++szCurr]) {
-				case 'f': strRes += std::to_string(va_arg(argList, Float32)); break;
-				case 'd': strRes += std::to_string(va_arg(argList, Float64));  break;
-				default: return strRes; break;
+				case 'f': switch (ccurr = format[++ncurr]) {
+				case 'f': result += std::to_string(va_arg(arg_list, f32)); break;
+				case 'd': result += std::to_string(va_arg(arg_list, f64));  break;
+				default: return result; break;
 				}
 						break;
-				case 'c': switch (cCurr = strFormat[++szCurr]) {
-				case 's': strRes += va_arg(argList, const char*); break;
-				default: return strRes; break;
+				case 'c': switch (ccurr = format[++ncurr]) {
+				case 's': result += va_arg(arg_list, cstring); break;
+				default: return result; break;
 				}
 						break;
-				default: return strRes; break;
+				default: return result; break;
 				}
 				break;
-			default: strRes.push_back(cCurr); break;
+			default: result.push_back(ccurr); break;
 			}
 		}
-		strRes.push_back('\0');
-		return strRes;
+		result.push_back('\0');
+		return result;
 	}
-	String StrGetFormat(const char* strFormat, ...) {
-		va_list argList;
-		va_start(argList, strFormat);
-		String strRes = StrGetFormatVa(strFormat, argList);
-		va_end(argList);
-		return strRes;
+	dstring str_format(cstring format, ...) {
+		va_list arg_list;
+		va_start(arg_list, format);
+		dstring result = str_format_var(format, arg_list);
+		va_end(arg_list);
+		return result;
 	}
-}
-namespace NWL
-{
-	const char* CStrGetPartL(const char* strSource, char cDelim, int nFromL) {
-		int nLen = strlen(strSource);
-		if (nLen == 0) { return ""; }
-		int nCurr = nFromL % nLen;
-		while (strSource[nCurr] != cDelim && nCurr <= nLen) { nCurr += 1; }
-		return &strSource[nCurr];
+	cstring str_part_left(cstring source, char8 delim_char, ui32 offset_from_left) {
+		si32 length = strlen(source);
+		if (length == 0) { return ""; }
+		si32 ncurr = offset_from_left % length;
+		while (source[ncurr] != delim_char && ncurr <= length) { ncurr += 1; }
+		return &source[ncurr];
 	}
-	const char* CStrGetPartR(const char* strSource, char cDelim, int nFromR) {
-		int nLen = strlen(strSource);
-		if (nLen == 0) { return ""; }
-		int nCurr = nLen - (nFromR % nLen);
-		while (strSource[nCurr] != cDelim && nCurr <= nLen) { nCurr -= 1; }
-		return &strSource[nCurr];
+	cstring str_part_right(cstring source, char8 delim_char, ui32 offset_from_right) {
+		si32 length = strlen(source);
+		if (length == 0) { return ""; }
+		si32 ncurr= length - (offset_from_right % length);
+		while (source[ncurr] != delim_char && ncurr <= length) { ncurr -= 1; }
+		return &source[ncurr];
 	}
-	const char* CStrGetFormat(const char* strFormat, ...) {
-		va_list argList;
-		va_start(argList, strFormat);
-		String strRes = StrGetFormatVa(strFormat, argList);
-		va_end(argList);
-		return &strRes[0];
-	}
-	bool CStrIsEqual(const char* strL, const char* strR) {
-		Size szCurr = 0;
-		while(strL[szCurr++] != '\0') { if (strL[szCurr] != strR[szCurr]) { return false; } }
+	bit str_is_equal(cstring str0, cstring str1) {
+		size ncurr = 0;
+		while(str0[ncurr++] != '\0') { if (str0[ncurr] != str1[ncurr]) { return false; } }
 		return true;
 	}
 }

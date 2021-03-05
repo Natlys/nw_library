@@ -1,49 +1,50 @@
 #ifndef NWL_ECS_ENTITY_SYSTEM_H
 #define NWL_ECS_ENTITY_SYSTEM_H
-
 #include <nwl_core.hpp>
 #include <core/nwl_container.h>
 #include <core/nwl_type.h>
-#include <ecs/ecs_entity.h>
-
+#include <ecs/ecs_ent.h>
+#include <memory/mem_ref.h>
 namespace NWL
 {
-	/// EntitySystem static class
-	class NWL_API EntSys
+	/// entity_system static class
+	class NWL_API ent_sys
 	{
 		/// entity id - entity ref
-		using Ents = HashMap<UInt32, RefKeeper<AEnt>>;
+		using ents = dictionary<ui32, mem_ref<a_ent>>;
 		/// type id - entity refs
-		using EntsRegistry = HashMap<UInt32, Ents>;
+		using registry = dictionary<ui32, ents>;
 	public:
 		// --getters
-		static inline EntsRegistry& GetRegistry() { return s_eReg; }
-		static inline Ents& GetEnts(UInt32 tId) { return s_eReg[tId]; }
-		static inline RefKeeper<AEnt>& GetEnt(UInt32 eId, UInt32 tId) { return s_eReg[tId][eId]; }
-		template<class EType> static Ents& GetEnts() { return s_eReg[TypeIndexator::GetId<EType>()]; }
-		template<class EType> static RefKeeper<AEnt>& GetEnt(UInt32 eId) { return s_eReg[TypeIndexator::GetId<EType>()][eId]; }
+		static inline registry& get_registry() { return s_reg; }
+		static inline ents& get_ents(ui32 type_id) { return s_reg[type_id]; }
+		static inline mem_ref<a_ent>& get_ent(ui32 ent_id, ui32 type_id) { return s_reg[type_id][ent_id]; }
+		template<class etype>
+		static ents& get_ents() { return s_reg[type_indexator::get_id<etype>()]; }
+		template<class etype>
+		static mem_ref<a_ent>& get_ent(ui32 ent_id) { return s_reg[type_indexator::get_id<etype>()][ent_id]; }
 		// --predicates
-		static inline bool HasEnt(UInt32 eId, UInt32 tId) { return s_eReg[tId][eId].IsValid(); }
-		template<class EType> static bool HasEnt(UInt32 eId) { return s_eReg[TypeIndexator::GetId<EType>()][eId].IsValid(); }
+		static inline bit has_ent(ui32 ent_id, ui32 type_id)	{ return s_reg[type_id][ent_id].is_valid(); }
+		template<class etype> static bit has_ent(ui32 ent_id)	{ return s_reg[type_indexator::get_id<etype>()][ent_id].is_valid(); }
 		// --core_methods
-		static void OnInit();
-		static void OnQuit();
-		template<class EType, typename ... Args>
-		static RefKeeper<AEnt>& AddEnt(Args&& ... Arguments);
-		static void RmvEnt(UInt32 eId, UInt32 tId);
-		template<class EType> static void RmvEnt(UInt32 eId) { RmvEnt(eId, TypeIndexator::GetId<EType>()); }
+		static void on_init();
+		static void on_quit();
+		static void del_ent(ui32 ent_id, ui32 type_id);
+		template<class etype, typename ... args>
+		static mem_ref<a_ent>& new_ent(args&& ... arguments);
+		template<class etype>
+		static void del_ent(ui32 ent_id) { del_ent(ent_id, type_indexator::get_id<etype>()); }
 	private:
-		static EntsRegistry s_eReg;
+		static registry s_reg;
 	};
 	// --setters
-	template<class EType, typename ... Args>
-	RefKeeper<AEnt>& EntSys::AddEnt(Args&& ... Arguments) {
-		auto& rEnts = GetEnts<EType>();
-		RefKeeper<AEnt> Ent;
-		Ent.MakeRef<EType>(std::forward<Args>(Arguments)...);
-		rEnts[pEnt->GetEntId()].SetRef(pEnt);
-		return rEnts[Ent->GetEntId()];
+	template<class etype, typename ... args>
+	mem_ref<a_ent>& ent_sys::new_ent(args&& ... arguments) {
+		auto& ents = get_ents<etype>();
+		mem_ref<a_ent> rent_temp;
+		rent_temp.make_ref<etype>(std::forward<args>(arguments)...);
+		rent[rent->get_ent_id()].set_ref<a_ent>(rent);
+		return ents[rent->get_ent_id()];
 	}
 }
-
 #endif // NWL_ECS_ENTITY_SYSTEM_H

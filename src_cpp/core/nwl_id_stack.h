@@ -1,24 +1,22 @@
 #ifndef NWL_ID_STACK_H
 #define NWL_ID_STACK_H
-
 #include <nwl_core.hpp>
-
 namespace NWL
 {
-	/// IdStack class
-	/// Description:
-	/// --It's like a simple stack of unsigned 32-bit integers but for identificators
-	/// --Contains one single ID for any class
-	/// --You can get new id during construction of and object and put it back into the stack
-	/// --If any destroyed instance gives back own ID to the stack - there is no loss
-	class NWL_API IdStack : protected std::stack<UInt32>
+	/// id_stack class
+	/// description:
+	/// --it's like a simple stack of unsigned 32-bit integers but for identificators;
+	/// --contains one single id for any class;
+	/// --you can get new id during construction of and object and put it back into the stack;
+	/// --if any destroyed instance gives back own id to the stack - there is no loss;
+	class NWL_API id_stack : protected std::stack<ui32>
 	{
 	public:
-		IdStack(UInt32 nBegin = 1) : std::stack<UInt32>() { push(nBegin); }
+		id_stack(ui32 first_id = 1) : std::stack<ui32>() { push(first_id); }
 		// -- getters
-		inline UInt32 GetFreeId() { UInt32 unFreeId = top(); if (size() == 1) { top()++; } else { pop(); } return unFreeId; }
+		inline ui32 get_free_id() { ui32 free_id = top(); if (size() == 1) { top()++; } else { pop(); } return free_id; }
 		// -- setters
-		inline void SetFreeId(UInt32 unFreeId) { if (unFreeId != top()) { push(unFreeId); } }
+		inline void set_free_id(ui32 free_id) { if (free_id != top()) { push(free_id); } }
 	};
 }
 #endif	// NWL_ID_STACK_H

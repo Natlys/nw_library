@@ -2,12 +2,11 @@
 #include "nwl_switch.h"
 #include <math/math_vector.h>
 #include <math/math_matrix.h>
-#include <io/io_exception.h>
-
+#include <io/io_error.h>
 namespace NWL
 {
-	PixelFormats PxfGet(UInt8 nChannels) {
-		switch (nChannels) {
+	pixel_formats pxf_get(ui8 nchannels) {
+		switch (nchannels) {
 		case 1: return PXF_R8_UINT8;
 		case 2: return PXF_R8G8_UINT16;
 		case 3: return PXF_R8G8B8_UINT32;
@@ -16,8 +15,8 @@ namespace NWL
 		}
 		return PXF_DEFAULT;
 	}
-	UInt8 PxfGetChannels(PixelFormats pxlFormat) {
-		switch (pxlFormat) {
+	ui8 pxf_get(pixel_formats pixel_format) {
+		switch (pixel_format) {
 		case PXF_R8_SINT8: case PXF_R8_UINT8:
 		case PXF_D32_SINT32: case PXF_D32_UINT32:
 		case PXF_S8_SINT8: case PXF_S8_UINT8:

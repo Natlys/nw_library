@@ -1,121 +1,111 @@
 #ifndef NWL_MEMORY_REF_H
 #define NWL_MEMORY_REF_H
-
 #include <nwl_core.hpp>
-
 #include <memory/mem_allocator.h>
 #include <memory/mem_sys.h>
-
 namespace NWL
 {
-	template<typename MType>
-	struct NWL_API MemRef : public AMemUser
-	{
-	public:
-		MType mData;
-		UInt32 unRefs;
-	public:
-		template<typename ... Args>
-		MemRef(Args&& ... Arguments) : mData(std::forward<Args>(Argument)) {}
-		~MemRef();
-	};
-	/// RefKeeper class
+	/// mem_ref class
 	/// Description:
 	/// -- Smart "shared" pointer in nw implementation
 	/// -- Allocates object due to given allocator
-	/// -- The reference gets deleted if there is no any other RefKeepers for it
+	/// -- The reference gets deleted if there is no any other mem_refs for it
 	/// Interface:
-	/// -> Create RefKeeper -> MakeRef with particular allocator -> SetRef for other keepers -> use as a pointer
-	template <typename MType>
-	class NWL_API RefKeeper : public AMemUser
+	/// -> Create mem_ref -> MakeRef with particular allocator -> set_ref for other keepers -> use as a pointer
+	template <typename mtype>
+	class NWL_API mem_ref : public a_mem_user
 	{
 	public:
-		RefKeeper();
-		RefKeeper(MType& rRef);
-		RefKeeper(const RefKeeper<MType>& rCpy);
-		template<typename VType> RefKeeper(const RefKeeper<VType>& rCpy);
-		~RefKeeper() { Reset(); }
+		mem_ref();
+		mem_ref(mtype& ref);
+		mem_ref(const mem_ref<mtype>& copy);
+		template<typename vtype> mem_ref(const mem_ref<vtype>& copy);
+		~mem_ref() { reset(); }
 		// --getters
-		inline MType* GetRef()		{ return static_cast<MType*>(m_pRef); }
-		inline UInt64* GetCounter()	{ return m_pCounter; }
-		template<typename VType>
-		inline VType* GetRef()		{ return static_cast<VType*>(m_pRef); }
+		inline mtype* get_ref()		{ return static_cast<mtype*>(m_ref); }
+		inline ui64* get_counter()	{ return m_counter; }
+		template<typename vtype>
+		inline vtype* get_ref()		{ return static_cast<vtype*>(m_ref); }
 		// --setters
-		void SetRef(MType& rRef);
-		void SetRef(const RefKeeper<MType>& rRefKeeper);
-		template<typename VType> void SetRef(const RefKeeper<VType>& rRefKeeper);
-		void Reset();
+		void set_ref(mtype& rRef);
+		void set_ref(const mem_ref<mtype>& rmem_ref);
+		template<typename vtype>
+		void set_ref(const mem_ref<vtype>& rmem_ref);
+		void reset();
 		// --predicates
-		inline bool IsValid() { return m_pRef != nullptr && m_pCounter != nullptr; }
+		inline bit is_valid() { return m_ref != nullptr && m_counter != nullptr; }
 		// --operators
-		inline operator bool() { return m_pRef != nullptr; }
-		inline MType* operator->()	{ return (m_pRef); }
-		inline MType& operator*()	{ return *(m_pRef); }
-		inline operator MType* ()	{ return static_cast<MType*>(m_pRef); }
-		inline operator MType& ()	{ return static_cast<MType&>(*m_pRef); }
-		inline RefKeeper<MType>& operator=(const RefKeeper<MType>& rCpy) { SetRef(rCpy); return *this; }
-		template<typename VType> operator VType*() { return static_cast<VType*>(m_pRef); }
-		template<typename VType> operator RefKeeper<VType>() { RefKeeper<VType> memRefKeeper(*this); return memRefKeeper; }
+		inline operator bit()		{ return m_ref != nullptr; }
+		inline mtype* operator->()	{ return (m_ref); }
+		inline mtype& operator*()	{ return *(m_ref); }
+		inline operator mtype* ()	{ return static_cast<mtype*>(m_ref); }
+		inline operator mtype& ()	{ return static_cast<mtype&>(*m_ref); }
+		inline mem_ref<mtype>& operator=(const mem_ref<mtype>& copy) { set_ref(copy); return *this; }
+		template<typename vtype>
+		operator vtype*() { return static_cast<vtype*>(m_ref); }
+		template<typename vtype>
+		operator mem_ref<vtype>() { mem_ref<vtype> memmem_ref(*this); return memmem_ref; }
 		// --core_methods
-		template <typename VType, typename ... Args> void MakeRef(Args&& ... Arguments);
+		template <typename vtype, typename ... args>
+		void make_ref(args&& ... arguments);
 	private:
-		mutable MType* m_pRef;
-		mutable UInt64* m_pCounter;
+		mutable mtype* m_ref;
+		mutable ui64* m_counter;
 	};
 	// --constructors_destructors
-	template <typename MType>
-	RefKeeper<MType>::RefKeeper() : m_pRef(nullptr), m_pCounter(nullptr) { Reset(); }
-	template <typename MType>
-	RefKeeper<MType>::RefKeeper(MType& rRef) : RefKeeper() { SetRef(rRef); }
-	template <typename MType>
-	RefKeeper<MType>::RefKeeper(const RefKeeper<MType>& rCpy) : RefKeeper() { SetRef(rCpy); }
-	template <typename MType>
-	template <typename VType> RefKeeper<MType>::RefKeeper(const RefKeeper<VType>& rCpy) : RefKeeper() { SetRef<VType>(rCpy); }
+	template <typename mtype>
+	mem_ref<mtype>::mem_ref() : m_ref(nullptr), m_counter(nullptr) { reset(); }
+	template <typename mtype>
+	mem_ref<mtype>::mem_ref(mtype& rRef) : mem_ref() { set_ref(rRef); }
+	template <typename mtype>
+	mem_ref<mtype>::mem_ref(const mem_ref<mtype>& copy) : mem_ref() { set_ref(copy); }
+	template <typename mtype> template <typename vtype>
+	mem_ref<mtype>::mem_ref(const mem_ref<vtype>& copy) : mem_ref() { set_ref<vtype>(copy); }
 	// --setters
-	template <typename MType>
-	void RefKeeper<MType>::SetRef(MType& rRef) {
-		Reset();
-		m_pRef = &rRef;
-		m_pCounter = MemSys::NewT<UInt64>();
-		*m_pCounter = 1;
+	template <typename mtype>
+	void mem_ref<mtype>::set_ref(mtype& rRef) {
+		reset();
+		m_ref = &rRef;
+		m_counter = mem_sys::new_one<ui64>();
+		*m_counter = 1;
 	}
-	template <typename MType>
-	void RefKeeper<MType>::SetRef(const RefKeeper<MType>& rRefKeeper) {
-		Reset();
-		RefKeeper<MType>& rKeeper = const_cast<RefKeeper<MType>&>(rRefKeeper);
-		m_pRef = rKeeper.GetRef<MType>();
-		m_pCounter = rKeeper.GetCounter();
-		if (m_pCounter != nullptr) { *m_pCounter += 1; }
+	template <typename mtype>
+	void mem_ref<mtype>::set_ref(const mem_ref<mtype>& rmem_ref) {
+		reset();
+		mem_ref<mtype>& ref_keeper = const_cast<mem_ref<mtype>&>(rmem_ref);
+		m_ref = ref_keeper.get_ref<mtype>();
+		m_counter = ref_keeper.get_counter();
+		if (m_counter != nullptr) { *m_counter += 1; }
 	}
-	template <typename MType>
-	template <typename VType> void RefKeeper<MType>::SetRef(const RefKeeper<VType>& rRefKeeper) {
-		Reset();
-		RefKeeper<VType>& rKeeper = const_cast<RefKeeper<VType>&>(rRefKeeper);
-		m_pRef = rKeeper.GetRef<MType>();
-		m_pCounter = rKeeper.GetCounter();
-		if (m_pCounter != nullptr) { *m_pCounter += 1; }
+	template <typename mtype> template <typename vtype>
+	void mem_ref<mtype>::set_ref(const mem_ref<vtype>& rmem_ref) {
+		reset();
+		mem_ref<vtype>& ref_keeper = const_cast<mem_ref<vtype>&>(rmem_ref);
+		m_ref = ref_keeper.get_ref<mtype>();
+		m_counter = ref_keeper.get_counter();
+		if (m_counter != nullptr) { *m_counter += 1; }
 	}
-	template <typename MType>
-	void RefKeeper<MType>::Reset() {
-		if (m_pCounter != nullptr) {
-			*m_pCounter -= 1;
-			if (*m_pCounter == 0) {
-				delete m_pRef;
-				m_pRef = nullptr;
-				MemSys::Dealloc(m_pCounter, sizeof(*m_pCounter));
-				m_pCounter = nullptr;
+	template <typename mtype>
+	void mem_ref<mtype>::reset() {
+		if (m_counter != nullptr) {
+			*m_counter -= 1;
+			if (*m_counter == 0) {
+				delete m_ref;
+				m_ref = nullptr;
+				mem_sys::dealloc(m_counter, sizeof(*m_counter));
+				m_counter = nullptr;
 			}
 		}
-		m_pRef = nullptr;
-		m_pCounter = nullptr;
+		m_ref = nullptr;
+		m_counter = nullptr;
 	}
 	// --core_methods
-	template <typename MType>
-	template <typename VType, typename ... Args> void RefKeeper<MType>::MakeRef(Args&& ... Arguments) {
-		Reset();
-		m_pRef = new VType(std::forward<Args>(Arguments)...);
-		m_pCounter = MemSys::NewT<UInt64>();
-		*m_pCounter = 1;
+	template <typename mtype> template <typename vtype, typename ... args> 
+	void mem_ref<mtype>::make_ref(args&& ... arguments) {
+		reset();
+		m_ref = new vtype(std::forward<args>(arguments)...);
+		m_counter = mem_sys::new_one<ui64>();
+		*m_counter = 1;
 	}
 }
 

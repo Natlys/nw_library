@@ -4,122 +4,104 @@
 #include <core/nwl_info.h>
 namespace NWL
 {
-	/// MemInfo struct
-	struct NWL_API MemInfo : public AInfo
+	/// memory_link struct
+	struct NWL_API mem_link
 	{
 	public:
-		Size szMem = 0;
-		UInt64 unMem = 0;
-		Size szAlloc = 0;
-		UInt64 unAlloc = 0;
-		Ptr pLoc = this;
+		mem_link* block_ptr = nullptr;
+		size block_size = 0;
 	public:
 		// --getters
-		inline uintptr_t GetLocNum(Size szOffset = 0) const { return reinterpret_cast<uintptr_t>(pLoc) + szOffset; }
-		// --setters
-		void SetAllocation(Size szData, UInt64 unData);
-		void SetDeallocation(Size szData, UInt64 unData);
+		mem_link* get_block(size nof_bytes);
 		// --operators
-		virtual std::ostream& operator<<(std::ostream& rStream) const override;
-		virtual std::istream& operator>>(std::istream& rStream) override;
-	};
-	/// MemLink struct
-	struct NWL_API MemLink
-	{
-	public:
-		MemLink* pNext = nullptr;
-		Size szBlock = 0;
-	public:
-		// --getters
-		MemLink* GetBlock(Size szMem);
-		// --operators
-		template <typename MType> inline operator MType*() { return reinterpret_cast<MType*>(this); }
+		template <typename mtype> inline operator mtype*() { return reinterpret_cast<mtype*>(this); }
 	};
 }
-
 namespace NWL
 {
-	/// Abstract MemAllocator class
-	class NWL_API AMemAllocator
+	/// abstract mem_allocator class
+	class NWL_API a_mem_allocator
 	{
 	public:
-		AMemAllocator(Ptr pBlock = nullptr, Size szMemory = 0ul);
-		virtual ~AMemAllocator();
+		a_mem_allocator(ptr memory_ptr = nullptr, size memory_size = 0ul);
+		virtual ~a_mem_allocator();
 		// --getters
-		inline Ptr GetDataBeg()	{ return &m_pBeg[0]; }
-		inline Ptr GetDataCur()	{ return &m_pBeg[m_Info.szAlloc]; }
-		inline Ptr GetDataEnd()	{ return &m_pBeg[m_Info.szMem]; }
-		inline Size GetDataSize() const			{ return m_Info.szMem; }
-		inline Size GetAllocSize() const		{ return m_Info.szAlloc; }
-		inline UInt64 GetAllocCount() const		{ return m_Info.unAlloc; }
-		inline Size GetFreeSize() const			{ return m_Info.szMem - m_Info.szAlloc; }
-		inline UInt64 GetFreeCount() const		{ return m_Info.unMem - m_Info.unAlloc; }
-		inline const MemInfo& GetInfo() const	{ return m_Info; }
+		inline ptr get_data() { return &m_data_ptr[0]; }
+		inline size get_data_size() const	{ return m_data_size; }
+		inline size get_alloc_size() const	{ return m_alloc_size; }
+		inline size get_free_size() const	{ return m_data_size - m_alloc_size; }
 		// --predicates
-		inline bool HasBlock(Ptr pBlock) const	{ return (pBlock >= &m_pBeg[0]) && (pBlock <= &m_pBeg[m_Info.szMem]); }
-		inline bool HasEnoughSize(Size szHowMuch)const	{ return GetFreeSize() > szHowMuch; }
-		inline bool HasEnoughCount(Size szHowMuch) { return GetFreeCount() > szHowMuch; }
+		inline bit has_block(ptr block_ptr) const	{ return (block_ptr >= &m_data_ptr[0]) && (block_ptr <= &m_data_ptr[m_data_size]); }
+		inline bit has_enough_size(size szof_memory) const	{ return get_free_size() > szof_memory; }
 		// --core_methods
-		virtual Ptr Alloc(Size szMem, Size szAlign = sizeof(int)) = 0;
-		virtual void Dealloc(Ptr pBlock, Size szDealloc) = 0;
-		virtual Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) = 0;
-		template<typename MType, typename ... Args> MType* NewT(Args&& ... Arguments);
-		template<typename MType> MType* NewTArr(UInt64 unAlloc);
-		template<typename MType> void DelT(MType* pBlock);
-		template<typename MType> void DelTArr(MType* pBlock, UInt64 unDealloc);
+		virtual void* alloc(size memory_size, size align_size = sizeof(mem_link)) = 0;
+		virtual void dealloc(ptr block_ptr, size dealloc_size) = 0;
+		virtual void* realloc(ptr block_ptr, size old_size, size new_size) = 0;
+		template<typename mtype, typename ... Args>
+		mtype* new_one(Args&& ... Arguments);
+		template<typename mtype>
+		mtype* new_arr(ui64 nof_alloc);
+		template<typename mtype>
+		void del_one(mtype* block_ptr);
+		template<typename mtype>
+		void del_arr(mtype* block_ptr, ui64 nof_dealloc);
 	protected:
-		Byte* m_pBeg;
-		MemInfo m_Info;
+		sbyte* m_data_ptr;
+		size m_data_size;
+		size m_alloc_size;
 	};
-	template<typename MType, typename ... Args> MType* AMemAllocator::NewT(Args&& ... Arguments) {
-		MType* pBlock = reinterpret_cast<MType*>(Alloc(1ul * sizeof(MType), __alignof(MType)));
-		new(pBlock) MType(std::forward<Args>(Arguments)...);
-		return pBlock;
+	template<typename mtype, typename ... args>
+	mtype* a_mem_allocator::new_one(args&& ... arguments) {
+		mtype* block_ptr = reinterpret_cast<mtype*>(alloc(1ul * sizeof(mtype), __alignof(mtype)));
+		new(block_ptr) mtype(std::forward<args>(arguments)...);
+		return block_ptr;
 	}
-	template <typename MType> MType* AMemAllocator::NewTArr(UInt64 unAlloc) {
-		return reinterpret_cast<MType*>(Alloc(unAlloc * sizeof(MType), __alignof(MType)));
+	template <typename mtype>
+	mtype* a_mem_allocator::new_arr(ui64 nof_alloc) {
+		return reinterpret_cast<mtype*>(alloc(nof_alloc* sizeof(mtype), __alignof(mtype)));
 	}
-	template<typename MType> void AMemAllocator::DelT(MType* pBlock) {
-		pBlock->~MType();
-		rmAllocator.Dealloc(pBlock, 1 * sizeof(MType));
+	template<typename mtype>
+	void a_mem_allocator::del_one(mtype* block_ptr) {
+		block_ptr->~mtype();
+		dealloc(block_ptr, 1 * sizeof(mtype));
 	}
-	template <typename MType> void AMemAllocator::DelTArr(MType* pBlock, UInt64 unDealloc) {
-		if (unDealloc >= GetDataSize()) { unDealloc = GetDataSize(); }
-		for (Size bi = 0; bi < unDealloc; bi++) { pBlock[bi].~MType(); }
-		Dealloc(pBlock, unDealloc * sizeof(MType));
+	template <typename mtype>
+	void a_mem_allocator::del_arr(mtype* block_ptr, ui64 nof_dealloc) {
+		for (size bi = 0; bi < nof_dealloc; bi++) { block_ptr[bi].~mtype(); }
+		dealloc(block_ptr, nof_dealloc * sizeof(mtype));
 	}
 }
 namespace NWL
 {
-	/// MemArena class
+	/// memory_arena class
 	/// Description:
 	/// --Just a chunk of bytes works with Ptr and char* pointers
-	class NWL_API MemArena : public AMemAllocator
+	class NWL_API mem_arena : public a_mem_allocator
 	{
 	public:
-		MemArena(Ptr pBlock = nullptr, Size szMemory = 0ul);
-		virtual ~MemArena();
+		mem_arena(ptr memory_ptr = nullptr, size memory_size = 0ul);
+		virtual ~mem_arena();
 		// --core_methods
-		virtual Ptr Alloc(Size szMemory, Size szAlign = sizeof(MemLink)) override;
-		virtual void Dealloc(Ptr pBlock, Size szDealloc) override;
-		virtual Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) override;
+		virtual void* alloc(size alloc_size, size align_size = sizeof(mem_link)) override;
+		virtual void dealloc(ptr block_ptr, size dealloc_size) override;
+		virtual void* realloc(ptr block_ptr, size old_size, size new_size) override;
 	private:
-		MemLink* m_FreeList;
+		mem_link* m_free_list;
 	};
 }
 namespace NWL
 {
-	/// LinearMemoryAllocator class
-	class LinearAllocator : public AMemAllocator
+	/// linear_memory_allocator class
+	class linear_allocator: public a_mem_allocator
 	{
 	public:
-		LinearAllocator(Ptr pBlock = nullptr, Size szMemory = 0ul);
-		virtual ~LinearAllocator();
+		linear_allocator(ptr memory_ptr = nullptr, size memory_size = 0ul);
+		virtual ~linear_allocator();
 		// --core_methods
-		virtual Ptr Alloc(Size szMemory, Size szAlign = 4ul) override;
-		virtual void Dealloc(Ptr pBlock, Size szDealloc) override;
-		virtual Ptr Realloc(Ptr pBlock, Size szOld, Size szNew) override;
-		void Clear();
+		virtual void* alloc(size alloc_size, size align_size = sizeof(int)) override;
+		virtual void dealloc(ptr block_ptr, size dealloc_size) override;
+		virtual void* realloc(ptr block_ptr, size old_size, size new_size) override;
+		void clear();
 	};
 }
 #endif	// NWL_MEMORY_ALLOCATOR_H

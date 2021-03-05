@@ -154,7 +154,7 @@ namespace glm
 	typedef float					lowp_float32;
 	typedef float					mediump_float32;
 	typedef float					highp_float32;
-	typedef float					float32;
+	typedef float					f32;
 
 	typedef float					lowp_float32_t;
 	typedef float					mediump_float32_t;
@@ -170,7 +170,7 @@ namespace glm
 	typedef double					lowp_float64;
 	typedef double					mediump_float64;
 	typedef double					highp_float64;
-	typedef double					float64;
+	typedef double					f64;
 
 	typedef double					lowp_float64_t;
 	typedef double					mediump_float64_t;

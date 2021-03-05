@@ -1,41 +1,35 @@
 #ifndef NWL_DATA_RES_H
 #define NWL_DATA_RES_H
-
 #include <nwl_core.hpp>
 #include <core/nwl_info.h>
 #include <core/nwl_string.h>
 #include <memory/mem_sys.h>
-
 namespace NWL
 {
-	/// Abstract DataResource class
-	/// Interface:
-	/// -> Derrive any class you want from the ADataRes class
-	/// -> Implement Save() and Load() methods
-	/// Description:
-	/// -- Every object in the engine can be saved in a binary file or some format
-	/// -- Class which is inherit of ADataRes can be: Saved | Loaded
-	/// -- Everything we need - save/load methods implementation for this
-	class NWL_API ADataRes : public AMemUser
+	/// abstract data_resource class
+	/// interface:
+	/// ->derrive any class you want from the a_data_res class
+	/// ->implement save() and load() methods
+	/// description:
+	/// --every object in the engine can be saved in a binary file or some format
+	/// --class which is inherit of a_data_res can be: saved | loaded
+	/// --everything we need - save/load methods implementation for this
+	class NWL_API a_data_res : public a_mem_user
 	{
-		friend class DataSys;
 	protected:
-		ADataRes() : m_strName("none") { }
-		ADataRes(const char* strName) : m_strName("none") { SetName(strName); }
+		a_data_res() : m_name("none") { }
+		a_data_res(cstring name) : m_name("none") { set_name(name); }
 	public:
-		virtual ~ADataRes() { }
+		virtual ~a_data_res() { }
 		// --getters
-		inline const char* GetName() const { return &m_strName[0]; }
+		inline cstring get_name() const { return &m_name[0]; }
 		// --setters
-		virtual void SetName(const char* strName) { m_strName = strName; }
-		// --predicates
-		template<class DType>
-		inline bool IsOfType() { return TypeIndexator::GetId<DType>() == GetTypeId(); }
+		virtual void set_name(const char* name) { m_name = name; }
 		// --core_methods
-		virtual bool SaveF(const char* strFPath) = 0;
-		virtual bool LoadF(const char* strFPath) = 0;
+		virtual bit save_file(cstring file_path) = 0;
+		virtual bit load_file(cstring file_path) = 0;
 	protected:
-		String m_strName;
+		dstring m_name;
 	};
 }
 

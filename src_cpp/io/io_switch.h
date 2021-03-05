@@ -1,0 +1,74 @@
+#ifndef NWL_IO_SWITCH_H
+#define NWL_IO_SWITCH_H
+#include <nwl_core.hpp>
+namespace NWL
+{
+	enum event_types : ui32 {
+		EVT_DEFAULT = 1 << 0,
+		EVT_CURSOR_MOVE = 1 << 1, EVT_CURSOR_SCROLL = 1 << 2, EVT_CURSOR_HELD = 1 << 3, EVT_CURSOR_FREE = 1 << 4, EVT_CURSOR_DOUBLE_CLICK = 1 << 5,
+		EVT_KEYBOARD_FREE = 1 << 8, EVT_KEYBOARD_HELD = 1 << 9, EVT_KEYBOARD_CHAR = 1 << 10,
+		EVT_WINDOW_CLOSE = 1 << 12, EVT_WINDOW_RESIZE = 1 << 13, EVT_WINDOW_MOVE = 1 << 14, EVT_WINDOW_FOCUS = 1 << 15, EVT_WINDOW_DEFOCUS = 1 << 16
+	};
+	enum event_categories : ui32 {
+		EVC_DEFAULT = EVT_DEFAULT,
+		EVC_CURSOR = EVT_CURSOR_MOVE | EVT_CURSOR_SCROLL | EVT_CURSOR_HELD | EVT_CURSOR_FREE | EVT_CURSOR_DOUBLE_CLICK,
+		EVC_KEYBOARD = EVT_KEYBOARD_HELD | EVT_KEYBOARD_FREE | EVT_KEYBOARD_CHAR,
+		EVC_WINDOW = EVT_WINDOW_CLOSE | EVT_WINDOW_RESIZE | EVT_WINDOW_MOVE | EVT_WINDOW_FOCUS | EVT_WINDOW_DEFOCUS,
+	};
+	enum button_states : ui32 {
+		BS_DEFAULT = 0,
+		BS_HELD, BS_FREE
+	};
+	enum key_codes : ui32 {
+		KC_BACKSPACE = 8, KC_VTAB = 9, KC_HTAB = 11, KC_ENTER = 13,
+		KC_LSHIFT = 16, KC_RSHIFT = 17,
+		KC_LCTRL = 17, KC_RCTRL = 18,
+		KC_PAUSE = 20, KC_CAPS_LOCK = 26, KC_ESCAPE = 27,
+		KC_LEFT = 37, KC_UP = 38, KC_RIGHT = 39, KC_DOWN = 40,
+		KC_INSERT = 45, KC_DEL = 46, KC_HOME = 47,
+		// printable
+		KC_SPACE = 32, KC_EXCLAIM = 33, KC_QUOTE = 34, KC_HASH = 35, KC_DOLLAR = 36,
+		KC_PERCENT = 37, KC_AMPERSAND = 38, KC_APOSTROPHE = 39,
+		KC_LBRACKET = 40, KC_RBRACKET = 41, KC_ASTERISK = 42,
+		KC_PLUS = 43, KC_MINUS = 45, KC_SLASH = 47,
+		KC_COMMA = 44, KC_DOT = 46,
+		KC_0 = 48, KC_1 = 49, KC_2 = 50, KC_3 = 51, KC_4 = 52,
+		KC_5 = 53, KC_6 = 54, KC_7 = 55, KC_8 = 56, KC_9 = 57,
+		KC_COLON = 58, KC_SEMICOLON = 59,
+		KC_LESSER = 60, KC_EQUAL = 61, KC_GREATER = 62,
+		KC_A = 65, KC_B = 66, KC_C = 67, KC_D = 68,
+		KC_E = 69, KC_F = 70, KC_G = 71, KC_H = 72,
+		KC_I = 73, KC_J = 74, KC_K = 75, KC_L = 76,
+		KC_M = 77, KC_N = 78, KC_O = 79, KC_P = 80,
+		KC_Q = 81, KC_R = 82, KC_S = 83, KC_T = 84,
+		KC_U = 85, KC_V = 86, KC_W = 87, KC_X = 88,
+		KC_Y = 89, KC_Z = 90,
+		KC_a = 97, KC_b = 98, KC_c = 99, KC_d = 100,
+		KC_e = 101, KC_f = 102, KC_g = 103, KC_h = 104,
+		KC_i = 105, KC_j = 106, KC_k = 107, KC_l = 108,
+		KC_m = 109, KC_n = 110, KC_o = 111, KC_p = 112,
+		KC_q = 113, KC_r = 114, KC_s = 115, KC_t = 116,
+		KC_u = 117, KC_v = 118, KC_w = 119, KC_x = 120,
+		KC_y = 121, KC_z = 122,
+		KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6,
+		KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
+		KC_RECT_DITHER = 177, KC_QUAD = 254,
+		KC_COUNT = 255
+	};
+	enum cursor_codes : ui8 {
+		CRS_0 = 0, CRS_1 = 1, CRS_2 = 2,
+		CRS_3, CRS_4, CRS_5,
+		CRS_6, CRS_7,
+		CRS_LEFT = CRS_0, CRS_RIGHT = CRS_1, CRS_MIDDLE = CRS_2,
+		CRS_COUNT = CRS_7
+	};
+	enum cursor_modes : ui32 {
+		CRS_DEFAULT = 0,
+		CRS_CAPTURED, CRS_HIDDEN,
+	};
+	enum keyboard_modes : ui32 {
+		KBD_DEFAULT = 0,
+		KBD_STICK, KBD_LOCK
+	};
+}
+#endif	// NWL_IO_SWITCH_H

@@ -1,35 +1,33 @@
 #ifndef NWL_IO_LOG_H
 #define NWL_IO_LOG_H
-
 #include <nwl_core.hpp>
-
 #include <io/io_stream.h>
 #include <core/nwl_string.h>
-
+#include <core/nwl_switch.h>
 namespace NWL
 {
-	/// LogSystem static class
-	class NWL_API LogSys
+	/// log_system static class
+	class NWL_API log_sys
 	{
 	public:
-		using ILog = StrStream;
-		using OLog = OutStream;
+		using input = str_stream;
+		using output = out_stream;
 	public:
 		// --getters
-		static inline ILog& GetILog() { return *s_piLog; }
-		static inline OLog& GetOLog() { return *s_poLog; }
+		static inline input& get_input() { return *s_input; }
+		static inline output& get_output() { return *s_output; }
 		// --setters
-		static void OnInit();
-		static void OnQuit();
-		static void Update();
-		static void SetOutput(OLog& routLog) { s_poLog = &routLog; }
+		static void on_init();
+		static void on_quit();
+		static void update();
+		static void set_output(output& out);
 		// --core_methods
-		static void WriteInf(const char* strFormat, ...);
-		static void WriteErr(Int32 nErrCode, const char* strFormat, ...);
-		static void WriteWrn(const char* strFormat, ...);
+		static void write_info(cstring format, ...);
+		static void write_error(error_codes err_code, cstring format, ...);
+		static void write_warn(cstring format, ...);
 	private:
-		static ILog* s_piLog;
-		static OLog* s_poLog;
+		static input* s_input;
+		static output* s_output;
 	};
 }
 #endif // NWL_IO_LOG_H

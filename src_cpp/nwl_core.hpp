@@ -14,9 +14,9 @@
 #define NWL_LAST_CLASS __declspec(novtable)
 
 #ifdef _WIN32
-#	define NWL_NEWLINE  "\r\n"
+#	define NWL_NLINE  "\r\n"
 #else
-#	define NWL_NEWLINE  "\n"
+#	define NWL_NLINE  "\n"
 #endif
 #if defined(_MSC_VER)
 #	if (!(defined _CRT_SECURE_NO_WARNINGS) && false)
@@ -46,36 +46,30 @@
 #include <nwl_pch.hpp>
 
 // --==<alias>==--
-namespace NWL
-{
-	using Int8 = __int8;
-	using Int16 = __int16;
-	using Int32 = __int32;
-	using Int64 = long int;
-	using UInt8 = unsigned __int8;
-	using UInt16 = unsigned __int16;
-	using UInt32 = unsigned __int32;
-	using UInt64 = unsigned long int;
-	using Float32 = float;
-	using Float64 = double;
-	using Float128 = long double;
-	using Ptr = void*;
-	using Bit = bool;
-	using Byte = char;
-	using UByte = unsigned char;
-	using Size = size_t;
-	using Char = char;
-	using UChar = unsigned char;
-	using Char8 = char;
-	using UChar8 = unsigned char;
-	using WChar = wchar_t;
-	using Char16 = wchar_t;
-}
+using si8 =		signed __int8;
+using si16 =	signed __int16;
+using si32 =	signed __int32;
+using si64 =	signed __int64;
+using ui8 =		unsigned __int8;
+using ui16 =	unsigned __int16;
+using ui32 =	unsigned __int32;
+using ui64 =	unsigned long int;
+using f32 =		float;
+using f64 =		double;
+using f128 =	long double;
+using ptr =		void*;
+using bit =		bool;
+using sbyte =	char;
+using ubyte =	unsigned char;
+using size =	size_t;
+using uchar8 =	unsigned char;
+using char8 =	char;
+using char16 =	wchar_t;
 // --==</alias>==--
 
 // --==<support_macroses>==--
-#define NWL_XY_TO_X(x, y, w) ( (static_cast<Size>(y) * static_cast<Size>(w)) + static_cast<Size>(x) )
-#define NWL_ALIGN_FORWARD(sz_data, sz_alignment) ( (static_cast<Size>(sz_data) + (static_cast<Size>(sz_alignment) - 1)) & ~(static_cast<Size>(sz_alignment) - 1) )
+#define NWL_XY_TO_X(x, y, w) ( (static_cast<size>(y) * static_cast<size>(w)) + static_cast<size>(x) )
+#define NWL_ALIGN_FORWARD(data, alignment) ( (static_cast<size>(data) + (static_cast<size>(alignment) - 1)) & ~(static_cast<size>(alignment) - 1) )
 
 #if (defined NWL_DEBUG)
 #	define NWL_BREAK() (__debugbreak())
@@ -90,15 +84,12 @@ namespace NWL
 
 namespace NWL
 {
-	template<class SType>
-	class NWL_API ASingleton;
-	template<class EType, class SType>
-	class NWL_API AEngine;
-	class NWL_API AEngineState;
-	class NWL_API ADataRes;
-	struct NWL_API AEvent;
-	struct NWL_API WindowEvent;
-	struct NWL_API CursorEvent;
-	struct NWL_API KeyboardEvent;
+	template<class stype>
+	class NWL_API a_singleton;
+	class NWL_API a_data_res;
+	struct NWL_API a_event;
+	struct NWL_API window_event;
+	struct NWL_API cursor_event;
+	struct NWL_API keyboard_event;
 }
 #endif	// NWL_CORE_HPP

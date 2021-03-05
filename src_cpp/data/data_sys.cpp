@@ -7,126 +7,122 @@
 #include <core/nwl_container.h>
 #include <core/nwl_string.h>
 #include <io/io_stream.h>
-#include <io/io_exception.h>
+#include <io/io_error.h>
 
-NWL::String NWL::DataSys::s_strDir = &std::filesystem::current_path().generic_string()[0];
+NWL::dstring NWL::data_sys::s_strDir = &std::filesystem::current_path().generic_string()[0];
 
 namespace NWL
 {
     // --setters
     // --==<core_methods>==--
-    void DataSys::OnInit()
-    {
-    }
-    void DataSys::OnQuit() {}
-    // --file_dialogs
-    String DataSys::DialogSave(const char* strFilter, Ptr pWindow)
+    void data_sys::on_init() { }
+    void data_sys::on_quit() { }
+    // --loading
+    dstring data_sys::dialog_load(cstring filter, ptr user_data)
     {
 #if (defined NWL_PLATFORM_WINDOWS)
-        constexpr Int32 nMaxChars = 256;
+        constexpr si32 nMaxChars = 256;
         char strRes[nMaxChars]{ 0 };
         OPENFILENAMEA ofn{ 0 };
         ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = reinterpret_cast<HWND>(pWindow);
-        ofn.lpstrFile = &strRes[0];
-        ofn.nMaxFile = sizeof(strRes);
-        ofn.lpstrFilter = strFilter;
-        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetSaveFileNameA(&ofn)) { return String(ofn.lpstrFile); }
-        else { return ""; }
-#endif  // NWL_PLATFORM
-    }
-    String DataSys::DialogLoad(const char* strFilter, Ptr pWindow)
-    {
-#if (defined NWL_PLATFORM_WINDOWS)
-        constexpr Int32 nMaxChars = 256;
-        char strRes[nMaxChars]{ 0 };
-        OPENFILENAMEA ofn{ 0 };
-        ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = reinterpret_cast<HWND>(pWindow);
+        ofn.hwndOwner = reinterpret_cast<HWND>(user_data);
         ofn.lpstrFile = &strRes[0];
         ofn.nMaxFile = nMaxChars;
-        ofn.lpstrFilter = strFilter;
+        ofn.lpstrFilter = filter;
         ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetOpenFileNameA(&ofn)) { return String(ofn.lpstrFile); }
+        if (GetOpenFileNameA(&ofn)) { return dstring(ofn.lpstrFile); }
         else { return ""; }
 #endif  // NWL_PLATFORM
     }
-    // --binary_data
-    bool DataSys::SaveFile(const char* strFPath, Ptr pData, Size szBytes)
+    bit data_sys::load_file(cstring file_path, ptr data, size nof_bytes)
     {
-        OutFStream fStream;
-        fStream.exceptions(std::ios::badbit | std::ios::failbit);
+        in_file_stream fstm;
+        fstm.exceptions(std::ios::badbit | std::ios::failbit);
         try {
-            fStream.open(strFPath, std::ios::out | std::ios::binary);
-            fStream.write(static_cast<Byte*>(pData), szBytes);
-            fStream.close();
+            fstm.open(file_path, std::ios::in | std::ios::binary);
+            fstm.read(static_cast<sbyte*>(data), nof_bytes);
+            fstm.close();
         }
-        catch (std::ios_base::failure ex) { throw Exception("saving fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("loading fail"); return false; }
         return true;
     }
-    bool DataSys::LoadFile(const char* strFPath, Ptr pData, Size szBytes)
+    bit data_sys::load_file(cstring file_path, dstring& data)
     {
-        InFStream fStream;
-        fStream.exceptions(std::ios::badbit | std::ios::failbit);
+        in_file_stream fstm;
+        fstm.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         try {
-            fStream.open(strFPath, std::ios::in | std::ios::binary);
-            fStream.read(static_cast<Byte*>(pData), szBytes);
-            fStream.close();
+            fstm.open(file_path, std::ios_base::in | std::ios_base::binary);
+            fstm.seekg(0, fstm.end);
+            data.resize(fstm.tellg());
+            fstm.seekg(0, fstm.beg);
+            fstm.read(&data[0], data.size());
+            fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("loading fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("loading fail"); return false; }
         return true;
     }
-    // --strings
-    bool DataSys::SaveFile(const char* strFPath, String& rData)
-    {
-        OutFStream fStream;
-        fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    bit data_sys::load_file(cstring file_path, a_info& data) {
+        in_file_stream fstm;
+        fstm.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         try {
-            fStream.open(strFPath, std::ios_base::out | std::ios_base::binary);
-            fStream.write(&rData[0], rData.size());
-            fStream.close();
+            fstm.open(file_path, std::ios_base::in | std::ios_base::binary);
+            fstm >> data;
+            fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("saving fail"); return false; }
         return true;
     }
-    bool DataSys::LoadFile(const char* strFPath, String& rData)
+    // --saving
+    dstring data_sys::dialog_save(cstring filter, ptr user_data)
     {
-        InFStream fStream;
-        fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+#if (defined NWL_PLATFORM_WINDOWS)
+        constexpr si32 nMaxChars = 256;
+        char strRes[nMaxChars]{ 0 };
+        OPENFILENAMEA ofn{ 0 };
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = reinterpret_cast<HWND>(user_data);
+        ofn.lpstrFile = &strRes[0];
+        ofn.nMaxFile = sizeof(strRes);
+        ofn.lpstrFilter = filter;
+        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
+        if (GetSaveFileNameA(&ofn)) { return dstring(ofn.lpstrFile); }
+        else { return ""; }
+#endif  // NWL_PLATFORM
+    }
+    bit data_sys::save_file(cstring file_path, ptr data, size nof_bytes)
+    {
+        out_file_stream fstm;
+        fstm.exceptions(std::ios::badbit | std::ios::failbit);
         try {
-            fStream.open(strFPath, std::ios_base::in | std::ios_base::binary);
-            fStream.seekg(0, fStream.end);
-            rData.resize(fStream.tellg());
-            fStream.seekg(0, fStream.beg);
-            fStream.read(&rData[0], rData.size());
-            fStream.close();
+            fstm.open(file_path, std::ios::out | std::ios::binary);
+            fstm.write(static_cast<sbyte*>(data), nof_bytes);
+            fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("loading fail"); return false; }
+        catch (std::ios_base::failure ex) { throw error("saving fail"); return false; }
         return true;
     }
-    // --images
-    bool DataSys::SaveFile(const char* strFPath, AInfo& rData)
+    bit data_sys::save_file(cstring file_path, dstring& data)
     {
-        OutFStream fStream;
-        fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+        out_file_stream fstm;
+        fstm.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         try {
-            fStream.open(strFPath, std::ios_base::out | std::ios_base::binary);
-            fStream << rData;
-            fStream.close();
+            fstm.open(file_path, std::ios_base::out | std::ios_base::binary);
+            fstm.write(&data[0], data.size());
+            fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("saving fail"); return false; }
         return true;
     }
-    bool DataSys::LoadFile(const char* strFPath, AInfo& rData) {
-        InFStream fStream;
-        fStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    bit data_sys::save_file(cstring file_path, a_info& data)
+    {
+        out_file_stream fstm;
+        fstm.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         try {
-            fStream.open(strFPath, std::ios_base::in | std::ios_base::binary);
-            fStream >> rData;
-            fStream.close();
+            fstm.open(file_path, std::ios_base::out | std::ios_base::binary);
+            fstm << data;
+            fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw Exception("saving fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("saving fail"); return false; }
         return true;
     }
     // --==</core_methods>==--

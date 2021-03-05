@@ -3,16 +3,16 @@
 #include <nwl_core.hpp>
 namespace NWL
 {
-	struct NWL_API AInfo
+	struct NWL_API a_info
 	{
 	public:
-		AInfo() = default;
-		virtual ~AInfo() = default;
+		a_info() = default;
+		virtual ~a_info() = default;
 		// --operators
-		virtual std::ostream& operator<<(std::ostream& rStream) const = 0;
-		virtual std::istream& operator>>(std::istream& rStream) = 0;
+		virtual std::ostream& operator<<(std::ostream& stm) const;
+		virtual std::istream& operator>>(std::istream& stm);
 	};
-	std::ostream& operator<<(std::ostream& rStream, const AInfo& rInfo);
-	std::istream& operator>>(std::istream& rStream, AInfo& rInfo);
+	std::ostream& operator<<(std::ostream& stm, const a_info& info);
+	std::istream& operator>>(std::istream& stm, a_info& info);
 }
 #endif	// NWL_INFO_H

@@ -266,10 +266,10 @@ namespace detail
 	};
 }//namespace detail
 
-	template<typename genFIType>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genFIType abs(genFIType x)
+	template<typename genFitype>
+	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genFitype abs(genFitype x)
 	{
-		return detail::compute_abs<genFIType, std::numeric_limits<genFIType>::is_signed>::call(x);
+		return detail::compute_abs<genFitype, std::numeric_limits<genFitype>::is_signed>::call(x);
 	}
 
 	template<length_t L, typename T, qualifier Q>
@@ -280,15 +280,15 @@ namespace detail
 
 	// sign
 	// fast and works for any type
-	template<typename genFIType>
-	GLM_FUNC_QUALIFIER genFIType sign(genFIType x)
+	template<typename genFitype>
+	GLM_FUNC_QUALIFIER genFitype sign(genFitype x)
 	{
 		GLM_STATIC_ASSERT(
-			std::numeric_limits<genFIType>::is_iec559 || (std::numeric_limits<genFIType>::is_signed && std::numeric_limits<genFIType>::is_integer),
+			std::numeric_limits<genFitype>::is_iec559 || (std::numeric_limits<genFitype>::is_signed && std::numeric_limits<genFitype>::is_integer),
 			"'sign' only accept signed inputs");
 
-		return detail::compute_sign<1, genFIType, defaultp,
-                                    std::numeric_limits<genFIType>::is_iec559, detail::is_aligned<highp>::value>::call(vec<1, genFIType>(x)).x;
+		return detail::compute_sign<1, genFitype, defaultp,
+                                    std::numeric_limits<genFitype>::is_iec559, detail::is_aligned<highp>::value>::call(vec<1, genFitype>(x)).x;
 	}
 
 	template<length_t L, typename T, qualifier Q>

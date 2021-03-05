@@ -1,20 +1,13 @@
 #ifndef NWL_IO_STREAM_H
 #define NWL_IO_STREAM_H
-
 #include <nwl_core.hpp>
-
 namespace NWL
 {
-	using InStream = std::istream;
-	using OutStream = std::ostream;
-	using IOutStream = std::iostream;
-	using InFStream = std::ifstream;
-	using OutFStream = std::ofstream;
-	using IOFStream = std::fstream;
+	using in_stream = std::istream;
+	using out_stream = std::ostream;
+	using io_stream = std::iostream;
+	using in_file_stream = std::ifstream;
+	using out_file_stream = std::ofstream;
+	using io_file_stream = std::fstream;
 }
-
-namespace NWL
-{
-}
-
 #endif	// NWL_IO_STREAM_H

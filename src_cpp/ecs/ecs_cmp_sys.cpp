@@ -2,29 +2,22 @@
 #include "ecs_cmp_sys.h"
 #include <ecs/ecs_ent_sys.h>
 
-NWL::CmpSys::EntCmpRegistry NWL::CmpSys::s_ecReg;
-NWL::CmpSys::TypeCmpRegistry NWL::CmpSys::s_tcReg;
+NWL::cmp_sys::registry NWL::cmp_sys::s_reg;
 
 namespace NWL
 {
 	// --==<core_methods>==--
-	void CmpSys::OnInit() {
-		if (!s_ecReg.empty() && !s_tcReg.empty()) { return; }
+	void cmp_sys::on_init() {
+		if (!s_reg.empty() && !s_reg.empty()) { return; }
 	}
-	void CmpSys::OnQuit() {
-		if (s_ecReg.empty() && s_tcReg.empty()) { return; }
-		s_ecReg.clear();
-		s_tcReg.clear();
+	void cmp_sys::on_quit() {
+		if (s_reg.empty() && s_reg.empty()) { return; }
+		s_reg.clear();
 	}
 
-	void CmpSys::AddCmp(RefKeeper<ACmp>& rCmp) {
-		s_ecReg[rCmp->GetEntId()][rCmp->GetTypeId()].SetRef(rCmp);
-		s_tcReg[rCmp->GetTypeId()][rCmp->GetEntId()].SetRef(rCmp);
-	}
-	void CmpSys::RmvCmp(UInt32 eId, UInt32 tId) {
-		if (!HasCmp(eId, tId)) { return; }
-		s_ecReg[eId].erase(tId);
-		s_tcReg[tId].erase(eId);
+	void cmp_sys::del_cmp(ui32 ent_id, ui32 type_id) {
+		if (!has_cmp(ent_id, type_id)) { return; }
+		s_reg[ent_id].erase(type_id);
 	}
 	// --==</core_methods>==--
 }

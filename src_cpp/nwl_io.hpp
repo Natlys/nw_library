@@ -5,6 +5,6 @@
 #include <io/io_event.h>
 #include <io/io_stream.h>
 #include <io/io_log.h>
-#include <io/io_exception.h>
+#include <io/io_error.h>
 
 #endif	// NWL_IO_HPP

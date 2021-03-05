@@ -3,14 +3,18 @@
 
 namespace NWL
 {
-	bool IsCollidPointRect(V2f xyPoint, V2f LeftTop, V2f RightBot) {
-		return ((xyPoint.x > LeftTop.x && xyPoint.x < RightBot.x) &&
-			(xyPoint.y > LeftTop.y && xyPoint.y < RightBot.y));
+	bool is_collision_pt_rt(v2f32 xyPoint, v2f32 rect_left_top, v2f32 rect_right_bot) {
+		return (
+			(xyPoint.x > rect_left_top.x && xyPoint.x < rect_right_bot.x) &&
+			(xyPoint.y > rect_left_top.y && xyPoint.y < rect_right_bot.y)
+			);
 	}
-	bool IsCollidRectRect(V2f LeftTop0, V2f RightBot0, V2f LeftTop1, V2f RightBot1) {
-		return ((LeftTop0.x > LeftTop1.x && LeftTop0.x < RightBot1.x) &&
-			(LeftTop0.y > LeftTop1.y && LeftTop0.y < RightBot1.y)) ||
-			((RightBot0.x > LeftTop1.x && RightBot0.x < RightBot1.x) &&
-				(RightBot0.y > LeftTop1.y && RightBot0.y < RightBot1.y));
+	bool is_collision_rt_rt(v2f32 rect0_left_top, v2f32 rect0_right_bot, v2f32 rect1_left_top, v2f32 rect1_right_bot) {
+		return (
+			(rect0_left_top.x > rect1_left_top.x && rect0_left_top.x < rect1_right_bot.x) &&
+			(rect0_left_top.y > rect1_left_top.y && rect0_left_top.y < rect1_right_bot.y)) ||
+			((rect0_right_bot.x > rect1_left_top.x && rect0_right_bot.x < rect1_right_bot.x) &&
+			(rect0_right_bot.y > rect1_left_top.y && rect0_right_bot.y < rect1_right_bot.y)
+				);
 	}
 }

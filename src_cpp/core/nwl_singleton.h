@@ -1,23 +1,21 @@
 #ifndef NWL_SINGLETON_H
 #define NWL_SINGLETON_H
-
 #include <nwl_core.hpp>
-
 namespace NWL
 {
-	/// ASingleton Interface for unique global classes
-	template<class SType>
-	class NWL_API ASingleton
+	/// abstract singleton for unique global classes
+	template<class stype>
+	class NWL_API a_singleton
 	{
 	protected:
-		ASingleton() = default;
-		ASingleton(const ASingleton& rCpy) = delete;
+		a_singleton() = default;
+		a_singleton(const a_singleton& copy) = delete;
 	public:
-		virtual ~ASingleton() = default;
+		virtual ~a_singleton() = default;
 		// --getters
-		static inline SType& Get() { static SType s_instance;  return s_instance; }
+		static inline stype& Get() { static stype s_instance; return s_instance; }
 		// --operators
-		void operator=(const ASingleton& rCpy) = delete;
+		void operator=(const a_singleton& copy) = delete;
 	};
 }
 

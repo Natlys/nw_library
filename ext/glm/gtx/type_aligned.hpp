@@ -619,7 +619,7 @@ namespace glm
 
 	/// 32 bit single-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
-	GLM_ALIGNED_TYPEDEF(float32, aligned_float32, 4);
+	GLM_ALIGNED_TYPEDEF(f32, aligned_float32, 4);
 
 	/// 32 bit single-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
@@ -627,13 +627,13 @@ namespace glm
 
 	/// 32 bit single-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
-	GLM_ALIGNED_TYPEDEF(float32, aligned_f32, 4);
+	GLM_ALIGNED_TYPEDEF(f32, aligned_f32, 4);
 
 #	ifndef GLM_FORCE_SINGLE_ONLY
 
 	/// 64 bit double-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
-	GLM_ALIGNED_TYPEDEF(float64, aligned_float64, 8);
+	GLM_ALIGNED_TYPEDEF(f64, aligned_float64, 8);
 
 	/// 64 bit double-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
@@ -641,7 +641,7 @@ namespace glm
 
 	/// 64 bit double-qualifier floating-point aligned scalar.
 	/// @see gtx_type_aligned
-	GLM_ALIGNED_TYPEDEF(float64, aligned_f64, 8);
+	GLM_ALIGNED_TYPEDEF(f64, aligned_f64, 8);
 
 #	endif//GLM_FORCE_SINGLE_ONLY
 

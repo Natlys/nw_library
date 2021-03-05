@@ -6,20 +6,20 @@
 namespace glm{
 namespace detail
 {
-	template<typename genFIType, bool /*signed*/>
+	template<typename genFitype, bool /*signed*/>
 	struct compute_abs
 	{};
 
-	template<typename genFIType>
-	struct compute_abs<genFIType, true>
+	template<typename genFitype>
+	struct compute_abs<genFitype, true>
 	{
-		GLM_FUNC_QUALIFIER GLM_CONSTEXPR static genFIType call(genFIType x)
+		GLM_FUNC_QUALIFIER GLM_CONSTEXPR static genFitype call(genFitype x)
 		{
 			GLM_STATIC_ASSERT(
-				std::numeric_limits<genFIType>::is_iec559 || std::numeric_limits<genFIType>::is_signed,
+				std::numeric_limits<genFitype>::is_iec559 || std::numeric_limits<genFitype>::is_signed,
 				"'abs' only accept floating-point and integer scalar or vector inputs");
 
-			return x >= genFIType(0) ? x : -x;
+			return x >= genFitype(0) ? x : -x;
 			// TODO, perf comp with: *(((int *) &x) + 1) &= 0x7fffffff;
 		}
 	};
@@ -35,13 +35,13 @@ namespace detail
 	};
 #endif
 
-	template<typename genFIType>
-	struct compute_abs<genFIType, false>
+	template<typename genFitype>
+	struct compute_abs<genFitype, false>
 	{
-		GLM_FUNC_QUALIFIER GLM_CONSTEXPR static genFIType call(genFIType x)
+		GLM_FUNC_QUALIFIER GLM_CONSTEXPR static genFitype call(genFitype x)
 		{
 			GLM_STATIC_ASSERT(
-				(!std::numeric_limits<genFIType>::is_signed && std::numeric_limits<genFIType>::is_integer),
+				(!std::numeric_limits<genFitype>::is_signed && std::numeric_limits<genFitype>::is_integer),
 				"'abs' only accept floating-point and integer scalar or vector inputs");
 			return x;
 		}

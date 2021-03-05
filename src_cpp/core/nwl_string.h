@@ -3,17 +3,18 @@
 #include <nwl_core.hpp>
 namespace NWL
 {
-	using String = std::string;
-	using WString = std::wstring;
-	using StrStream = std::stringstream;
+	using cstring = const char*;
+	using dstring = std::string;
+	using str_stream = std::stringstream;
+	using cstring16 = const wchar_t*;
+	using dstring16 = std::wstring;
 }
 namespace NWL
 {
-	NWL_API String StrGetFormatVa(const char* strFormat, va_list& argList);
-	NWL_API String StrGetFormat(const char* strFormat, ...);
-	NWL_API const char* CStrGetPartL(const char* strSource, char cDelim, int nFromL = 0);
-	NWL_API const char* CStrGetPartR(const char* strSource, char cDelim, int nFromR = 0);
-	NWL_API const char* CStrGetFormat(const char* strFormat, ...);
-	NWL_API bool CStrIsEqual(const char* strL, const char* strR);
+	NWL_API dstring str_format_var(cstring format, va_list& arg_list);
+	NWL_API dstring str_format(cstring format, ...);
+	NWL_API cstring str_part_left(cstring source, char8 delim_char, ui32 from_left = 0);
+	NWL_API cstring str_part_right(cstring source, char8 delim_char, ui32 from_right = 0);
+	NWL_API bit str_is_equal(cstring str0, cstring str1);
 }
 #endif // NWL_STRING_H

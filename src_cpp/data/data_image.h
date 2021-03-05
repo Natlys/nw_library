@@ -7,124 +7,112 @@
 #include <memory/mem_sys.h>
 namespace NWL
 {
-	struct Pixel;
-	struct ImageInfo;
-	struct ImageBmpInfo;
-	struct ImagePngInfo;
+	struct pixel;
+	struct image_info;
+	struct image_bmp_info;
+	struct image_png_info;
 }
 namespace NWL
 {
-	/// Pixel struct
-	struct NWL_API Pixel
+	/// pixel struct
+	struct NWL_API pixel
 	{
 	public:
 		union {
-			unsigned int rgbaVal;
-			struct { UByte r, g, b, a; };
-			UByte rgba[4]{ 0 };
+			ui32 rgba_num;
+			struct { ubyte r, g, b, a; };
+			ubyte rgba[4]{ 0 };
 		};
 	public:
-		Pixel() = default;
-		Pixel(UInt32 nValue) : rgbaVal(nValue) { }
-		Pixel(UByte red, UByte green, UByte blue, UByte alpha) :
+		pixel(ui32 value = 0x00'00'00'00) : rgba_num(value) { }
+		pixel(ubyte red, ubyte green, ubyte blue, ubyte alpha) :
 			rgba{ red, green, blue, alpha } { }
 		// --operators
-		inline UByte& operator[](UInt8 nIdx) { return rgba[nIdx]; }
-		inline const UByte& operator[](UInt8 nIdx) const { return rgba[nIdx]; }
-		inline void operator=(UInt32 nValue) { rgbaVal = nValue; }
-		inline void operator=(const Pixel& rCpy) { rgbaVal = rCpy.rgbaVal; }
+		inline ubyte& operator[](ui8 idx) { return rgba[idx]; }
+		inline const ubyte& operator[](ui8 idx) const { return rgba[idx]; }
+		inline void operator=(ui32 value) { rgba_num = value; }
+		inline void operator=(const pixel& copy) { rgba_num = copy.rgba_num; }
 	};
 }
 namespace NWL
 {
-	/// ImageInfo struct
-	struct NWL_API ImageInfo : public AInfo
+	/// image_information struct
+	struct NWL_API image_info : public a_info
 	{
 	public:
-		PixelFormats pxlFormat = PXF_R8G8B8A8_UINT32;
-		Int32 nWidth = 1;
-		Int32 nHeight = 1;
-		Int32 nChannels = 4;
-		DArray<Pixel> pxlData = { Pixel(255u, 255u, 255u, 255u) };
+		pixel_formats pxl_format = PXF_R8G8B8A8_UINT32;
+		si32 size_x = 1;
+		si32 size_y = 1;
+		si32 nof_channels = 4;
+		darray<pixel> pxl_data = { pixel(255u, 255u, 255u, 255u) };
 	public:
 		// --getters
-		inline Size GetDataSize() const { return static_cast<Size>(abs(nChannels) * abs(nWidth) * abs(nHeight)); }
-		inline UInt64 GetPxlCount() const { return static_cast<UInt64>(abs(nWidth) * abs(nHeight)); }
-		inline Pixel GetPixel(UInt32 nX, UInt32 nY) { return pxlData[NWL_XY_TO_X(nX, nY, nWidth) % GetDataSize()]; }
+		inline size get_size() const { return static_cast<size>(abs(nof_channels) * abs(size_x) * abs(size_y)); }
+		inline ui64 get_count() const { return static_cast<ui64>(abs(size_x) * abs(size_y)); }
+		inline pixel get_pixel(ui32 x, ui32 y) { return pxl_data[NWL_XY_TO_X(x, y, size_x) % get_size()]; }
 		// --setters
-		void SetPixel(UInt32 szX, UInt32 nY, Pixel pxlColor);
-		void SetPixels(UByte* pData);
+		void set_pixel(ui32 x, ui32 y, pixel pxl);
+		void set_pixels(ubyte* data_ptr);
 		// --operators
-		ImageInfo& operator=(const ImageBmpInfo& rInfo);
-		ImageInfo& operator=(const ImagePngInfo& rInfo);
-		ImageInfo& operator=(const ImageInfo& rInfo);
-		virtual std::ostream& operator<<(std::ostream& rStream) const override;
-		virtual std::istream& operator>>(std::istream& rStream) override;
+		image_info& operator=(const image_bmp_info& info);
+		image_info& operator=(const image_png_info& info);
+		image_info& operator=(const image_info& info);
+		virtual std::ostream& operator<<(std::ostream& stm) const override;
+		virtual std::istream& operator>>(std::istream& stm) override;
 	};
 }
 namespace NWL
 {
-	/// ImageBmpInfo struct
-	/// Description:
+	/// image_bmp_info struct
+	/// description:
 	/// --used for loading of .bmp formatted files
-	/// Interface:
+	/// interface:
 	/// ->load a bitmap as binary file->read headers "file" and "data"
 	/// ->if the image is indexed - load color pallete
 	/// ->read pixel data with offset which is defined in "file" header
 	/// ->in the case of 24bit and not multiple-of-4 sizes, we need to consider padding
-	struct NWL_API ImageBmpInfo : public ImageInfo
+	struct NWL_API image_bmp_info : public image_info
 	{
 	public:
 #pragma pack(push, 1) // add padding 16->14
 		struct {
-			UInt16 nType = 0x4d; // two encoded letters;usually "bm"
-			UInt32 szData = 3; // size of the file in bytes
-			UInt16 nReserved1 = 0; // it is reserved, (can be used by a programmer)
-			UInt16 nReserved2 = 0; // so it is always zero
-			UInt32 szOffset = 54; // offset to the pixel data
-		}File;	// file info
+			ui16 type_code = 0x4d;		// two encoded letters;usually "bm"
+			ui32 header_size = 14;		// size of the file in bytes
+			ui16 reserved1 = 0;			// it is reserved, (can be used by a programmer)
+			ui16 reserved2 = 0;			// so it is always zero
+			ui32 data_offset = 54;		// offset to the pixel data
+		} file_info;	// file info
 #pragma pack(pop)
 #pragma pack(push, 1)
 		struct {
-			UInt32 szData = 3; // size of the header in bytes
-			Int32 nWidth = 1; // bitmap width in pixels
-			Int32 nHeight = 1; // bitmap height in pixels
-
-			UInt16 nPlanes = 1; // always 1
-			UInt16 nPxBits = 24; // bpp
-			UInt32 szCompression = 0; // 24bpp = 0; 32bpp = 3
-			UInt32 szImage = 3; // 0 for uncompressed
-			Int32 nXppm = 0;
-			Int32 nYppm = 0;
-			UInt32 nClrUsed = 0; // indexed pallete count; zero for all available collors;
-			UInt32 nClrNeed = 0; // required colors for bitmap
-		}Desc;	// description
-#pragma pack(pop)
-#pragma pack(push, 1)
-		struct {
-			UInt32 nRMask = 0x00'ff'00'00; // bit mask for the red channel
-			UInt32 nGMask = 0x00'00'ff'00; // bit mask for the green channel
-			UInt32 nBMask = 0x00'00'00'ff; // bit mask for the blue channel
-			UInt32 nAMask = 0xff'00'00'00; // bit mask for the alpha channel
-			UInt32 nColorSpaceType = 0x73'52'47'42; // default s'rgb
-			UInt32 nUnused = 0x73'52'47'42; // unused data for s'rgb clr space
-		} Clut;	// color lookup table
+			ui32 header_size = 3;	// size of the header in bytes
+			si32 width = 1;			// bitmap width in pixels
+			si32 height = 1;		// bitmap height in pixels
+			ui16 nof_planes = 1;		// always 1
+			ui16 nof_pixel_bits = 24;	// bpp
+			ui32 compression_type = 0;	// 24bpp = 0; 32bpp = 3
+			ui32 image_size = 0;		// 0 for uncompressed
+			si32 ppm_x = 0;
+			si32 ppm_y = 0;
+			ui32 clrs_used = 0;	// indexed pallete count; zero for all available collors;
+			ui32 clrs_need = 0;	// required colors for bitmap
+		} data_info;	// description
 #pragma pack(pop)
 	public:
 		// --operators
-		virtual std::ostream& operator<<(std::ostream& rStream) const override;
-		virtual std::istream& operator>>(std::istream& rStream) override;
+		virtual std::ostream& operator<<(std::ostream& stm) const override;
+		virtual std::istream& operator>>(std::istream& stm) override;
 	};
-	/// ImagePngInfo struct
 }
 namespace NWL
 {
-	struct NWL_API ImagePngInfo : public ImageInfo
+	/// image_png_info struct
+	struct NWL_API image_png_info : public image_info
 	{
 	public:
 		// --operators
-		virtual std::ostream& operator<<(std::ostream& rStream) const override;
-		virtual std::istream& operator>>(std::istream& rStream) override;
+		virtual std::ostream& operator<<(std::ostream& stm) const override;
+		virtual std::istream& operator>>(std::istream& stm) override;
 	};
 }
 #endif	// NWL_DATA_IMAGE_H

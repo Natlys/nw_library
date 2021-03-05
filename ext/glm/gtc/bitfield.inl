@@ -237,13 +237,13 @@ namespace detail
 		return detail::functor1<vec, L, T, T, Q>::call(mask, v);
 	}
 
-	template<typename genIType>
-	GLM_FUNC_QUALIFIER genIType bitfieldRotateRight(genIType In, int Shift)
+	template<typename genitype>
+	GLM_FUNC_QUALIFIER genitype bitfieldRotateRight(genitype In, int Shift)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<genIType>::is_integer, "'bitfieldRotateRight' accepts only integer values");
+		GLM_STATIC_ASSERT(std::numeric_limits<genitype>::is_integer, "'bitfieldRotateRight' accepts only integer values");
 
-		int const BitSize = static_cast<genIType>(sizeof(genIType) * 8);
-		return (In << static_cast<genIType>(Shift)) | (In >> static_cast<genIType>(BitSize - Shift));
+		int const BitSize = static_cast<genitype>(sizeof(genitype) * 8);
+		return (In << static_cast<genitype>(Shift)) | (In >> static_cast<genitype>(BitSize - Shift));
 	}
 
 	template<length_t L, typename T, qualifier Q>
@@ -255,13 +255,13 @@ namespace detail
 		return (In << static_cast<T>(Shift)) | (In >> static_cast<T>(BitSize - Shift));
 	}
 
-	template<typename genIType>
-	GLM_FUNC_QUALIFIER genIType bitfieldRotateLeft(genIType In, int Shift)
+	template<typename genitype>
+	GLM_FUNC_QUALIFIER genitype bitfieldRotateLeft(genitype In, int Shift)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<genIType>::is_integer, "'bitfieldRotateLeft' accepts only integer values");
+		GLM_STATIC_ASSERT(std::numeric_limits<genitype>::is_integer, "'bitfieldRotateLeft' accepts only integer values");
 
-		int const BitSize = static_cast<genIType>(sizeof(genIType) * 8);
-		return (In >> static_cast<genIType>(Shift)) | (In << static_cast<genIType>(BitSize - Shift));
+		int const BitSize = static_cast<genitype>(sizeof(genitype) * 8);
+		return (In >> static_cast<genitype>(Shift)) | (In << static_cast<genitype>(BitSize - Shift));
 	}
 
 	template<length_t L, typename T, qualifier Q>

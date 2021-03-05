@@ -1,57 +1,33 @@
 #ifndef NWL_TIME_H
 #define NWL_TIME_H
-
 #include <nwl_core.hpp>
-
 namespace NWL
 {
-	/// TimeCounter class
-	class NWL_API TimeCounter
+	/// timer class
+	class NWL_API timer
 	{
-		using Clock = std::chrono::high_resolution_clock;
-		using TimePoint = std::chrono::time_point<Clock>;
-		using Sec = std::chrono::duration<Float64, std::ratio<1>>;
+		using clock = std::chrono::high_resolution_clock;
+		using time_point = std::chrono::time_point<clock>;
+		using sec = std::chrono::duration<f64, std::ratio<1>>;
+		using millisec = std::chrono::duration<f64, std::milli>;
 	public:
-		TimeCounter();
+		timer();
 		// --getters
-		inline Float64 GetCurr()	{ return m_nLast; }
-		inline Float64 GetLast()	{ return m_nLast; }
-		inline Float64 GetDelta()	{ return m_nCurr - m_nLast; }
-		inline Float64 GetBegin()	{ return m_nBegin; }
+		inline f64 get_curr(f64 nratio = 1.0) const		{ return m_ncurr * nratio; }
+		inline f64 get_last(f64 nratio = 1.0) const		{ return m_nlast * nratio; }
+		inline f64 get_delta(f64 nratio = 1.0) const	{ return m_ndelta * nratio; }
+		inline f64 get_begin(f64 nratio = 1.0) const	{ return m_nbegin * nratio; }
+		inline f64 get_ups(f64 nratio = 1.0) const		{ return 1.0 / m_ndelta * nratio; }
 		// --setters
-		void Update();
+		void update();
 		// --core_methods
 	private:
-		TimePoint m_tpLast;
-		TimePoint m_tpCurr;
-		Float64 m_nCurr;
-		Float64 m_nLast;
-		Float64 m_nDelta;
-		Float64 m_nBegin;
+		time_point m_tp_curr;
+		time_point m_tp_last;
+		f64 m_ncurr;
+		f64 m_nlast;
+		f64 m_ndelta;
+		f64 m_nbegin;
 	};
 }
-namespace NWL
-{
-	/// Time static class
-	/// Description:
-	/// -- The class for getting time. Update Method updates values
-	class NWL_API TimeSys
-	{
-	public:
-		// --getters
-		static inline const TimeCounter& GetCounter()			{ return s_tCounter; }
-		static inline Float64 GetCurr(Float64 nRatio = 1.0)		{ return s_tCounter.GetCurr() * nRatio; }
-		static inline Float64 GetLast(Float64 nRatio = 1.0)		{ return s_tCounter.GetLast() * nRatio; }
-		static inline Float64 GetDelta(Float64 nRatio = 1.0)	{ return s_tCounter.GetDelta() * nRatio; }
-		static inline Float64 GetGlobal(Float64 nRatio = 1.0)	{ return s_tCounter.GetBegin() * nRatio; }
-		static inline Float64 GetFPS(Float64 nRatio = 1.0)		{ return 1.0 / GetDelta(nRatio); }
-		// --core_methods
-		static void OnInit();
-		static void OnQuit();
-		static void Update();
-	private:
-		static TimeCounter s_tCounter;
-	};
-}
-
 #endif // NW_TIME_H

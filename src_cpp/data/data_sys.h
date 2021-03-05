@@ -5,27 +5,27 @@
 #include <data/data_res.h>
 namespace NWL
 {
-	/// DataSys static class
-	class NWL_API DataSys
+	/// data_sys static class
+	class NWL_API data_sys
 	{
 	public:
 		// --getters
-		static inline const char* GetDirectory() { return &s_strDir[0]; }
+		static inline cstring GetDirectory() { return &s_strDir[0]; }
 		// --core_methods
-		static void OnInit();
-		static void OnQuit();
-		// --dialogs
-		static String DialogSave(const char* strFilter, Ptr pWindow);
-		static String DialogLoad(const char* strFilter, Ptr pWindow);
-		// --save_load
-		static bool SaveFile(const char* strFPath, Ptr pData, Size szBytes);
-		static bool LoadFile(const char* strFPath, Ptr pData, Size szBytes);
-		static bool SaveFile(const char* strFPath, String& rData);
-		static bool LoadFile(const char* strFPath, String& rData);
-		static bool SaveFile(const char* strFPath, AInfo& rData);
-		static bool LoadFile(const char* strFPath, AInfo& rData);
+		static void on_init();
+		static void on_quit();
+		// --loading
+		static dstring dialog_load(cstring filter, ptr user_data);
+		static bit load_file(cstring file_path, ptr data, size nof_bytes);
+		static bit load_file(cstring file_path, dstring& data);
+		static bit load_file(cstring file_path, a_info& data);
+		// --saving
+		static dstring dialog_save(cstring filter, ptr user_data);
+		static bit save_file(cstring file_path, ptr data, size nof_bytes);
+		static bit save_file(cstring file_path, dstring& data);
+		static bit save_file(cstring file_path, a_info& data);
 	private:
-		static String s_strDir;
+		static dstring s_strDir;
 	};
 }
 

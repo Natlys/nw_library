@@ -1,43 +1,19 @@
 #include <nwl_pch.hpp>
 #include "mem_allocator.h"
-
+#include <io/io_error.h>
 namespace NWL
 {
-	// --==<MemInfo>==--
-	// --setters
-	void MemInfo::SetAllocation(Size szData, UInt64 unData) { szAlloc += szData; unAlloc += unData; }
-	void MemInfo::SetDeallocation(Size szData, UInt64 unData) { szAlloc -= szData; unAlloc -= unData; }
-	// --operators
-	std::ostream& MemInfo::operator<<(std::ostream& rStream) const {
-		return rStream <<
-			"====<memory_info>====" << std::endl <<
-			"address: " << std::hex << GetLocNum() << std::dec << std::endl <<
-			"total bytes: " << szMem << std::endl <<
-			"total blocks: " << unMem << std::endl <<
-			"allocated bytes: " << szAlloc << std::endl <<
-			"allocated blocks: " << unAlloc << std::endl <<
-			"====<memory_info>====" << std::endl;
-	}
-	std::istream& MemInfo::operator>>(std::istream& rStream) {
-		return rStream >>
-			szMem >> unMem >>
-			szAlloc >> unAlloc >>
-			pLoc;
-	}
-	// --==</MemInfo>==--
-
-	// --==<MemLink>==--
-	MemLink* MemLink::GetBlock(Size szMem) {
-		if (szBlock >= szMem) { szBlock -= szMem; return this; }
-		MemLink* pBlock = this;
-		MemLink* pBlockNext = nullptr;
-		while (pBlock != nullptr && pBlockNext != nullptr) {
-			if (pBlock = pBlock->pNext) {
-				if (pBlockNext = pBlock->pNext) {
-					if (pBlockNext->szBlock >= szMem) {
-						pBlock->szBlock -= szMem;
-						if (pBlock->szBlock == 0) { pBlock->pNext = pBlockNext->pNext; }
-						return pBlockNext;
+	mem_link* mem_link::get_block(size memory_size) {
+		if (block_size >= memory_size) { block_size -= memory_size; return this; }
+		mem_link* block_ptr = this;
+		mem_link* block_next_ptr = nullptr;
+		while (block_ptr != nullptr && block_next_ptr != nullptr) {
+			if (block_ptr = block_ptr->block_ptr) {
+				if (block_next_ptr = block_ptr->block_ptr) {
+					if (block_next_ptr->block_size >= memory_size) {
+						block_next_ptr->block_size -= memory_size;
+						if (block_ptr->block_size == 0) { block_ptr->block_ptr = block_next_ptr->block_ptr; }
+						return block_next_ptr;
 					}
 				}
 				else { break; }
@@ -46,106 +22,102 @@ namespace NWL
 		}
 		return nullptr;
 	}
-	// --==</MemLink>==--
 }
 namespace NWL
 {
-	AMemAllocator::AMemAllocator(Ptr pBlock, Size szMemory) :
-		m_pBeg(static_cast<Byte*>(pBlock)), m_Info(MemInfo())
-	{
-		m_Info.szMem = m_Info.unMem = static_cast<UInt64>(szMemory);
-		m_Info.szAlloc = 0; m_Info.unAlloc = 0;
-		m_Info.pLoc = pBlock;
-	}
-	AMemAllocator::~AMemAllocator() {}
+	a_mem_allocator::a_mem_allocator(ptr memory_ptr, size memory_size) :
+		m_data_ptr(static_cast<sbyte*>(memory_ptr)),
+		m_data_size(memory_size),
+		m_alloc_size(0) { }
+	a_mem_allocator::~a_mem_allocator() { }
 }
 namespace NWL
 {
-	MemArena::MemArena(Ptr pBlock, Size szMemory) :
-		AMemAllocator(pBlock, szMemory),
-		m_FreeList(nullptr) { }
-	MemArena::~MemArena() {}
+	mem_arena::mem_arena(ptr memory_ptr, size memory_size) :
+		a_mem_allocator(memory_ptr, memory_size),
+		m_free_list(nullptr) { }
+	mem_arena::~mem_arena() {}
 	// --==<core_methods>==--
-	Ptr MemArena::Alloc(Size szMemory, Size szAlign) {
-		Ptr pBlock = nullptr;
-		if (szMemory == 0) { return nullptr; }
-		szMemory = NWL_ALIGN_FORWARD(szMemory, szAlign);
-		if (szMemory < sizeof(MemLink)) { szMemory = sizeof(MemLink); }
-		if (m_FreeList != nullptr) {
-			if (MemLink* pLink = m_FreeList->GetBlock(szMemory)) {
-				pBlock = pLink;
-				if (pLink == m_FreeList && m_FreeList->szBlock == 0) { m_FreeList = m_FreeList->pNext; }
+	void* mem_arena::alloc(size alloc_size, size align_size) {
+		ptr block_ptr = nullptr;
+		if (alloc_size == 0) { throw error("attempt to allocate zero memory"); return nullptr; }
+		alloc_size = NWL_ALIGN_FORWARD(alloc_size, align_size);
+		if (alloc_size < sizeof(mem_link)) { alloc_size = sizeof(mem_link); }
+		if (m_free_list != nullptr) {
+			if (mem_link* free_link = m_free_list->get_block(alloc_size)) {
+				block_ptr = free_link;
+				if (free_link == m_free_list && m_free_list->block_ptr == nullptr) { m_free_list = m_free_list->block_ptr; }
 			}
 			else {
-				if (HasEnoughSize(szMemory)) { pBlock = GetDataCur(); }
-				else { NWL_ERR("the memory is exhausted!"); }
+				if (has_enough_size(alloc_size)) { block_ptr = &m_data_ptr[m_alloc_size]; }
+				else { throw error("the memory has been exhausted!"); }
 			}
 		}
 		else {
-			if (HasEnoughSize(szMemory)) { pBlock = GetDataCur(); }
-			else { NWL_ERR("the memory is exhausted!"); }
+			if (has_enough_size(alloc_size)) { block_ptr = &m_data_ptr[m_alloc_size]; }
+			else { throw error("the memory has been exhausted!"); }
 		}
-		m_Info.unAlloc++;
-		m_Info.szAlloc += szMemory;
-		return pBlock;
+		m_alloc_size += alloc_size;
+		return block_ptr;
 	}
-	void MemArena::Dealloc(Ptr pBlock, Size szMemory) {
-		if (HasBlock(pBlock)) {
-			szMemory = NWL_ALIGN_FORWARD(szMemory, sizeof(MemLink));
-			if (szMemory < sizeof(MemLink)) { szMemory = sizeof(MemLink); }
-			if ((static_cast<Int64>(m_Info.szAlloc) - static_cast<Int64>(szMemory)) < 0) { return; }
-			MemLink* pNextFreeList = new(pBlock)MemLink();
-			pNextFreeList->pNext = m_FreeList;
-			pNextFreeList->szBlock = szMemory;
-			m_FreeList = pNextFreeList;
+	void mem_arena::dealloc(ptr block_ptr, size dealloc_size) {
+		if (has_block(block_ptr)) {
+			dealloc_size = NWL_ALIGN_FORWARD(dealloc_size, sizeof(mem_link));
+			if (dealloc_size < sizeof(mem_link)) { dealloc_size = sizeof(mem_link); }
+			if ((static_cast<si64>(m_alloc_size) - static_cast<si64>(dealloc_size)) < 0) {
+				throw error("memory deallocation violation"); return;
+			}
+			mem_link* next_free_list = new(block_ptr)mem_link();
+			next_free_list->block_ptr = m_free_list;
+			next_free_list->block_size = dealloc_size;
+			m_free_list = next_free_list;
 		}
-		else { NWL_ERR("the pointer is out of bounds!"); }
-		m_Info.unAlloc--;
-		m_Info.szAlloc -= szMemory;
+		else { throw error("the pointer is out of bounds!"); }
+		m_alloc_size -= dealloc_size;
 	}
-	Ptr MemArena::Realloc(Ptr pBlock, Size szOld, Size szNew) {
-		Size szCpy = szOld < szNew ? szOld : szNew;
-		Ptr pRealloc = Alloc(szNew);
-		memcpy(pRealloc, pBlock, szCpy);
-		Dealloc(pBlock, szOld);
-		return pRealloc;
+	void* mem_arena::realloc(ptr block_ptr, size old_size, size new_size) {
+		size copy_size = old_size < new_size ? old_size : new_size;
+		ptr realloc_block_ptr = alloc(new_size);
+		memcpy(realloc_block_ptr, block_ptr, copy_size);
+		dealloc(block_ptr, old_size);
+		return realloc_block_ptr;
 	}
 	// --==</core_methods>==--
 }
 namespace NWL
 {
-	LinearAllocator::LinearAllocator(Ptr pBlock, Size szMemory) :
-		AMemAllocator(pBlock, szMemory) { }
-	LinearAllocator::~LinearAllocator() { }
+	linear_allocator::linear_allocator(ptr memory_ptr, size memory_size) :
+		a_mem_allocator(memory_ptr, memory_size) { }
+	linear_allocator::~linear_allocator() { }
 	// --==<core_methods>==--
-	inline Ptr LinearAllocator::Alloc(Size szMemory, Size szAlign) {
-		Ptr pBlock = nullptr;
-		if (szMemory == 0) { return nullptr; }
-		szMemory = NWL_ALIGN_FORWARD(szMemory, szAlign);
-		if (!HasEnoughSize(szMemory)) { NWL_ERR("The memory is exhausted"); return pBlock; }
-		pBlock = GetDataCur();
-		m_Info.unAlloc++;
-		m_Info.szAlloc += szMemory;
-		return pBlock;
+	void* linear_allocator::alloc(size alloc_size, size align_size) {
+		ptr block_ptr = nullptr;
+		if (alloc_size == 0) { return nullptr; }
+		alloc_size = NWL_ALIGN_FORWARD(alloc_size, align_size);
+		if (!has_enough_size(alloc_size)) {
+			throw error("the memory has been exhausted");
+			return nullptr;
+		}
+		block_ptr = &m_data_ptr[m_alloc_size];
+		m_alloc_size += alloc_size;
+		return block_ptr;
 	}
-	inline void LinearAllocator::Dealloc(Ptr pBlock, Size szMemory) {
-		if (pBlock != GetDataCur()) { return; }
-		memset(pBlock, 0, szMemory);
-		m_Info.unAlloc--;
-		m_Info.szAlloc -= szMemory;
+	void linear_allocator::dealloc(ptr block_ptr, size dealloc_size) {
+		if (block_ptr != &m_data_ptr[m_alloc_size]) { throw error("deallocation violation"); return; }
+		memset(block_ptr, 0, dealloc_size);
+		m_alloc_size -= dealloc_size;
 	}
-	inline Ptr LinearAllocator::Realloc(Ptr pBlock, Size szOld, Size szNew) {
-		if (pBlock != GetDataCur()) { return pBlock; }
-		Size szCpy = szOld < szNew ? szOld : szNew;
-		Ptr pRealloc = Alloc(szNew);
-		memcpy(pRealloc, pBlock, szCpy);
-		Dealloc(pBlock, szOld);
-		return pRealloc;
+	ptr linear_allocator::realloc(ptr block_ptr, size old_size, size new_size) {
+		if (block_ptr != &m_data_ptr[m_alloc_size]) { return block_ptr; }
+		size copy_size = old_size < new_size ? old_size : new_size;
+		ptr realloc_block_ptr = alloc(new_size);
+		memcpy(realloc_block_ptr, block_ptr, copy_size);
+		dealloc(block_ptr, old_size);
+		return realloc_block_ptr;
 	}
-	inline void LinearAllocator::Clear() {
-		memset(GetDataBeg(), 0, GetDataSize());
-		m_Info.unAlloc = 0;
-		m_Info.szAlloc = 0;
+	void linear_allocator::clear() {
+		memset(m_data_ptr, 0, m_data_size);
+		m_data_size = 0;
 	}
 	// --==</core_methods>==--
 }
