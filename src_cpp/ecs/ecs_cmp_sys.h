@@ -15,38 +15,36 @@ namespace NWL
 	/// --registry: ent_id-table | tables: type_id-ref;
 	class NWL_API cmp_sys
 	{
+		using cmp_ref = mem_ref<a_cmp>;
 		/// table of type_id and component references
-		using cmps = dictionary<ui32, mem_ref<a_cmp>>;
-		/// table of ent_id and component containers
+		using cmps = dictionary<ui32, cmp_ref>;
+		/// table of cmp_id and component containers
 		using registry = dictionary<ui32, cmps>;
 	public:
 		// --getters
-		static inline registry& get_registry()			{ return s_reg; }
-		static inline cmps& get_ent_cmps(ui32 ent_id)	{ return s_reg[ent_id]; }
-		static inline mem_ref<a_cmp>& get_cmp(ui32 ent_id, ui32 type_id)	{ return s_reg[ent_id][type_id]; }
-		template<class ctype> static mem_ref<a_cmp>& GetCmp(ui32 ent_id)	{ return get_cmp(ent_id, type_indexator::get_id<ctype>()); }
+		static inline registry& get_registry()						{ return s_reg; }
+		static inline cmps& get_cmps(ui32 type_id)					{ return s_reg[type_id]; }
+		static inline cmp_ref& get_cmp(ui32 type_id, ui32 cmp_id)	{ return s_reg[type_id][cmp_id]; }
+		template<class ctype> static inline cmps& get_cmps()		{ return s_reg[type_indexator::get_id<ctype>()]; }
+		template<class ctype> static cmp_ref& get_cmp(ui32 cmp_id)	{ return s_reg[type_indexator::get_id<ctype>()][cmp_id]; }
 		// --predicates
-		static inline bit has_cmp(ui32 ent_id, ui32 type_id) { return s_reg[ent_id][type_id].is_valid(); }
-		template<class ctype> static bit has_cmp(ui32 ent_id) { return s_reg[type_indexator::get_id<>()][ent_id]; }
+		static inline bit has_cmp(ui32 type_id, ui32 cmp_id)		{ return s_reg[type_id].find(cmp_id) != s_reg[type_id].end(); }
+		template<class ctype> static bit has_cmp(ui32 cmp_id)		{ return has_ent(type_indexator::get_id<ctype>(), cmp_id); }
 		// --core_methods
 		static void on_init();
 		static void on_quit();
-		static void del_cmp(ui32 ent_id, ui32 type_id);
 		template<class ctype, typename ... args>
-		static mem_ref<a_cmp>& new_cmp(ui32 ent_id, args& ... arguments);
-		template<class ctype>
-		static void del_cmp(ui32 ent_id) { del_cmp(ent_id, type_indexator::get_id<ctype>()); }
+		static void new_cmp(cmp_ref& ref, args& ... arguments);
+		static void del_cmp(ui32 type_id, ui32 cmp_id);
+		template<class ctype> static void del_cmp(ui32 cmp_id)	{ del_cmp(type_indexator::get_id<ctype>(), cmp_id); }
 	private:
 		static registry s_reg;
 	};
 	// --setters
 	template<class ctype, typename ... args>
-	static mem_ref<a_cmp>& cmp_sys::new_cmp(ui32 ent_id, args& ... arguments) {
-		mem_ref<a_cmp>& rcmp = s_reg[ent_id][type_indexator::get_id<ctype>()];
-		rcmp.make_ref<ctype>(std::forward<args&>(arguments)...);
-		rcmp->m_ent_id = ent_id;
-		rcmp.set_ref(rcmp);
-		return rcmp;
+	static void cmp_sys::new_cmp(cmp_ref& ref, args& ... arguments) {
+		ref.make_ref<ctype>(std::forward<args&>(arguments)...);
+		s_reg[ref->get_type_id()][ref->get_cmp_id()].set_ref<a_cmp>(ref);
 	}
 }
 

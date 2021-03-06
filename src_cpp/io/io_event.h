@@ -42,7 +42,7 @@ namespace NWL
 	public:
 		union {
 			key_codes code = KC_SPACE;
-			union { char8 nrow; char16 wide; } character;
+			union { schar nrow; wchar wide; } character;
 		};
 		ui32 nof_repeats = 0;
 	public:

@@ -52,5 +52,20 @@ namespace NWL
 	typedef glm::f32vec2 v2f64;
 	typedef glm::f32vec3 v3f64;
 	typedef glm::f32vec4 v4f64;
+
+	using v1si = v1si32;
+	using v2si = v2si32;
+	using v3si = v3si32;
+	using v4si = v4si32;
+
+	using v1ui = v1ui32;
+	using v2ui = v2ui32;
+	using v3ui = v3ui32;
+	using v4ui = v4ui32;
+
+	using v1f = v1f32;
+	using v2f = v2f32;
+	using v3f = v3f32;
+	using v4f = v4f32;
 }
 #endif // NWL_MATH_VECTOR_H

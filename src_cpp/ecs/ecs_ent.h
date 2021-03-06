@@ -1,9 +1,11 @@
 #ifndef NWL_ECS_ENTITY_H
 #define NWL_ECS_ENTITY_H
 #include <nwl_core.hpp>
-#include <core/nwl_id_stack.h>
 #include <core/nwl_type.h>
+#include <core/nwl_id_stack.h>
+#include <core/nwl_container.h>
 #include <memory/mem_sys.h>
+#include <ecs/ecs_cmp.h>
 namespace NWL
 {
 	/// abstract entity class
@@ -12,6 +14,7 @@ namespace NWL
 	/// --takes responsibility for creation and destruction of all components
 	class NWL_API a_ent : public a_mem_user
 	{
+		using cmps = darray<mem_ref<a_cmp>>;
 	protected:
 		a_ent();
 		a_ent(const a_ent& copy) = delete;
@@ -23,11 +26,10 @@ namespace NWL
 		// --setters
 		void set_enabled(bit enable);
 		// --predicates
-		template<typename etype>
-		inline bit check_type() const { return get_type_id() == type_indexator::get_id<etype>(); }
 		inline bit is_enabled() { return m_is_enabled; }
-		template<class etype>
-		bit check_type() { return m_type_id == type_indexator<etype>(); }
+		// --predicates
+		template<typename etype>
+		bit check_type() const { return get_type_id() == type_indexator::get_id<etype>(); }
 		// --operators
 		inline void operator=(const a_ent& copy) = delete;
 	protected:

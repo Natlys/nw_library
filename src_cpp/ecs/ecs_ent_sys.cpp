@@ -15,14 +15,9 @@ namespace NWL
 		s_reg.clear();
 	}
 
-	void ent_sys::del_ent(ui32 ent_id, ui32 type_id) {
-		if (s_reg.empty()) { return; }
-		auto& ents = s_reg.find(type_id);
-		if (ents == s_reg.end()) { return; }
-		if (ents->second.empty()) { return; }
-		auto& ent = ents->second.find(ent_id);
-		if (ent == ents->second.end()) { return; }
-		ents->second.erase(ent_id);
+	void ent_sys::del_ent(ui32 type_id, ui32 ent_id) {
+		if (!has_ent(type_id, ent_id)) { return; }
+		s_reg[type_id].erase(ent_id);
 	}
 	// --==</core_methods>==--
 }

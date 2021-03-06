@@ -11,10 +11,7 @@ namespace NWL
 	public:
 		button_states state = BS_FREE;
 		ui16 nof_repeats = 0;
-		union {
-			char8 nrow = ' ';
-			char16 wide;
-		} character;
+		union { schar nrow = ' '; wchar wide; } character;
 	};
 	/// keyboard_state class
 	class NWL_API keyboard_state

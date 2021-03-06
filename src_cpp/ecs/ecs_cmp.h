@@ -10,6 +10,7 @@ namespace NWL
 	{
 	protected:
 		a_cmp();
+		a_cmp(const a_cmp& copy) = delete;
 	public:
 		virtual ~a_cmp();
 		// --getters
@@ -17,7 +18,9 @@ namespace NWL
 		virtual inline ui32 get_cmp_id() const = 0;
 		// --predicates
 		template<typename ctype>
-		inline bit check_type_id() const { return get_type_id() == type_indexator::get_id<ctype>(); }
+		bit check_type_id() const { return get_type_id() == type_indexator::get_id<ctype>(); }
+		// --operators
+		inline void operator=(const a_cmp& copy) = delete;
 	};
 }
 namespace NWL
@@ -31,9 +34,9 @@ namespace NWL
 	public:
 		virtual ~t_cmp() { get_id_stack().set_free_id(m_cmp_id); };
 		// --getters
-		static inline ui32 get_type_id_static() { return type_indexator::get_id<ctype>(); }
-		virtual inline ui32 get_type_id() const override { return type_indexator::get_id<ctype>(); }
-		virtual inline ui32 get_cmp_id() const override { return m_cmp_id; }
+		static inline ui32 get_type_id_static()				{ return type_indexator::get_id<ctype>(); }
+		virtual inline ui32 get_type_id() const override	{ return type_indexator::get_id<ctype>(); }
+		virtual inline ui32 get_cmp_id() const override		{ return m_cmp_id; }
 	protected:
 		const ui32 m_cmp_id;
 	private:

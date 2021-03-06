@@ -10,5 +10,9 @@ namespace NWL
 	typedef glm::f64mat2 m2f64;
 	typedef glm::f64mat3 m3f64;
 	typedef glm::f64mat4 m4f64;
+
+	using m2f = m2f32;
+	using m3f = m3f32;
+	using m4f = m4f32;
 }
 #endif // NWL_MATH_MATRIX_H

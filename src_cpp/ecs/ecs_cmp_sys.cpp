@@ -15,9 +15,9 @@ namespace NWL
 		s_reg.clear();
 	}
 
-	void cmp_sys::del_cmp(ui32 ent_id, ui32 type_id) {
-		if (!has_cmp(ent_id, type_id)) { return; }
-		s_reg[ent_id].erase(type_id);
+	void cmp_sys::del_cmp(ui32 type_id, ui32 cmp_id) {
+		if (!has_cmp(type_id, cmp_id)) { return; }
+		s_reg[type_id].erase(cmp_id);
 	}
 	// --==</core_methods>==--
 }

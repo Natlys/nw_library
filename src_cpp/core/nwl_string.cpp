@@ -3,7 +3,7 @@
 namespace NWL
 {
 	dstring str_format_var(cstring format, va_list& arg_list) {
-		char8 ccurr = ' ';
+		schar ccurr = ' ';
 		size ncurr = 0;
 		size nlen = strlen(format);
 		dstring result;
@@ -61,14 +61,14 @@ namespace NWL
 		va_end(arg_list);
 		return result;
 	}
-	cstring str_part_left(cstring source, char8 delim_char, ui32 offset_from_left) {
+	cstring str_part_left(cstring source, schar delim_char, ui32 offset_from_left) {
 		si32 length = strlen(source);
 		if (length == 0) { return ""; }
 		si32 ncurr = offset_from_left % length;
 		while (source[ncurr] != delim_char && ncurr <= length) { ncurr += 1; }
 		return &source[ncurr];
 	}
-	cstring str_part_right(cstring source, char8 delim_char, ui32 offset_from_right) {
+	cstring str_part_right(cstring source, schar delim_char, ui32 offset_from_right) {
 		si32 length = strlen(source);
 		if (length == 0) { return ""; }
 		si32 ncurr= length - (offset_from_right % length);

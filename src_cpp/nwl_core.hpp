@@ -62,9 +62,9 @@ using bit =		bool;
 using sbyte =	char;
 using ubyte =	unsigned char;
 using size =	size_t;
-using uchar8 =	unsigned char;
-using char8 =	char;
-using char16 =	wchar_t;
+using schar =	char;
+using uchar =	unsigned char;
+using wchar =	wchar_t;
 // --==</alias>==--
 
 // --==<support_macroses>==--
