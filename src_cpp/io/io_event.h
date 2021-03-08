@@ -6,7 +6,7 @@ namespace NWL
 {
 	/// abstract event struct
 	/// interface:
-	/// -> create in the on_event callback function -> set the event data
+	/// -> create in the event_proc callback function -> set the event data
 	/// -> dispatch to different listeners;
 	/// description:
 	struct NWL_API a_event
@@ -32,7 +32,7 @@ namespace NWL
 	public:
 		// mouse_move_event or mouse_scroll_event
 		cursor_event(event_types event_type, f64 coord_or_scroll_x, f64 coord_or_scroll_y);
-		// mouse_button_event
+		// mouse_buttevent_proc
 		cursor_event(event_types event_type, cursor_codes button_code,
 			f64 coord_or_scroll_x = 0.0, f64 coord_or_scroll_y = 0.0);
 	};
@@ -41,15 +41,15 @@ namespace NWL
 	{
 	public:
 		union {
-			key_codes code = KC_SPACE;
+			keyboard_codes code = KC_SPACE;
 			union { schar nrow; wchar wide; } character;
 		};
 		ui32 nof_repeats = 0;
 	public:
 		// release_key_event
-		keyboard_event(event_types event_type, key_codes code_or_char);
+		keyboard_event(event_types event_type, keyboard_codes code_or_char);
 		// press_key_event
-		keyboard_event(event_types event_type, key_codes code_or_char, ui32 repeat_count);
+		keyboard_event(event_types event_type, keyboard_codes code_or_char, ui32 repeat_count);
 	};
 	/// window_event struct
 	struct NWL_API window_event : public a_event

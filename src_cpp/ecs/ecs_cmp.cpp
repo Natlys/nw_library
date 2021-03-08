@@ -4,6 +4,9 @@
 #include "ecs_cmp_sys.h"
 namespace NWL
 {
-	a_cmp::a_cmp() { }
+	a_cmp::a_cmp() :
+		a_type_owner()
+	{
+	}
 	a_cmp::~a_cmp() { }
 }

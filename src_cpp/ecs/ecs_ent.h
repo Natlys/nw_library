@@ -2,7 +2,7 @@
 #define NWL_ECS_ENTITY_H
 #include <nwl_core.hpp>
 #include <core/nwl_type.h>
-#include <core/nwl_id_stack.h>
+#include <core/nwl_id.h>
 #include <core/nwl_container.h>
 #include <memory/mem_sys.h>
 #include <ecs/ecs_cmp.h>
@@ -12,7 +12,7 @@ namespace NWL
 	/// --main object base class for complex objects;
 	/// --allows to construct an object of different components;
 	/// --takes responsibility for creation and destruction of all components
-	class NWL_API a_ent : public a_mem_user
+	class NWL_API a_ent : public a_type_owner
 	{
 		using cmps = darray<mem_ref<a_cmp>>;
 	protected:

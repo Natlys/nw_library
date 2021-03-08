@@ -58,6 +58,7 @@ using f32 =		float;
 using f64 =		double;
 using f128 =	long double;
 using ptr =		void*;
+using cptr =	const void*;
 using bit =		bool;
 using sbyte =	char;
 using ubyte =	unsigned char;

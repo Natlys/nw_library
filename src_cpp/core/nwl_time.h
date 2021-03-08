@@ -3,15 +3,15 @@
 #include <nwl_core.hpp>
 namespace NWL
 {
-	/// timer class
-	class NWL_API timer
+	/// time_state class
+	class NWL_API time_state
 	{
 		using clock = std::chrono::high_resolution_clock;
 		using time_point = std::chrono::time_point<clock>;
 		using sec = std::chrono::duration<f64, std::ratio<1>>;
 		using millisec = std::chrono::duration<f64, std::milli>;
 	public:
-		timer();
+		time_state();
 		// --getters
 		inline f64 get_curr(f64 nratio = 1.0) const		{ return m_ncurr * nratio; }
 		inline f64 get_last(f64 nratio = 1.0) const		{ return m_nlast * nratio; }

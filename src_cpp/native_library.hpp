@@ -3,7 +3,7 @@
 
 #include <core/nwl_switch.h>
 #include <core/nwl_singleton.h>
-#include <core/nwl_id_stack.h>
+#include <core/nwl_id.h>
 #include <core/nwl_random.h>
 #include <core/nwl_string.h>
 #include <core/nwl_thread.h>

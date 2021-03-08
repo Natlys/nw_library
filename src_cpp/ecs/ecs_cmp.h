@@ -1,12 +1,13 @@
 #ifndef NWL_ECS_COMPONENT_H
 #define NWL_ECS_COMPONENT_H
 #include <nwl_core.hpp>
-#include <core/nwl_id_stack.h>
+#include <core/nwl_id.h>
+#include <core/nwl_type.h>
 #include <memory/mem_ref.h>
 namespace NWL
 {
 	/// abstract component class
-	class NWL_API a_cmp : public a_mem_user
+	class NWL_API a_cmp : public a_type_owner
 	{
 	protected:
 		a_cmp();
@@ -16,9 +17,6 @@ namespace NWL
 		// --getters
 		virtual inline ui32 get_type_id() const = 0;
 		virtual inline ui32 get_cmp_id() const = 0;
-		// --predicates
-		template<typename ctype>
-		bit check_type_id() const { return get_type_id() == type_indexator::get_id<ctype>(); }
 		// --operators
 		inline void operator=(const a_cmp& copy) = delete;
 	};

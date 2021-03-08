@@ -10,9 +10,9 @@ namespace NWL
 		f64 coord_or_scroll_x, f64 coord_or_scroll_y) :
 		a_event(event_type), code(button_code), val_x(coord_or_scroll_x), val_y(coord_or_scroll_y) {}
 
-	keyboard_event::keyboard_event(event_types event_type, key_codes code_or_char) :
+	keyboard_event::keyboard_event(event_types event_type, keyboard_codes code_or_char) :
 		a_event(event_type), code(code_or_char), nof_repeats(0) { }
-	keyboard_event::keyboard_event(event_types event_type, key_codes code_or_char, ui32 repeat_count) :
+	keyboard_event::keyboard_event(event_types event_type, keyboard_codes code_or_char, ui32 repeat_count) :
 		a_event(event_type), code(code_or_char), nof_repeats(repeat_count) { }
 
 	window_event::window_event(event_types event_type) : a_event(event_type) {}

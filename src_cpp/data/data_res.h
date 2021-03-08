@@ -17,8 +17,7 @@ namespace NWL
 	class NWL_API a_data_res : public a_mem_user
 	{
 	protected:
-		a_data_res() : m_name("none") { }
-		a_data_res(cstring name) : m_name("none") { set_name(name); }
+		a_data_res(cstring name);
 	public:
 		virtual ~a_data_res() { }
 		// --getters

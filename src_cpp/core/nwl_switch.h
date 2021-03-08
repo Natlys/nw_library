@@ -33,9 +33,6 @@ namespace NWL
 		LO_EQUAL = 1, LO_GREATER = 2, LO_LESSER = 2,
 		LO_GEQUAL, LO_LEQUAL,
 	};
-}
-namespace NWL
-{
 	enum data_types : ui32 {
 		DT_DEFAULT = 0,
 		DT_BOOL = 1,
@@ -73,9 +70,6 @@ namespace NWL
 		DT_MAT2_UNORM, DT_MAT3_UNORM, DT_MAT4_UNORM,
 		DT_USER_DATA = 99
 	};
-}
-namespace NWL
-{
 	enum pixel_formats : ui32 {
 		PXF_DEFAULT = C_DEFAULT,
 		PXF_R8_SINT8,

@@ -16,7 +16,31 @@ namespace NWL
 		// -- getters
 		inline ui32 get_free_id() { ui32 free_id = top(); if (size() == 1) { top()++; } else { pop(); } return free_id; }
 		// -- setters
-		inline void set_free_id(ui32 free_id) { if (free_id != top()) { push(free_id); } }
+		void set_free_id(ui32 free_id);
+	};
+}
+namespace NWL
+{
+	/// id_indexator class
+	class NWL_API id_indexator
+	{
+	public:
+		template<typename itype> static ui32 get_id()				{ return get_id_stack<itype>().get_free_id(); }
+		template<typename itype> static void set_id(ui32 id)		{ get_id_stack<itype>().set_free_id(id); }
+	private:
+		template<typename itype> static id_stack& get_id_stack()	{ static id_stack s_id_stack(0); return s_id_stack; }
+	};
+}
+namespace NWL
+{
+	/// id_owner class
+	class NWL_API a_id_owner
+	{
+	public:
+		a_id_owner();
+		virtual ~a_id_owner();
+		// --getters
+		virtual inline ui32 get_id() = 0;
 	};
 }
 #endif	// NWL_ID_STACK_H

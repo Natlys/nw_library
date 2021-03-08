@@ -3,7 +3,6 @@
 
 #include <nwl_math.hpp>
 #include <data/data_image.h>
-#include <data/data_mesh.h>
 #include <core/nwl_container.h>
 #include <core/nwl_string.h>
 #include <io/io_stream.h>
@@ -58,7 +57,7 @@ namespace NWL
             fstm.read(&data[0], data.size());
             fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw error("loading fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("saving fail"); return false; }
         return true;
     }
     bit data_sys::load_file(cstring file_path, a_info& data) {
@@ -69,7 +68,7 @@ namespace NWL
             fstm >> data;
             fstm.close();
         }
-        catch (std::ios_base::failure exc) { throw error("saving fail"); return false; }
+        catch (std::ios_base::failure exc) { throw error("loading fail"); return false; }
         return true;
     }
     // --saving

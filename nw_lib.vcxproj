@@ -96,7 +96,7 @@
     <ClInclude Include="src_cpp\core\nwl_container.h" />
     <ClInclude Include="src_cpp\core\nwl_info.h" />
     <ClInclude Include="src_cpp\core\nwl_switch.h" />
-    <ClInclude Include="src_cpp\core\nwl_id_stack.h" />
+    <ClInclude Include="src_cpp\core\nwl_id.h" />
     <ClInclude Include="src_cpp\core\nwl_random.h" />
     <ClInclude Include="src_cpp\core\nwl_singleton.h" />
     <ClInclude Include="src_cpp\core\nwl_string.h" />
@@ -104,7 +104,6 @@
     <ClInclude Include="src_cpp\core\nwl_time.h" />
     <ClInclude Include="src_cpp\core\nwl_type.h" />
     <ClInclude Include="src_cpp\data\data_image.h" />
-    <ClInclude Include="src_cpp\data\data_mesh.h" />
     <ClInclude Include="src_cpp\data\data_res.h" />
     <ClInclude Include="src_cpp\data\data_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
@@ -140,6 +139,7 @@
     <ClInclude Include="src_cpp\physx\physx_collision.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_id.cpp" />
     <ClCompile Include="src_cpp\core\nwl_info.cpp" />
     <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
     <ClCompile Include="src_cpp\core\nwl_random.cpp" />
@@ -147,7 +147,7 @@
     <ClCompile Include="src_cpp\core\nwl_time.cpp" />
     <ClCompile Include="src_cpp\core\nwl_type.cpp" />
     <ClCompile Include="src_cpp\data\data_image.cpp" />
-    <ClCompile Include="src_cpp\data\data_mesh.cpp" />
+    <ClCompile Include="src_cpp\data\data_res.cpp" />
     <ClCompile Include="src_cpp\data\data_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_cmp.cpp" />
