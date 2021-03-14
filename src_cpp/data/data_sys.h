@@ -1,32 +1,36 @@
-#ifndef NWL_DATA_SYSTEM_H
-#define NWL_DATA_SYSTEM_H
+#ifndef NW_DATA_SYSTEM_H
+#define NW_DATA_SYSTEM_H
 #include <nwl_core.hpp>
-#include <core/nwl_info.h>
-#include <data/data_res.h>
-namespace NWL
+#include "data_rsc.h"
+#if (defined NW_OS)
+namespace NW
 {
-	/// data_sys static class
-	class NWL_API data_sys
+	/// data_system static class
+	class NW_API data_sys
 	{
 	public:
 		// --getters
-		static inline cstring GetDirectory() { return &s_strDir[0]; }
+		static cstring get_path();
+		static cstring get_path(cstring file_path);
+		// --setters
+		static void set_dir_root(cstring root_directory);
 		// --core_methods
 		static void on_init();
 		static void on_quit();
 		// --loading
-		static dstring dialog_load(cstring filter, ptr user_data);
+		static cstring dialog_load(cstring filter, const window_handle& wnd);
 		static bit load_file(cstring file_path, ptr data, size nof_bytes);
 		static bit load_file(cstring file_path, dstring& data);
-		static bit load_file(cstring file_path, a_info& data);
+		static bit load_file(cstring file_path, a_data_rsc& data);
 		// --saving
-		static dstring dialog_save(cstring filter, ptr user_data);
+		static cstring dialog_save(cstring filter, const window_handle& wnd);
 		static bit save_file(cstring file_path, ptr data, size nof_bytes);
 		static bit save_file(cstring file_path, dstring& data);
-		static bit save_file(cstring file_path, a_info& data);
+		static bit save_file(cstring file_path, a_data_rsc& data);
 	private:
-		static dstring s_strDir;
+		static dstring s_root_path;
+		static dstring s_temp_path;
 	};
 }
-
-#endif	// NWL_DATA_SYSTEM_H
+#endif	// NW_OS
+#endif	// NW_DATA_SYSTEM_H

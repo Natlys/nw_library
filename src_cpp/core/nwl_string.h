@@ -1,20 +1,20 @@
-#ifndef NWL_STRING_H
-#define NWL_STRING_H
+#ifndef NW_STRING_H
+#define NW_STRING_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	using cstring = const char*;
 	using dstring = std::string;
-	using str_stream = std::stringstream;
+	using io_stream_str = std::stringstream;
 	using cstring16 = const wchar_t*;
 	using dstring16 = std::wstring;
 }
-namespace NWL
+namespace NW
 {
-	NWL_API dstring str_format_var(cstring format, va_list& arg_list);
-	NWL_API dstring str_format(cstring format, ...);
-	NWL_API cstring str_part_left(cstring source, schar delim_char, ui32 from_left = 0);
-	NWL_API cstring str_part_right(cstring source, schar delim_char, ui32 from_right = 0);
-	NWL_API bit str_is_equal(cstring str0, cstring str1);
+	NW_API dstring str_format_var(cstring format, va_list& arg_list);
+	NW_API dstring str_format(cstring format, ...);
+	NW_API cstring str_part_left(cstring source, schar delim_char, ui32 from_left = 0);
+	NW_API cstring str_part_right(cstring source, schar delim_char, ui32 from_right = 0);
+	NW_API bit str_is_equal(cstring str0, cstring str1);
 }
-#endif // NWL_STRING_H
+#endif // NW_STRING_H

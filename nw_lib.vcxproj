@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;DEBUG;NW_DEBUG;NWG_DEBUG;NWC_DEBUG;NWL_PLATFORM_WINDOWS;NWL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NW_BUILD_EXE;DEBUG;NW_PLATFORM_WINDOWS;NW_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -75,7 +75,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>nwl_pch.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NW_BUILD_EXE;NWL_BUILD_LIB;NWL_LINK_STATIC;NWG_BUILD_LIB;NWG_LINK_STATIC;NWC_BUILD_LIB;NWC_LINK_STATIC;NW_PLATFORM_WINDOWS;NWG_PLATFORM_WINDOWS;NWC_PLATFORM_WINDOWS;NDEBUG;NW_RELEASE;NWG_RELEASE;NWC_RELEASE;NWL_PLATFORM_WINDOWS;NWL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NW_BUILD_EXE;NDEBUG;NW_PLATFORM_WINDOWS;NW_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src_cpp;ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -94,33 +94,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src_cpp\core\nwl_container.h" />
-    <ClInclude Include="src_cpp\core\nwl_info.h" />
-    <ClInclude Include="src_cpp\core\nwl_switch.h" />
     <ClInclude Include="src_cpp\core\nwl_id.h" />
+    <ClInclude Include="src_cpp\core\nwl_info.h" />
     <ClInclude Include="src_cpp\core\nwl_random.h" />
     <ClInclude Include="src_cpp\core\nwl_singleton.h" />
     <ClInclude Include="src_cpp\core\nwl_string.h" />
+    <ClInclude Include="src_cpp\core\nwl_switch.h" />
     <ClInclude Include="src_cpp\core\nwl_thread.h" />
     <ClInclude Include="src_cpp\core\nwl_time.h" />
     <ClInclude Include="src_cpp\core\nwl_type.h" />
-    <ClInclude Include="src_cpp\data\data_image.h" />
-    <ClInclude Include="src_cpp\data\data_res.h" />
+    <ClInclude Include="src_cpp\data\data_rsc.h" />
     <ClInclude Include="src_cpp\data\data_sys.h" />
-    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_cmp.h" />
-    <ClInclude Include="src_cpp\ecs\ecs_ent_sys.h" />
+    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
     <ClInclude Include="src_cpp\ecs\ecs_ent.h" />
+    <ClInclude Include="src_cpp\ecs\ecs_ent_sys.h" />
     <ClInclude Include="src_cpp\io\io_device.h" />
-    <ClInclude Include="src_cpp\io\io_event.h" />
     <ClInclude Include="src_cpp\io\io_error.h" />
+    <ClInclude Include="src_cpp\io\io_event.h" />
     <ClInclude Include="src_cpp\io\io_log.h" />
     <ClInclude Include="src_cpp\io\io_stream.h" />
     <ClInclude Include="src_cpp\io\io_switch.h" />
+    <ClInclude Include="src_cpp\math\math_base.h" />
     <ClInclude Include="src_cpp\math\math_matrix.h" />
     <ClInclude Include="src_cpp\math\math_transform.h" />
     <ClInclude Include="src_cpp\math\math_trigonom.h" />
     <ClInclude Include="src_cpp\math\math_vector.h" />
-    <ClInclude Include="src_cpp\math\math_base.h" />
     <ClInclude Include="src_cpp\memory\mem_allocator.h" />
     <ClInclude Include="src_cpp\memory\mem_ref.h" />
     <ClInclude Include="src_cpp\memory\mem_sys.h" />
@@ -134,25 +133,22 @@
     <ClInclude Include="src_cpp\nwl_pch.hpp" />
     <ClInclude Include="src_cpp\nwl_physx.hpp" />
     <ClInclude Include="src_cpp\nwl_platform.hpp" />
-    <ClInclude Include="src_cpp\nwlib\nwl_data_res.h" />
-    <ClInclude Include="src_cpp\nwlib\nwl_memory.h" />
     <ClInclude Include="src_cpp\physx\physx_collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src_cpp\core\nwl_id.cpp" />
     <ClCompile Include="src_cpp\core\nwl_info.cpp" />
-    <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
     <ClCompile Include="src_cpp\core\nwl_random.cpp" />
     <ClCompile Include="src_cpp\core\nwl_string.cpp" />
+    <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
     <ClCompile Include="src_cpp\core\nwl_time.cpp" />
     <ClCompile Include="src_cpp\core\nwl_type.cpp" />
-    <ClCompile Include="src_cpp\data\data_image.cpp" />
-    <ClCompile Include="src_cpp\data\data_res.cpp" />
+    <ClCompile Include="src_cpp\data\data_rsc.cpp" />
     <ClCompile Include="src_cpp\data\data_sys.cpp" />
-    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_cmp.cpp" />
-    <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp" />
+    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
     <ClCompile Include="src_cpp\ecs\ecs_ent.cpp" />
+    <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp" />
     <ClCompile Include="src_cpp\io\io_device.cpp" />
     <ClCompile Include="src_cpp\io\io_error.cpp" />
     <ClCompile Include="src_cpp\io\io_event.cpp" />

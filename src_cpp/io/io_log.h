@@ -1,16 +1,16 @@
-#ifndef NWL_IO_LOG_H
-#define NWL_IO_LOG_H
+#ifndef NW_IO_LOG_H
+#define NW_IO_LOG_H
 #include <nwl_core.hpp>
 #include <io/io_stream.h>
 #include <core/nwl_string.h>
 #include <core/nwl_switch.h>
-namespace NWL
+namespace NW
 {
 	/// log_system static class
-	class NWL_API log_sys
+	class NW_API log_sys
 	{
 	public:
-		using input = str_stream;
+		using input = io_stream_str;
 		using output = out_stream;
 	public:
 		// --getters
@@ -30,4 +30,4 @@ namespace NWL
 		static output* s_output;
 	};
 }
-#endif // NWL_IO_LOG_H
+#endif // NW_IO_LOG_H

@@ -1,13 +1,13 @@
-#ifndef NWL_ECS_COMPONENT_H
-#define NWL_ECS_COMPONENT_H
+#ifndef NW_ECS_COMPONENT_H
+#define NW_ECS_COMPONENT_H
 #include <nwl_core.hpp>
 #include <core/nwl_id.h>
 #include <core/nwl_type.h>
 #include <memory/mem_ref.h>
-namespace NWL
+namespace NW
 {
 	/// abstract component class
-	class NWL_API a_cmp : public a_type_owner
+	class NW_API a_cmp : public a_type_owner
 	{
 	protected:
 		a_cmp();
@@ -21,11 +21,11 @@ namespace NWL
 		inline void operator=(const a_cmp& copy) = delete;
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// templated component class
 	template <class ctype>
-	class NWL_API t_cmp : public a_cmp
+	class NW_API t_cmp : public a_cmp
 	{
 	protected:
 		t_cmp() : a_cmp(), m_cmp_id(get_id_stack().get_free_id()) { }
@@ -41,4 +41,4 @@ namespace NWL
 		static id_stack& get_id_stack() { static id_stack s_id_stack(1); return s_id_stack; }
 	};
 }
-#endif	// NWL_ECS_COMPONENT_H
+#endif	// NW_ECS_COMPONENT_H

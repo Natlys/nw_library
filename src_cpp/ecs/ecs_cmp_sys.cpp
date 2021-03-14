@@ -2,9 +2,9 @@
 #include "ecs_cmp_sys.h"
 #include <ecs/ecs_ent_sys.h>
 
-NWL::cmp_sys::registry NWL::cmp_sys::s_reg;
+NW::cmp_sys::registry NW::cmp_sys::s_reg;
 
-namespace NWL
+namespace NW
 {
 	// --==<core_methods>==--
 	void cmp_sys::on_init() {

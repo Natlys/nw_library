@@ -1,11 +1,10 @@
-#ifndef NWL_MEMORY_ALLOCATOR_H
-#define NWL_MEMORY_ALLOCATOR_H
+#ifndef NW_MEMORY_ALLOCATOR_H
+#define NW_MEMORY_ALLOCATOR_H
 #include <nwl_core.hpp>
-#include <core/nwl_info.h>
-namespace NWL
+namespace NW
 {
 	/// memory_link struct
-	struct NWL_API mem_link
+	struct NW_API mem_link
 	{
 	public:
 		mem_link* block_ptr = nullptr;
@@ -17,10 +16,10 @@ namespace NWL
 		template <typename mtype> inline operator mtype*() { return reinterpret_cast<mtype*>(this); }
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// abstract mem_allocator class
-	class NWL_API a_mem_allocator
+	class NW_API a_mem_allocator
 	{
 	public:
 		a_mem_allocator(ptr memory_ptr = nullptr, size memory_size = 0ul);
@@ -71,12 +70,12 @@ namespace NWL
 		dealloc(block_ptr, nof_dealloc * sizeof(mtype));
 	}
 }
-namespace NWL
+namespace NW
 {
 	/// memory_arena class
 	/// Description:
 	/// --Just a chunk of bytes works with Ptr and char* pointers
-	class NWL_API mem_arena : public a_mem_allocator
+	class NW_API mem_arena : public a_mem_allocator
 	{
 	public:
 		mem_arena(ptr memory_ptr = nullptr, size memory_size = 0ul);
@@ -89,7 +88,7 @@ namespace NWL
 		mem_link* m_free_list;
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// linear_memory_allocator class
 	class linear_allocator: public a_mem_allocator
@@ -104,4 +103,4 @@ namespace NWL
 		void clear();
 	};
 }
-#endif	// NWL_MEMORY_ALLOCATOR_H
+#endif	// NW_MEMORY_ALLOCATOR_H

@@ -1,14 +1,14 @@
-#ifndef NWL_ECS_ENTITY_SYSTEM_H
-#define NWL_ECS_ENTITY_SYSTEM_H
+#ifndef NW_ECS_ENTITY_SYSTEM_H
+#define NW_ECS_ENTITY_SYSTEM_H
 #include <nwl_core.hpp>
 #include <core/nwl_container.h>
 #include <core/nwl_type.h>
 #include <ecs/ecs_ent.h>
 #include <memory/mem_ref.h>
-namespace NWL
+namespace NW
 {
 	/// entity_system static class
-	class NWL_API ent_sys
+	class NW_API ent_sys
 	{
 		/// storable reference of an entity
 		using ent_ref = mem_ref<a_ent>;
@@ -43,4 +43,4 @@ namespace NWL
 		s_reg[ref->get_type_id()][ref->get_ent_id()].set_ref<a_ent>(ref);
 	}
 }
-#endif // NWL_ECS_ENTITY_SYSTEM_H
+#endif // NW_ECS_ENTITY_SYSTEM_H

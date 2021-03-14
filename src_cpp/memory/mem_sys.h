@@ -1,11 +1,11 @@
-#ifndef NWL_MEMORY_SYSTEM_H
-#define NWL_MEMORY_SYSTEM_H
+#ifndef NW_MEMORY_SYSTEM_H
+#define NW_MEMORY_SYSTEM_H
 #include <nwl_core.hpp>
 #include <memory/mem_allocator.h>
-namespace NWL
+namespace NW
 {
 	/// memory_system static class
-	class NWL_API mem_sys
+	class NW_API mem_sys
 	{
 	public:
 		// --getters
@@ -34,13 +34,13 @@ namespace NWL
 	template <typename mtype>
 	inline void mem_sys::del_arr(mtype* block_ptr, ui64 unDealloc) { s_memory.del_arr<mtype>(block_ptr, unDealloc); }
 }
-namespace NWL
+namespace NW
 {
 	/// abstract memory_user
 	/// description:
 	/// -- overrides default new/delete operators
 	/// that the the memory is allocated by memory system
-	class NWL_API a_mem_user
+	class NW_API a_mem_user
 	{
 	public:
 		// --operators
@@ -52,4 +52,4 @@ namespace NWL
 	};
 }
 
-#endif	// NWL_MEMORY_SYSTEM_H
+#endif	// NW_MEMORY_SYSTEM_H

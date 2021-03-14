@@ -1,7 +1,7 @@
-#ifndef NWL_MATH_MATRIX_H
-#define NWL_MATH_MATRIX_H
+#ifndef NW_MATH_MATRIX_H
+#define NW_MATH_MATRIX_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	typedef glm::f32mat2 m2f32;
 	typedef glm::f32mat3 m3f32;
@@ -15,4 +15,4 @@ namespace NWL
 	using m3f = m3f32;
 	using m4f = m4f32;
 }
-#endif // NWL_MATH_MATRIX_H
+#endif // NW_MATH_MATRIX_H

@@ -1,11 +1,11 @@
-#ifndef NWL_IO_ERROR_H
-#define NWL_IO_ERROR_H
+#ifndef NW_IO_ERROR_H
+#define NW_IO_ERROR_H
 #include <nwl_core.hpp>
 #include <core/nwl_string.h>
 #include <core/nwl_switch.h>
-namespace NWL
+namespace NW
 {
-	class NWL_API error
+	class NW_API error
 	{
 	public:
 		error(cstring comment = "default", ui32 err_code = ERC_DEFAULT, cstring location = "default", ui32 line = -1);
@@ -27,4 +27,4 @@ namespace NWL
 	std::ostream& operator<<(std::ostream& stm, const error& err);
 	std::istream& operator>>(std::istream& stm, error& err);
 }
-#endif	// NWL_IO_ERROR_H
+#endif	// NW_IO_ERROR_H

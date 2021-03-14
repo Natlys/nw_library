@@ -1,15 +1,15 @@
 #include <nwl_pch.hpp>
 #include "io_error.h"
-namespace NWL
+namespace NW
 {
 	error::error(cstring comment, ui32 err_code, cstring location, ui32 line) :
 		m_comment(comment), m_location(location), m_code(static_cast<error_codes>(err_code)), m_line(line)
 	{
-		NWL_ERR(get_string());
+		NW_ERR(get_string());
 	}
 	// --getters
 	inline cstring error::get_string() const {
-		str_stream stm;
+		io_stream_str stm;
 		this->operator<<(stm);
 		return &(stm.str())[0];
 	}

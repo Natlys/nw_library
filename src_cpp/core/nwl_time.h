@@ -1,10 +1,10 @@
-#ifndef NWL_TIME_H
-#define NWL_TIME_H
+#ifndef NW_TIME_H
+#define NW_TIME_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	/// time_state class
-	class NWL_API time_state
+	class NW_API time_state
 	{
 		using clock = std::chrono::high_resolution_clock;
 		using time_point = std::chrono::time_point<clock>;

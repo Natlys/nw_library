@@ -1,11 +1,11 @@
-#ifndef NWL_SINGLETON_H
-#define NWL_SINGLETON_H
+#ifndef NW_SINGLETON_H
+#define NW_SINGLETON_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	/// abstract singleton for unique global classes
 	template<class stype>
-	class NWL_API a_singleton
+	class NW_API a_singleton
 	{
 	protected:
 		a_singleton() = default;
@@ -19,4 +19,4 @@ namespace NWL
 	};
 }
 
-#endif // NWL_SINGLETON_H
+#endif // NW_SINGLETON_H

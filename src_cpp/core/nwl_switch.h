@@ -1,7 +1,7 @@
-#ifndef NWL_ENUM_H
-#define NWL_ENUM_H
+#ifndef NW_ENUM_H
+#define NW_ENUM_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	enum constants : ui32 {
 		C_DEFAULT = 0,
@@ -84,9 +84,9 @@ namespace NWL
 		PXF_D24S8_UINT32,
 	};
 }
-namespace NWL
+namespace NW
 {
-	NWL_API pixel_formats pxf_get(ui8 nchannels);
-	NWL_API ui8 pxf_get(pixel_formats pixel_format);
+	NW_API pixel_formats pxf_get(ui8 nchannels);
+	NW_API ui8 pxf_get(pixel_formats pixel_format);
 }
-#endif	// NWL_SWITCH_H
+#endif	// NW_SWITCH_H

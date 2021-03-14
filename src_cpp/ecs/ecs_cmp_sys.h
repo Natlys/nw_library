@@ -1,10 +1,10 @@
-#ifndef NWL_ECS_COMPONENT_SYSTEM_H
-#define NWL_ECS_COMPONENT_SYSTEM_H
+#ifndef NW_ECS_COMPONENT_SYSTEM_H
+#define NW_ECS_COMPONENT_SYSTEM_H
 #include <nwl_core.hpp>
 #include <core/nwl_container.h>
 #include <core/nwl_type.h>
 #include <ecs/ecs_cmp.h>
-namespace NWL
+namespace NW
 {
 	/// component_system static class
 	/// description:
@@ -13,7 +13,7 @@ namespace NWL
 	/// --any cmp table contains abstract refs to components of particular type;
 	/// --all cmp tables are inside of single registry;
 	/// --registry: ent_id-table | tables: type_id-ref;
-	class NWL_API cmp_sys
+	class NW_API cmp_sys
 	{
 		using cmp_ref = mem_ref<a_cmp>;
 		/// table of type_id and component references
@@ -48,4 +48,4 @@ namespace NWL
 	}
 }
 
-#endif	// NWL_ECS_COMPONENT_SYSTEM_H
+#endif	// NW_ECS_COMPONENT_SYSTEM_H

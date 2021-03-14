@@ -1,15 +1,15 @@
-#ifndef NWL_EVENT_H
-#define NWL_EVENT_H
+#ifndef NW_EVENT_H
+#define NW_EVENT_H
 #include <nwl_core.hpp>
 #include "io_switch.h"
-namespace NWL
+namespace NW
 {
 	/// abstract event struct
 	/// interface:
 	/// -> create in the event_proc callback function -> set the event data
 	/// -> dispatch to different listeners;
 	/// description:
-	struct NWL_API a_event
+	struct NW_API a_event
 	{
 	public:
 		bit is_handled = false;
@@ -21,27 +21,27 @@ namespace NWL
 	};
 	using event_callback = std::function<void(a_event&)>;
 }
-namespace NWL
+namespace NW
 {
-	/// cursor_event struct
-	struct NWL_API cursor_event : public a_event
+	/// mouse_event struct
+	struct NW_API mouse_event : public a_event
 	{
 	public:
-		cursor_codes code = CRS_0;
+		mouse_codes code = MSC_0;
 		f64 val_x = 0.0, val_y = 0.0;
 	public:
 		// mouse_move_event or mouse_scroll_event
-		cursor_event(event_types event_type, f64 coord_or_scroll_x, f64 coord_or_scroll_y);
+		mouse_event(event_types event_type, f64 coord_or_scroll_x, f64 coord_or_scroll_y);
 		// mouse_buttevent_proc
-		cursor_event(event_types event_type, cursor_codes button_code,
+		mouse_event(event_types event_type, mouse_codes button_code,
 			f64 coord_or_scroll_x = 0.0, f64 coord_or_scroll_y = 0.0);
 	};
 	/// keyboard_event struct
-	struct NWL_API keyboard_event : public a_event
+	struct NW_API keyboard_event : public a_event
 	{
 	public:
 		union {
-			keyboard_codes code = KC_SPACE;
+			keyboard_codes code = KBC_SPACE;
 			union { schar nrow; wchar wide; } character;
 		};
 		ui32 nof_repeats = 0;
@@ -52,7 +52,7 @@ namespace NWL
 		keyboard_event(event_types event_type, keyboard_codes code_or_char, ui32 repeat_count);
 	};
 	/// window_event struct
-	struct NWL_API window_event : public a_event
+	struct NW_API window_event : public a_event
 	{
 	public:
 		si32 val_x = 0, val_y = 0;

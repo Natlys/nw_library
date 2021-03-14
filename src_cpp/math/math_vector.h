@@ -1,7 +1,7 @@
-#ifndef NWL_MATH_VECTOR_H
-#define NWL_MATH_VECTOR_H
+#ifndef NW_MATH_VECTOR_H
+#define NW_MATH_VECTOR_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	typedef glm::bvec1 v1b;
 	typedef glm::bvec2 v2b;
@@ -68,4 +68,4 @@ namespace NWL
 	using v3f = v3f32;
 	using v4f = v4f32;
 }
-#endif // NWL_MATH_VECTOR_H
+#endif // NW_MATH_VECTOR_H

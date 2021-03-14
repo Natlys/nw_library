@@ -1,9 +1,9 @@
-#ifndef NWL_THREAD_H
-#define NWL_THREAD_H
+#ifndef NW_THREAD_H
+#define NW_THREAD_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	using thread = std::thread;
 	using thread_locker = std::mutex;
 }
-#endif	// NWL_THREAD_H
+#endif	// NW_THREAD_H

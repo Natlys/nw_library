@@ -3,10 +3,12 @@
 
 #include <memory/mem_sys.h>
 
-NWL::log_sys::input* NWL::log_sys::s_input = nullptr;
-NWL::log_sys::output* NWL::log_sys::s_output = nullptr;
+#include <iomanip>
 
-namespace NWL
+NW::log_sys::input* NW::log_sys::s_input = nullptr;
+NW::log_sys::output* NW::log_sys::s_output = nullptr;
+
+namespace NW
 {
 	// --==<core_methods>==--
 	void log_sys::on_init()
@@ -14,6 +16,23 @@ namespace NWL
 		if (s_input != nullptr) { return; }
 		s_input = new input();
 		s_output = &std::cout;
+
+		// format flags;
+		// use "flags" method to get them;
+		// or "setf"/"unsetf" for individual setting;
+		std::ios_base::fmtflags input_flags =
+			std::ios_base::internal |		// central padding
+			std::ios_base::boolalpha |		// true/false
+			std::ios_base::oct |			// octodecimal
+			std::ios_base::hex |			// hexadecimal
+			std::ios_base::showbase |		// 0 or x before oct/hex
+			std::ios_base::showpoint |		// no matter zeros;
+			std::ios_base::uppercase;		//
+		std::ios_base::fmtflags flag_fields =
+			std::ios_base::basefield |		//
+			std::ios_base::adjustfield |	// 
+			std::ios_base::floatfield;		//
+		std::cout.exceptions(std::ios_base::failbit | std::ios_base::badbit);
 	}
 	void log_sys::on_quit()
 	{
@@ -24,9 +43,6 @@ namespace NWL
 	}
 	void log_sys::update()
 	{
-		if (get_input().eof()) { return; }
-		get_output() << get_input().rdbuf();
-		get_input().clear();
 	}
 	void log_sys::write_info(cstring format, ...)
 	{
@@ -47,7 +63,7 @@ namespace NWL
 			"::message:" << &str_format_var(format, valArgs)[0] << std::endl <<
 			"--==</log_warning>==--" << std::endl;
 		va_end(valArgs);
-		NWL_BREAK();
+		NW_BREAK();
 	}
 	void log_sys::write_error(error_codes err_code, cstring format, ...)
 	{
@@ -59,7 +75,7 @@ namespace NWL
 			"::message:" << &str_format_var(format, valArgs)[0] << std::endl <<
 			"--==</log_error>==--" << std::endl;
 		va_end(valArgs);
-		NWL_BREAK();
+		NW_BREAK();
 	}
 	// --==</core_methods>==--
 }

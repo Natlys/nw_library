@@ -1,7 +1,7 @@
 #include <nwl_pch.hpp>
 #include "physx_collision.h"
 
-namespace NWL
+namespace NW
 {
 	bool is_collision_pt_rt(v2f32 xyPoint, v2f32 rect_left_top, v2f32 rect_right_bot) {
 		return (

@@ -1,9 +1,9 @@
 #include <nwl_pch.hpp>
 #include "ecs_ent_sys.h"
 
-NWL::ent_sys::registry NWL::ent_sys::s_reg;
+NW::ent_sys::registry NW::ent_sys::s_reg;
 
-namespace NWL
+namespace NW
 {
 	// --==<core_methods>==--
 	void ent_sys::on_init() {

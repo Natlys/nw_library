@@ -3,7 +3,7 @@
 #include <math/math_vector.h>
 #include <math/math_matrix.h>
 #include <io/io_error.h>
-namespace NWL
+namespace NW
 {
 	pixel_formats pxf_get(ui8 nchannels) {
 		switch (nchannels) {

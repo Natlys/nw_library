@@ -1,6 +1,6 @@
 #include <nwl_pch.hpp>
 #include "nwl_string.h"
-namespace NWL
+namespace NW
 {
 	dstring str_format_var(cstring format, va_list& arg_list) {
 		schar ccurr = ' ';

@@ -1,7 +1,7 @@
-#ifndef NWL_ID_STACK_H
-#define NWL_ID_STACK_H
+#ifndef NW_ID_STACK_H
+#define NW_ID_STACK_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	/// id_stack class
 	/// description:
@@ -9,7 +9,7 @@ namespace NWL
 	/// --contains one single id for any class;
 	/// --you can get new id during construction of and object and put it back into the stack;
 	/// --if any destroyed instance gives back own id to the stack - there is no loss;
-	class NWL_API id_stack : protected std::stack<ui32>
+	class NW_API id_stack : protected std::stack<ui32>
 	{
 	public:
 		id_stack(ui32 first_id = 1) : std::stack<ui32>() { push(first_id); }
@@ -19,10 +19,10 @@ namespace NWL
 		void set_free_id(ui32 free_id);
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// id_indexator class
-	class NWL_API id_indexator
+	class NW_API id_indexator
 	{
 	public:
 		template<typename itype> static ui32 get_id()				{ return get_id_stack<itype>().get_free_id(); }
@@ -31,10 +31,10 @@ namespace NWL
 		template<typename itype> static id_stack& get_id_stack()	{ static id_stack s_id_stack(0); return s_id_stack; }
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// id_owner class
-	class NWL_API a_id_owner
+	class NW_API a_id_owner
 	{
 	public:
 		a_id_owner();
@@ -43,4 +43,4 @@ namespace NWL
 		virtual inline ui32 get_id() = 0;
 	};
 }
-#endif	// NWL_ID_STACK_H
+#endif	// NW_ID_STACK_H

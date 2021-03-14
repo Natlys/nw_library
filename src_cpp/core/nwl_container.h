@@ -1,10 +1,10 @@
-#ifndef NWL_CONTAINER_H
-#define NWL_CONTAINER_H
+#ifndef NW_CONTAINER_H
+#define NW_CONTAINER_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	template <typename vtype, size slots>
-	using carray = std::array<vtype, slots>;
+	using sarray = std::array<vtype, slots>;
 	template <typename vtype>
 	using darray = std::vector<vtype>;
 	template <typename vtype>
@@ -16,4 +16,4 @@ namespace NWL
 	template <typename type1, typename type2>
 	using pair = std::pair<type1, type2>;
 }
-#endif	// NWL_CONTAINER_H
+#endif	// NW_CONTAINER_H

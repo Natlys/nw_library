@@ -1,8 +1,7 @@
-#ifndef NWL_DATA_HPP
-#define NWL_DATA_HPP
+#ifndef NW_DATA_HPP
+#define NW_DATA_HPP
 
 #include <data/data_sys.h>
-#include <data/data_res.h>
-#include <data/data_image.h>
+#include <data/data_rsc.h>
 
-#endif	// NWL_DATA_HPP
+#endif	// NW_DATA_HPP

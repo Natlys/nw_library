@@ -1,6 +1,6 @@
 #include <nwl_pch.hpp>
 #include "nwl_time.h"
-namespace NWL
+namespace NW
 {
 	time_state::time_state() :
 		m_tp_last(clock::now()), m_tp_curr(clock::now()),

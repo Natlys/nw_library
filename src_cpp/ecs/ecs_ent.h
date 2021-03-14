@@ -1,18 +1,18 @@
-#ifndef NWL_ECS_ENTITY_H
-#define NWL_ECS_ENTITY_H
+#ifndef NW_ECS_ENTITY_H
+#define NW_ECS_ENTITY_H
 #include <nwl_core.hpp>
 #include <core/nwl_type.h>
 #include <core/nwl_id.h>
 #include <core/nwl_container.h>
 #include <memory/mem_sys.h>
 #include <ecs/ecs_cmp.h>
-namespace NWL
+namespace NW
 {
 	/// abstract entity class
 	/// --main object base class for complex objects;
 	/// --allows to construct an object of different components;
 	/// --takes responsibility for creation and destruction of all components
-	class NWL_API a_ent : public a_type_owner
+	class NW_API a_ent : public a_type_owner
 	{
 		using cmps = darray<mem_ref<a_cmp>>;
 	protected:
@@ -36,11 +36,11 @@ namespace NWL
 		bit m_is_enabled;
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// templated entity class
 	template<class etype>
-	class NWL_API t_ent: public a_ent
+	class NW_API t_ent: public a_ent
 	{
 	protected:
 		t_ent() : a_ent(), m_ent_id(get_id_stack().get_free_id()) { }
@@ -56,4 +56,4 @@ namespace NWL
 		static inline id_stack& get_id_stack() { id_stack s_id_stack(1); return s_id_stack; }
 	};
 }
-#endif	// NWL_ECS_ENTITY_H
+#endif	// NW_ECS_ENTITY_H

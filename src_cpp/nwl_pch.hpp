@@ -1,5 +1,5 @@
-#ifndef NWL_PCH_HPP
-#define NWL_PCH_HPP
+#ifndef NATIVE_LIBRARY_PCH_HPP
+#define NATIVE_LIBRARY_PCH_HPP
 /// pre-compiled header file
 /// this file contains the most usable standard include files
 /// nwl_pch.cpp file gets it and generates .pch file in the intermediate files
@@ -65,4 +65,4 @@
 
 #include <nwl_platform.hpp>
 
-#endif	// NWL_PCH_HPP
+#endif	// NATIVE_LIBRARY_PCH_HPP

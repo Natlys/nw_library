@@ -1,9 +1,9 @@
-#ifndef NWL_MEMORY_REF_H
-#define NWL_MEMORY_REF_H
+#ifndef NW_MEMORY_REF_H
+#define NW_MEMORY_REF_H
 #include <nwl_core.hpp>
 #include <memory/mem_allocator.h>
 #include <memory/mem_sys.h>
-namespace NWL
+namespace NW
 {
 	/// mem_ref class
 	/// Description:
@@ -13,7 +13,7 @@ namespace NWL
 	/// Interface:
 	/// -> Create mem_ref -> MakeRef with particular allocator -> set_ref for other keepers -> use as a pointer
 	template <typename mtype>
-	class NWL_API mem_ref : public a_mem_user
+	class NW_API mem_ref : public a_mem_user
 	{
 	public:
 		mem_ref();
@@ -35,14 +35,18 @@ namespace NWL
 		// --predicates
 		inline bit is_valid() { return m_ref != nullptr && m_counter != nullptr; }
 		// --operators
-		inline operator bit()		{ return m_ref != nullptr; }
-		inline mtype* operator->()	{ return (m_ref); }
-		inline mtype& operator*()	{ return *(m_ref); }
-		inline operator mtype* ()	{ return static_cast<mtype*>(m_ref); }
-		inline operator mtype& ()	{ return static_cast<mtype&>(*m_ref); }
-		inline mem_ref<mtype>& operator=(const mem_ref<mtype>& copy) { set_ref(copy); return *this; }
-		template<typename vtype>
-		operator vtype*() { return static_cast<vtype*>(m_ref); }
+		inline operator bit()					{ return m_ref != nullptr; }
+		inline mtype* operator->()				{ return (m_ref); }
+		inline mtype& operator*()				{ return *(m_ref); }
+		inline operator mtype* ()				{ return static_cast<mtype*>(m_ref); }
+		inline operator mtype& ()				{ return static_cast<mtype&>(*m_ref); }
+		inline const mtype* operator->()const	{ return (m_ref); }
+		inline const mtype& operator*() const	{ return *(m_ref); }
+		inline operator const mtype* () const	{ return static_cast<const mtype*>(m_ref); }
+		inline operator const mtype& () const	{ return static_cast<const mtype&>(*m_ref); }
+		inline mem_ref<mtype>& operator=(const mem_ref<mtype>& copy){ set_ref(copy); return *this; }
+		template<typename vtype> operator vtype*()					{ return static_cast<vtype*>(m_ref); }
+		template<typename vtype> operator const vtype*() const		{ return static_cast<const vtype*>(m_ref); }
 		template<typename vtype>
 		operator mem_ref<vtype>() { mem_ref<vtype> memmem_ref(*this); return memmem_ref; }
 		// --core_methods
@@ -109,4 +113,4 @@ namespace NWL
 	}
 }
 
-#endif	// NWL_MEMORY_REF_H
+#endif	// NW_MEMORY_REF_H

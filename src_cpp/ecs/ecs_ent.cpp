@@ -1,7 +1,7 @@
 #include <nwl_pch.hpp>
 #include "ecs_ent.h"
 #include <ecs/ecs_cmp_sys.h>
-namespace NWL
+namespace NW
 {
 	a_ent::a_ent() :
 		a_type_owner(),

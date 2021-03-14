@@ -1,5 +1,5 @@
-#ifndef NWL_IO_HPP
-#define NWL_IO_HPP
+#ifndef NW_IO_HPP
+#define NW_IO_HPP
 
 #include <io/io_device.h>
 #include <io/io_event.h>
@@ -7,4 +7,4 @@
 #include <io/io_log.h>
 #include <io/io_error.h>
 
-#endif	// NWL_IO_HPP
+#endif	// NW_IO_HPP

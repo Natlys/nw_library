@@ -1,10 +1,10 @@
-#ifndef NWL_TYPE_H
-#define NWL_TYPE_H
+#ifndef NW_TYPE_H
+#define NW_TYPE_H
 #include <nwl_core.hpp>
 #include <memory/mem_sys.h>
-namespace NWL
+namespace NW
 {
-	class NWL_API type_indexator
+	class NW_API type_indexator
 	{
 	public:
 		template <typename type>
@@ -14,10 +14,10 @@ namespace NWL
 		static ui32 s_curr_id;
 	};
 }
-namespace NWL
+namespace NW
 {
 	/// abstract type_owner class
-	class NWL_API a_type_owner : public a_mem_user
+	class NW_API a_type_owner : public a_mem_user
 	{
 	protected:
 		a_type_owner();
@@ -31,7 +31,7 @@ namespace NWL
 	};
 	/// templated type_owner class
 	template<typename type>
-	class NWL_API t_type_owner : public a_mem_user
+	class NW_API t_type_owner : public a_mem_user
 	{
 	protected:
 		t_type_owner() { }
@@ -42,4 +42,4 @@ namespace NWL
 		virtual inline ui32 get_type_id() const override	{ return type_indexator::get_id<type>(); }
 	};
 }
-#endif	// NWL_TYPE_H
+#endif	// NW_TYPE_H

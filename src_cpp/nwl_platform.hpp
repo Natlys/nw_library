@@ -1,7 +1,7 @@
-#ifndef NWL_PLATFORM_HPP
-#define NWL_PLATFORM_HPP
+#ifndef NW_PLATFORM_HPP
+#define NW_PLATFORM_HPP
 
-#if (defined NWL_PLATFORM_WINDOWS)
+#if (defined NW_PLATFORM_WINDOWS)
 #	define NOMINMAX
 #	define WIN32_LEAN_AND_MEAN 1
 #	include <windows.h>
@@ -17,6 +17,6 @@
 #		pragma comment(lib, "winmm.lib")
 #		pragma comment(lib, "gdi32")   // link with gdi32.lib for GetDeviceCaps()
 #	endif	// MSC_VER
-#endif	// NWL_PLATFORM_WINDOWS
+#endif	// NW_PLATFORM_WINDOWS
 
-#endif	// NWL_PLATFORM_HPP
+#endif	// NW_PLATFORM_HPP

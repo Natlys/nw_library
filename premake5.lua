@@ -20,11 +20,11 @@ project "nw_lib"
 	}
 	filter "system:windows"
 		systemversion "latest"
-		defines "NWL_PLATFORM_WINDOWS"
+		defines { "NW_PLATFORM_WINDOWS" }
 	filter "configurations:debug"
-		defines { "NWL_DEBUG" }
+		defines { "NW_DEBUG" }
 		symbols "on"
 	filter "configurations:release"
-		defines { "NWL_RELEASE" }
+		defines { "NW_RELEASE" }
 		optimize "on"
 --==</library project>==--

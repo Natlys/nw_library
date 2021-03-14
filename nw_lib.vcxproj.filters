@@ -10,9 +10,6 @@
     <Filter Include="ecs">
       <UniqueIdentifier>{C06D880B-2C77-887C-B5F2-9E7C21FB937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gfx">
-      <UniqueIdentifier>{AA76880B-1680-887C-9FFB-9E7C0B04947C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="io">
       <UniqueIdentifier>{3D785900-2904-880B-92B2-880B7E5D880B}</UniqueIdentifier>
     </Filter>
@@ -22,15 +19,15 @@
     <Filter Include="memory">
       <UniqueIdentifier>{DEA8820D-CA4A-ADE3-B305-C1379F463434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="nwlib">
-      <UniqueIdentifier>{01A20810-6DB6-30C1-3638-D420A20B2DF2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="physx">
       <UniqueIdentifier>{01D22410-6DE6-4CC1-3668-F020A23B49F2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src_cpp\core\nwl_container.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_id.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_random.h">
@@ -42,6 +39,9 @@
     <ClInclude Include="src_cpp\core\nwl_string.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\core\nwl_switch.h">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\core\nwl_thread.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -51,16 +51,25 @@
     <ClInclude Include="src_cpp\core\nwl_type.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\data\data_res.h">
-      <Filter>data</Filter>
-    </ClInclude>
     <ClInclude Include="src_cpp\data\data_sys.h">
       <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\ecs\ecs_cmp.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\ecs\ecs_ent.h">
+      <Filter>ecs</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\ecs\ecs_ent_sys.h">
       <Filter>ecs</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\io\io_device.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\io\io_error.h">
       <Filter>io</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\io\io_event.h">
@@ -72,10 +81,19 @@
     <ClInclude Include="src_cpp\io\io_stream.h">
       <Filter>io</Filter>
     </ClInclude>
+    <ClInclude Include="src_cpp\io\io_switch.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\math\math_base.h">
+      <Filter>math</Filter>
+    </ClInclude>
     <ClInclude Include="src_cpp\math\math_matrix.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\math\math_transform.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src_cpp\math\math_trigonom.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="src_cpp\math\math_vector.h">
@@ -100,42 +118,25 @@
     <ClInclude Include="src_cpp\nwl_pch.hpp" />
     <ClInclude Include="src_cpp\nwl_physx.hpp" />
     <ClInclude Include="src_cpp\nwl_platform.hpp" />
-    <ClInclude Include="src_cpp\nwlib\nwl_data_res.h">
-      <Filter>nwlib</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\nwlib\nwl_memory.h">
-      <Filter>nwlib</Filter>
-    </ClInclude>
     <ClInclude Include="src_cpp\physx\physx_collision.h">
       <Filter>physx</Filter>
     </ClInclude>
-    <ClInclude Include="src_cpp\core\nwl_switch.h" />
-    <ClInclude Include="src_cpp\ecs\ecs_cmp_sys.h" />
     <ClInclude Include="src_cpp\core\nwl_info.h" />
-    <ClInclude Include="src_cpp\math\math_base.h" />
-    <ClInclude Include="src_cpp\math\math_trigonom.h" />
-    <ClInclude Include="src_cpp\data\data_image.h">
+    <ClInclude Include="src_cpp\data\data_rsc.h">
       <Filter>data</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\io\io_error.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\ecs\ecs_ent.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\ecs\ecs_cmp.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src_cpp\io\io_switch.h" />
-    <ClInclude Include="src_cpp\core\nwl_id.h">
-      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src_cpp\core\nwl_id.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_random.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_string.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\core\nwl_switch.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\core\nwl_time.cpp">
@@ -144,14 +145,29 @@
     <ClCompile Include="src_cpp\core\nwl_type.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="src_cpp\data\data_image.cpp">
-      <Filter>data</Filter>
-    </ClCompile>
     <ClCompile Include="src_cpp\data\data_sys.cpp">
       <Filter>data</Filter>
     </ClCompile>
+    <ClCompile Include="src_cpp\ecs\ecs_cmp.cpp">
+      <Filter>ecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp">
+      <Filter>ecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\ecs\ecs_ent.cpp">
+      <Filter>ecs</Filter>
+    </ClCompile>
     <ClCompile Include="src_cpp\ecs\ecs_ent_sys.cpp">
       <Filter>ecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\io\io_device.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\io\io_error.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="src_cpp\io\io_event.cpp">
+      <Filter>io</Filter>
     </ClCompile>
     <ClCompile Include="src_cpp\io\io_log.cpp">
       <Filter>io</Filter>
@@ -166,21 +182,9 @@
     <ClCompile Include="src_cpp\physx\physx_collision.cpp">
       <Filter>physx</Filter>
     </ClCompile>
-    <ClCompile Include="src_cpp\core\nwl_switch.cpp" />
-    <ClCompile Include="src_cpp\ecs\ecs_cmp_sys.cpp" />
     <ClCompile Include="src_cpp\core\nwl_info.cpp" />
-    <ClCompile Include="src_cpp\io\io_error.cpp">
-      <Filter>io</Filter>
+    <ClCompile Include="src_cpp\data\data_rsc.cpp">
+      <Filter>data</Filter>
     </ClCompile>
-    <ClCompile Include="src_cpp\ecs\ecs_cmp.cpp">
-      <Filter>ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\ecs\ecs_ent.cpp">
-      <Filter>ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src_cpp\io\io_device.cpp" />
-    <ClCompile Include="src_cpp\io\io_event.cpp" />
-    <ClCompile Include="src_cpp\data\data_res.cpp" />
-    <ClCompile Include="src_cpp\core\nwl_id.cpp" />
   </ItemGroup>
 </Project>

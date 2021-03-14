@@ -1,9 +1,9 @@
 #include <nwl_pch.hpp>
 #include "mem_sys.h"
 
-NWL::mem_arena NWL::mem_sys::s_memory = NWL::mem_arena(nullptr, 0);
+NW::mem_arena NW::mem_sys::s_memory = NW::mem_arena(nullptr, 0);
 
-namespace NWL
+namespace NW
 {
 	// --==<core_methods>==--
 	void mem_sys::on_init(size memory_size) {

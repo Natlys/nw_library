@@ -1,13 +1,13 @@
-#ifndef NWL_IO_STREAM_H
-#define NWL_IO_STREAM_H
+#ifndef NW_IO_STREAM_H
+#define NW_IO_STREAM_H
 #include <nwl_core.hpp>
-namespace NWL
+namespace NW
 {
 	using in_stream = std::istream;
 	using out_stream = std::ostream;
 	using io_stream = std::iostream;
-	using in_file_stream = std::ifstream;
-	using out_file_stream = std::ofstream;
-	using io_file_stream = std::fstream;
+	using in_stream_file = std::ifstream;
+	using out_stream_file = std::ofstream;
+	using io_stream_file = std::fstream;
 }
-#endif	// NWL_IO_STREAM_H
+#endif	// NW_IO_STREAM_H

@@ -339,9 +339,9 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 #endif
 
 #ifndef STBI_MALLOC
-//#define STBI_MALLOC(sz)           NWL::mem_sys::Alloc(sz)
-//#define STBI_REALLOC(p,oldsz,newsz)NWL::mem_sys::Realloc(p,oldsz,newsz)
-//#define STBI_FREE(p)              NWL::mem_sys::Dealloc(p)
+//#define STBI_MALLOC(sz)           NW::mem_sys::Alloc(sz)
+//#define STBI_REALLOC(p,oldsz,newsz)NW::mem_sys::Realloc(p,oldsz,newsz)
+//#define STBI_FREE(p)              NW::mem_sys::Dealloc(p)
 #define STBI_MALLOC(sz)           malloc(sz)
 #define STBI_REALLOC(p,newsz)     realloc(p,newsz)
 #define STBI_FREE(p)              free(p)

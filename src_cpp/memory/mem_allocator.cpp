@@ -1,7 +1,7 @@
 #include <nwl_pch.hpp>
 #include "mem_allocator.h"
 #include <io/io_error.h>
-namespace NWL
+namespace NW
 {
 	mem_link* mem_link::get_block(size memory_size) {
 		if (block_size >= memory_size) { block_size -= memory_size; return this; }
@@ -23,7 +23,7 @@ namespace NWL
 		return nullptr;
 	}
 }
-namespace NWL
+namespace NW
 {
 	a_mem_allocator::a_mem_allocator(ptr memory_ptr, size memory_size) :
 		m_data_ptr(static_cast<sbyte*>(memory_ptr)),
@@ -31,7 +31,7 @@ namespace NWL
 		m_alloc_size(0) { }
 	a_mem_allocator::~a_mem_allocator() { }
 }
-namespace NWL
+namespace NW
 {
 	mem_arena::mem_arena(ptr memory_ptr, size memory_size) :
 		a_mem_allocator(memory_ptr, memory_size),
@@ -41,7 +41,7 @@ namespace NWL
 	void* mem_arena::alloc(size alloc_size, size align_size) {
 		ptr block_ptr = nullptr;
 		if (alloc_size == 0) { throw error("attempt to allocate zero memory"); return nullptr; }
-		alloc_size = NWL_ALIGN_FORWARD(alloc_size, align_size);
+		alloc_size = NW_ALIGN_FORWARD(alloc_size, align_size);
 		if (alloc_size < sizeof(mem_link)) { alloc_size = sizeof(mem_link); }
 		if (m_free_list != nullptr) {
 			if (mem_link* free_link = m_free_list->get_block(alloc_size)) {
@@ -62,7 +62,7 @@ namespace NWL
 	}
 	void mem_arena::dealloc(ptr block_ptr, size dealloc_size) {
 		if (has_block(block_ptr)) {
-			dealloc_size = NWL_ALIGN_FORWARD(dealloc_size, sizeof(mem_link));
+			dealloc_size = NW_ALIGN_FORWARD(dealloc_size, sizeof(mem_link));
 			if (dealloc_size < sizeof(mem_link)) { dealloc_size = sizeof(mem_link); }
 			if ((static_cast<si64>(m_alloc_size) - static_cast<si64>(dealloc_size)) < 0) {
 				throw error("memory deallocation violation"); return;
@@ -84,7 +84,7 @@ namespace NWL
 	}
 	// --==</core_methods>==--
 }
-namespace NWL
+namespace NW
 {
 	linear_allocator::linear_allocator(ptr memory_ptr, size memory_size) :
 		a_mem_allocator(memory_ptr, memory_size) { }
@@ -93,7 +93,7 @@ namespace NWL
 	void* linear_allocator::alloc(size alloc_size, size align_size) {
 		ptr block_ptr = nullptr;
 		if (alloc_size == 0) { return nullptr; }
-		alloc_size = NWL_ALIGN_FORWARD(alloc_size, align_size);
+		alloc_size = NW_ALIGN_FORWARD(alloc_size, align_size);
 		if (!has_enough_size(alloc_size)) {
 			throw error("the memory has been exhausted");
 			return nullptr;
